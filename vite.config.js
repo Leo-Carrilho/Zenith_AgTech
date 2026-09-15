@@ -25,8 +25,8 @@ export default defineConfig({
   start_url: '/',
   scope: '/',
   display: 'standalone',
-  theme_color: '#ffffff',
-  background_color: '#ffffff',
+  theme_color: '#f4f8ef',
+  background_color: '#f4f8ef',
   lang: 'pt-BR',
    icons: [
   {

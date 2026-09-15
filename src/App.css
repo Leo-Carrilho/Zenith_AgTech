@@ -48,6 +48,10 @@ html, body {
   pointer-events: auto;
 }
 
+.app-opening-route-loader {
+  z-index: 99999;
+}
+
 .route-page-loader__mark {
   position: relative;
   width: 76px;
