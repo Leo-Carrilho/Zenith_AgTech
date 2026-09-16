@@ -4485,3 +4485,30 @@ body:has(.home-shell),
     font-size: 0.9rem;
   }
 }
+
+/* Reduz somente a ilustração em celulares estreitos. */
+@media screen and (max-width: 480px) {
+  .home-shell .weather-illustration {
+    top: 30px !important;
+    right: -2px !important;
+    width: 198px !important;
+    height: 150px !important;
+  }
+
+  .home-shell .weather-illustration img {
+    transform: scale(1) !important;
+    transform-origin: center right !important;
+  }
+
+  .home-shell .weather-stat-grid {
+    margin-top: -16px !important;
+  }
+}
+
+/* Trata telas como a do iPhone 11 Pro (375px) como celulares medios. */
+@media screen and (min-width: 370px) and (max-width: 480px) {
+  .home-shell .weather-illustration {
+    width: 228px !important;
+    height: 170px !important;
+  }
+}
