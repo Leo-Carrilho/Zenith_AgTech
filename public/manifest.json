@@ -11,14 +11,16 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/assets/icons/Logo.png",
+      "src": "/assets/icons/icon-192-v2.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/assets/icons/Logo.png",
+      "src": "/assets/icons/icon-512-v2.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
