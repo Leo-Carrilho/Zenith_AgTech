@@ -20,6 +20,15 @@ const modules = [
     sublabel: "Previsão 7 dias", 
     type: "weather" 
   },
+  {
+    id: "monitoramento",
+    path: "/explore",
+    tab: "monitoramento",
+    icon: "monitoring",
+    label: "Monitoramento",
+    sublabel: "Análise do plantio",
+    type: "monitoring"
+  },
   { 
     id: "diario",
     path: "/explore", 

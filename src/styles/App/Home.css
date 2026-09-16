@@ -1486,6 +1486,11 @@ body:has(.home-shell) {
   color: #0066ff;
 }
 
+.explore-icon.monitoring {
+  background: linear-gradient(135deg, rgba(46, 111, 70, 0.22), rgba(229, 190, 38, 0.12));
+  color: #2e6f46;
+}
+
 .explore-icon.diary {
   background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 170, 0, 0.1));
   color: #ffaa00;
@@ -1956,6 +1961,10 @@ body:has(.home-shell) {
 
 .explore-card:hover .explore-icon.weather {
   box-shadow: 0 0 20px rgba(0, 102, 255, 0.3) !important;
+}
+
+.explore-card:hover .explore-icon.monitoring {
+  box-shadow: 0 0 20px rgba(46, 111, 70, 0.3) !important;
 }
 
 .explore-card:hover .explore-icon.diary {

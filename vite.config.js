@@ -8,16 +8,38 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      manifestFilename: 'manifest-v5.webmanifest',
+      manifestFilename: 'manifest-v7.webmanifest',
       workbox: {
         globPatterns: [
           '**/*.{js,css,html,ico,svg,woff2}',
-          'assets/icons/icon-*.png',
         ],
         globIgnores: ['**/webodmService-*.js'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         skipWaiting: true,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'zenith-google-fonts-stylesheets',
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'zenith-google-fonts-webfonts',
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: {
+                maxEntries: 12,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
+        ],
       },
      manifest: {
   name: 'Zenith',
@@ -31,14 +53,26 @@ export default defineConfig({
   lang: 'pt-BR',
    icons: [
   {
-    src: "/assets/icons/Logo.png?v=5",
-    sizes: "1080x1080",
+    src: "/assets/icons/zenith-icon-192-v6.png",
+    sizes: "192x192",
     type: "image/png",
     purpose: "any"
   },
   {
-    src: "/assets/icons/Logo.png?v=5",
-    sizes: "1080x1080",
+    src: "/assets/icons/zenith-icon-512-v6.png",
+    sizes: "512x512",
+    type: "image/png",
+    purpose: "any"
+  },
+  {
+    src: "/assets/icons/zenith-icon-maskable-192-v6.png",
+    sizes: "192x192",
+    type: "image/png",
+    purpose: "maskable"
+  },
+  {
+    src: "/assets/icons/zenith-icon-maskable-512-v6.png",
+    sizes: "512x512",
     type: "image/png",
     purpose: "maskable"
   }

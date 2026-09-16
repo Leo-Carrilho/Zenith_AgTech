@@ -1,7 +1,7 @@
 // Profile.jsx - Versão Tecnológica com Componentes
 import { useState, useEffect, useRef } from "react"
 import { auth, db } from "../../services/firebase"
-import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore"
+import { doc, updateDoc, collection, query, where, getDocs } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import { sendPasswordResetEmail } from "firebase/auth"
 
@@ -13,7 +13,12 @@ import PersonalInfoView from "../../components/App/Profile/PersonalInfoView"
 import FarmInfoView from "../../components/App/Profile/FarmInfoView"
 import ProfileEditForm from "../../components/App/Profile/ProfileEditForm"
 import MenuBar from "../../components/App/Global/MenuBar"
-import { ACCOUNT_ROLES } from "../../services/accessControl"
+import { ACCOUNT_ROLES, getUserAccessProfile, isOperationalRole } from "../../services/accessControl"
+import {
+  accountIdentifierMessage,
+  attachUniquePhoneToProfile,
+  maskAccountPhone,
+} from "../../services/accountIdentity"
 
 // CSS
 import "../../styles/App/Profile.css"
@@ -52,8 +57,8 @@ export default function Profile() {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser)
-        await loadUserData(currentUser.uid)
-        await loadFarmData(currentUser.uid)
+        const profile = await loadUserData(currentUser.uid)
+        await loadFarmData(profile?.ownerId || currentUser.uid)
       } else {
         navigate("/login")
       }
@@ -84,27 +89,28 @@ export default function Profile() {
 
   const loadUserData = async (uid) => {
     try {
-      const userDoc = await getDoc(doc(db, "users", uid))
-      if (userDoc.exists()) {
-        const data = userDoc.data()
+      const data = await getUserAccessProfile(uid)
+      if (data) {
         setUserData(data)
         setFormData({
           name: data.name || "",
           age: data.age || "",
           type: data.type || "",
-          document: data.document || "",
+          document: data.documentMasked || data.document || "",
           hectares: data.hectares || "",
           email: data.email || "",
           role: data.role || ACCOUNT_ROLES.ADMIN,
           profileIcon: data.profileIcon || "👨‍🌾",
-          phone: data.phone || "",
+          phone: "",
           city: data.city || "",
           state: data.state || ""
         })
       }
+      return data
     } catch (error) {
       console.error("Erro ao carregar dados:", error)
       showAlert("error", "Erro ao carregar perfil")
+      return null
     }
   }
 
@@ -134,6 +140,7 @@ export default function Profile() {
           municipio: data.municipio || "",
           plantacao: data.plantacao || "",
           telefone: data.telefone || "",
+          telefone_mascarado: data.telefone_mascarado || "",
           tipo_proprietario: data.tipo_proprietario || "",
           uf: data.uf || ""
         })
@@ -164,18 +171,28 @@ export default function Profile() {
   const handleSave = async () => {
     if (!user) return
 
+    if ((userData?.profileCollection || "owners") !== "owners") {
+      showAlert("error", "Dados da equipe devem ser alterados pelo administrador.")
+      return
+    }
+
     setSaving(true)
     try {
-      const userRef = doc(db, "users", user.uid)
+      const userRef = doc(db, "owners", user.uid)
+
+      if (formData.phone.replace(/\D/g, "").length >= 10) {
+        await attachUniquePhoneToProfile({
+          profileCollection: "owners",
+          userId: user.uid,
+          phone: formData.phone,
+        })
+      }
+
       await updateDoc(userRef, {
         name: formData.name,
         age: parseInt(formData.age) || null,
-        type: formData.type,
-        document: formData.document,
-        role: formData.role || ACCOUNT_ROLES.ADMIN,
         hectares: parseFloat(formData.hectares) || null,
         profileIcon: formData.profileIcon,
-        phone: formData.phone,
         city: formData.city,
         state: formData.state,
         updatedAt: new Date().toISOString()
@@ -187,7 +204,7 @@ export default function Profile() {
       window.dispatchEvent(new Event("zenith-user-role-updated"))
     } catch (error) {
       console.error("Erro ao atualizar:", error)
-      showAlert("error", "Erro ao atualizar perfil")
+      showAlert("error", accountIdentifierMessage(error) || "Erro ao atualizar perfil")
     } finally {
       setSaving(false)
     }
@@ -199,6 +216,7 @@ export default function Profile() {
   setSavingFarm(true)
   try {
     const farmRef = doc(db, "farms", farmData.id)
+    const phoneDigits = updatedFarmData.telefone.replace(/\D/g, "")
     await updateDoc(farmRef, {
       name: updatedFarmData.name,
       area_total: parseFloat(updatedFarmData.area_total) || 0,
@@ -208,7 +226,9 @@ export default function Profile() {
       bairro: updatedFarmData.bairro || "",
       cep: updatedFarmData.cep || "",
       data_aquisicao: updatedFarmData.data_aquisicao || "",
-      telefone: updatedFarmData.telefone || "",
+      ...(phoneDigits.length >= 10
+        ? { telefone_mascarado: maskAccountPhone(updatedFarmData.telefone) }
+        : {}),
       tipo_proprietario: updatedFarmData.tipo_proprietario || "Proprietário",
       updatedAt: new Date().toISOString()
     })
@@ -314,7 +334,7 @@ export default function Profile() {
       email: user?.email || "",
       role: userData?.role || ACCOUNT_ROLES.ADMIN,
       profileIcon: userData?.profileIcon || "👨‍🌾",
-      phone: userData?.phone || "",
+      phone: "",
       city: userData?.city || "",
       state: userData?.state || ""
     })
@@ -327,6 +347,7 @@ export default function Profile() {
   }
 
   const displayName = userData?.name || user?.displayName || "Agricultor"
+  const canManageProfile = !isOperationalRole(userData?.role)
   const profileInitial = displayName.trim().charAt(0).toLocaleUpperCase("pt-BR") || "A"
   const profilePhotoIcon = editing ? formData.profileIcon : userData?.profileIcon
   const membershipTime = calculateMemberTime()
@@ -356,10 +377,12 @@ export default function Profile() {
             </div>
 
             <div className="profile-quick-actions" aria-label="Ações rápidas do perfil">
-              <button type="button" onClick={openProfileEditor}>
-                <span className="material-symbols-outlined" aria-hidden="true">edit</span>
-                Editar perfil
-              </button>
+              {canManageProfile && (
+                <button type="button" onClick={openProfileEditor}>
+                  <span className="material-symbols-outlined" aria-hidden="true">edit</span>
+                  Editar perfil
+                </button>
+              )}
               <button type="button" onClick={handlePasswordReset} disabled={passwordResetting}>
                 <span className="material-symbols-outlined" aria-hidden="true">lock_reset</span>
                 {passwordResetting ? "Enviando..." : "Alterar senha"}
@@ -431,7 +454,7 @@ export default function Profile() {
                   <PersonalInfoView
                     userData={userData}
                     user={user}
-                    onEdit={openProfileEditor}
+                    onEdit={canManageProfile ? openProfileEditor : undefined}
                     onChangePassword={handlePasswordReset}
                     passwordResetting={passwordResetting}
                   />
@@ -458,7 +481,12 @@ export default function Profile() {
               {activeTab === "fazenda" && (
                 <section className="profile-expanded-content">
                   {!editingFarm ? (
-                    <FarmInfoView farmData={farmData} onAddFarm={handleAddFarm} onEditFarm={handleEditFarm} formatPhone={formatPhone} />
+                    <FarmInfoView
+                      farmData={farmData}
+                      onAddFarm={canManageProfile ? handleAddFarm : undefined}
+                      onEditFarm={canManageProfile ? handleEditFarm : undefined}
+                      formatPhone={formatPhone}
+                    />
                   ) : (
                     <FarmEditForm farmData={farmData} onSave={handleSaveFarm} onCancel={() => setEditingFarm(false)} saving={savingFarm} />
                   )}
@@ -466,7 +494,7 @@ export default function Profile() {
               )}
             </div>
 
-            <div className={`profile-setting-item ${editing ? "is-open" : ""}`}>
+            {canManageProfile && <div className={`profile-setting-item ${editing ? "is-open" : ""}`}>
               <button
                 type="button"
                 aria-expanded={editing}
@@ -495,7 +523,7 @@ export default function Profile() {
                   </div>
                 </section>
               )}
-            </div>
+            </div>}
 
             <div className="profile-setting-item">
               <button type="button" className="logout" onClick={handleLogout}>

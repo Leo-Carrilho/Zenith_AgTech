@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth, db } from "../../services/firebase"
 import { getWeatherByCity } from "../../services/weatherService"
-import { doc, getDoc, query, where, getDocs, collection } from "firebase/firestore"
+import { query, where, getDocs, collection, onSnapshot } from "firebase/firestore"
 import {
   Cloud,
   CloudFog,
@@ -27,7 +27,7 @@ import ExploreModules from "../../components/App/Home/ExploreModules"
 import AppFooter from "../../components/App/Global/AppFooter"
 import MenuBar from "../../components/App/Global/MenuBar"
 import AppHeader from "../../components/App/Global/AppHeader"  
-import { isOperationalRole } from "../../services/accessControl"
+import { getUserAccessProfile, isOperationalRole } from "../../services/accessControl"
 
 import "../../styles/App/Home.css"
 
@@ -166,12 +166,8 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
       }
 
       try {
-        const docRef = doc(db, "users", user.uid)
-        const docSnap = await getDoc(docRef)
-
-        if (docSnap.exists()) {
-          setUserData(docSnap.data())
-        }
+        const accessProfile = await getUserAccessProfile(user.uid)
+        setUserData(accessProfile)
 
         const q = query(
           collection(db, "farms"),
@@ -202,7 +198,6 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
 
   useEffect(() => {
     const syncLocalData = () => {
-      setActivities(readStoredArray("activities"))
       setDiagnosticHistory(readStoredArray("diagnosticHistory"))
       setLastAiImageSubmission(localStorage.getItem("lastAiImageSubmission"))
     }
@@ -214,6 +209,39 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
     return () => {
       window.removeEventListener("storage", syncLocalData)
       window.removeEventListener("focus", syncLocalData)
+    }
+  }, [])
+
+  useEffect(() => {
+    let unsubscribeActivities = null
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      unsubscribeActivities?.()
+      unsubscribeActivities = null
+
+      if (!user) {
+        setActivities([])
+        return
+      }
+
+      unsubscribeActivities = onSnapshot(
+        query(collection(db, "activities"), where("ownerId", "==", user.uid)),
+        (snapshot) => {
+          setActivities(snapshot.docs.map((activityDoc) => ({
+            id: activityDoc.id,
+            ...activityDoc.data(),
+          })))
+        },
+        (error) => {
+          console.error("Erro ao sincronizar atividades da home:", error)
+          setActivities([])
+        }
+      )
+    })
+
+    return () => {
+      unsubscribeAuth()
+      unsubscribeActivities?.()
     }
   }, [])
 

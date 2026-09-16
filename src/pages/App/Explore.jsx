@@ -22,7 +22,7 @@ import "../../styles/App/Explore.css";
 // ================= TABS =================
 const tabs = [
   { id: "diagnostico", label: "Diagnóstico", icon: "eco" },
-  { id: "monitoramento", label: "Plantio", icon: "psychiatry" },
+  { id: "monitoramento", label: "Monitoramento", icon: "psychiatry" },
   { id: "clima", label: "Clima", icon: "cloud" },
   { id: "diario", label: "Diário", icon: "menu_book" },
   { id: "mapa", label: "Mapa", icon: "map" },
@@ -140,6 +140,18 @@ export default function Explore() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.2 }}
         >
+          {activeTab === "diagnostico" && (
+            <aside className="desktop-feature-notice" role="note" aria-label="Recurso exclusivo do aplicativo desktop">
+              <span className="desktop-feature-notice__icon material-symbols-outlined" aria-hidden="true">
+                desktop_windows
+              </span>
+              <div className="desktop-feature-notice__copy">
+                <strong>Análise multiespectral</strong>
+                <p>Este recurso avançado está disponível exclusivamente no aplicativo Zenith para desktop.</p>
+              </div>
+              <span className="desktop-feature-notice__badge">Desktop</span>
+            </aside>
+          )}
           {renderTab()}
         </motion.div>
       </AnimatePresence>

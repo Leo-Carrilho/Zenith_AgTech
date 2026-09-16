@@ -12,7 +12,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
     bairro: farmData?.bairro || "",
     cep: farmData?.cep || "",
     data_aquisicao: farmData?.data_aquisicao || "",
-    telefone: farmData?.telefone || "",
+    telefone: "",
     tipo_proprietario: farmData?.tipo_proprietario || "Proprietário"
   })
 
@@ -260,6 +260,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
                 value={formData.telefone}
                 onChange={handleChange}
                 className="tech-input"
+                placeholder={farmData?.telefone_mascarado || "Novo telefone"}
                 disabled={saving}
               />
             </div>

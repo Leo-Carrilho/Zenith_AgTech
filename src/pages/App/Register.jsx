@@ -1,8 +1,11 @@
 import { useState } from "react"
-import { auth, db } from "../../services/firebase"
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { doc, setDoc } from "firebase/firestore"
+import { auth } from "../../services/firebase"
+import { createUserWithEmailAndPassword, deleteUser } from "firebase/auth"
 import { ACCOUNT_ROLES } from "../../services/accessControl"
+import {
+  accountIdentifierMessage,
+  createProfileWithUniqueIdentifiers,
+} from "../../services/accountIdentity"
 import "../../styles/App/Register.css"
 
 export default function Register() {
@@ -39,25 +42,31 @@ export default function Register() {
     if (!validateForm()) return
 
     setLoading(true)
+    let createdUser = null
     try {
       const userCred = await createUserWithEmailAndPassword(
         auth,
         form.email,
         form.password
       )
+      createdUser = userCred.user
 
-      await setDoc(doc(db, "users", userCred.user.uid), {
+      await createProfileWithUniqueIdentifiers({
+        profileCollection: "owners",
+        userId: userCred.user.uid,
+        profileData: {
         name: form.name,
         age: parseInt(form.age),
         type: form.type,
         document: form.document,
         hectares: parseFloat(form.hectares),
-        email: form.email,
+        email: userCred.user.email || form.email,
         role: ACCOUNT_ROLES.ADMIN,
         position: "Administrador",
         status: "offline",
         createdAt: new Date().toISOString(),
         profileIcon: "👨‍🌾"
+        },
       })
 
       setAlertMessage({ type: "success", text: "Conta criada com sucesso! Bem-vindo ao campo! 🌾" })
@@ -77,7 +86,11 @@ export default function Register() {
       }, 2000)
 
     } catch (error) {
-      let errorMessage = "Erro na plantação. Tente novamente! 🌧️"
+      if (createdUser) {
+        await deleteUser(createdUser).catch(() => {})
+      }
+
+      let errorMessage = accountIdentifierMessage(error) || "Erro na plantação. Tente novamente! 🌧️"
       
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = "Este email já está sendo cultivado por outra pessoa!"

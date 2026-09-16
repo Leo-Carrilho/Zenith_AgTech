@@ -1,9 +1,13 @@
-const CACHE_NAME = "agrovoo-cache-v3"
+const CACHE_NAME = "zenith-cache-v7"
 
 const urlsToCache = [
   "/",
   "/index.html",
-  "/manifest.json"
+  "/manifest.json",
+  "/assets/icons/zenith-icon-192-v6.png",
+  "/assets/icons/zenith-icon-512-v6.png",
+  "/assets/icons/zenith-icon-maskable-192-v6.png",
+  "/assets/icons/zenith-icon-maskable-512-v6.png"
 ]
 
 self.addEventListener("install", (event) => {

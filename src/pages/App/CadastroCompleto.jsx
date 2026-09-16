@@ -3,9 +3,16 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { auth, db } from "../../services/firebase"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, deleteUser } from "firebase/auth"
 import { doc, setDoc, addDoc, collection } from "firebase/firestore"
-import { ACCOUNT_ROLES, getRoleHomePath, isOperationalRole } from "../../services/accessControl"
+import { ACCOUNT_ROLES } from "../../services/accessControl"
+import {
+  accountIdentifierMessage,
+  attachUniquePhoneToProfile,
+  createProfileWithUniqueIdentifiers,
+  maskAccountDocument,
+  maskAccountPhone,
+} from "../../services/accountIdentity"
 import "../../styles/App/CadastroCompleto.css"
 
 const PROBLEMAS_LAVOURA = [
@@ -422,6 +429,7 @@ export default function CadastroCompleto({ setAppLoading }) {
     if (!validateUserData()) return
 
     setLoading(true)
+    let createdUser = null
 
     try {
       const userCred = await createUserWithEmailAndPassword(
@@ -429,19 +437,25 @@ export default function CadastroCompleto({ setAppLoading }) {
         userData.email,
         userData.password
       )
+      createdUser = userCred.user
 
-      await setDoc(doc(db, "users", userCred.user.uid), {
-        name: userData.name,
-        age: parseInt(userData.age),
-        type: userData.type,
-        document: userData.document,
-        email: userData.email,
-        hectares: 0,
-        role: userData.role,
-        position: isOperationalRole(userData.role) ? "Operacional de campo" : "Administrador",
-        status: "offline",
-        teamId: userCred.user.uid,
-        createdAt: new Date().toISOString(),
+      await createProfileWithUniqueIdentifiers({
+        profileCollection: "owners",
+        userId: userCred.user.uid,
+        profileData: {
+          name: userData.name,
+          age: parseInt(userData.age),
+          type: userData.type,
+          document: userData.document,
+          email: userCred.user.email || userData.email,
+          hectares: 0,
+          role: ACCOUNT_ROLES.ADMIN,
+          position: "Administrador",
+          status: "offline",
+          teamId: userCred.user.uid,
+          createdAt: new Date().toISOString(),
+          profileIcon: "👨‍🌾",
+        },
       })
 
       setUserId(userCred.user.uid)
@@ -452,14 +466,6 @@ export default function CadastroCompleto({ setAppLoading }) {
       })
 
       setTimeout(() => {
-        if (isOperationalRole(userData.role)) {
-          sessionStorage.removeItem("zenithShowWhiteLoaderOnce")
-          sessionStorage.setItem("zenithBlockWhiteLoaderUntil", String(Date.now() + 5000))
-          setAppLoading?.(true)
-          navigate(getRoleHomePath(userData.role), { replace: true })
-          return
-        }
-
         setEtapa(2)
 
         setAlertMessage({
@@ -468,7 +474,11 @@ export default function CadastroCompleto({ setAppLoading }) {
         })
       }, 1200)
     } catch (error) {
-      let errorMessage = "Erro ao criar conta."
+      if (createdUser) {
+        await deleteUser(createdUser).catch(() => {})
+      }
+
+      let errorMessage = accountIdentifierMessage(error) || "Erro ao criar conta."
 
       if (error.code === "auth/email-already-in-use") {
         errorMessage = "Este email já está em uso."
@@ -497,16 +507,30 @@ export default function CadastroCompleto({ setAppLoading }) {
     setLoading(true)
 
     try {
+      await attachUniquePhoneToProfile({
+        profileCollection: "owners",
+        userId,
+        phone: farmData.telefone,
+      })
+
       await addDoc(collection(db, "farms"), {
-        ...farmData,
+        name: farmData.name,
+        tipo_proprietario: farmData.tipo_proprietario,
+        cep: farmData.cep,
+        bairro: farmData.bairro,
+        municipio: farmData.municipio,
+        uf: farmData.uf,
+        area_total: parseFloat(farmData.area_total),
         plantacao: farmData.plantacao.join(", "),
+        documento_proprietario_mascarado: maskAccountDocument(userData.document),
+        telefone_mascarado: maskAccountPhone(farmData.telefone),
         ownerId: userId,
         ownerName: userData.name,
         createdAt: new Date(),
       })
 
       await setDoc(
-        doc(db, "users", userId),
+        doc(db, "owners", userId),
         {
           hectares: parseFloat(farmData.area_total),
         },
@@ -529,7 +553,7 @@ export default function CadastroCompleto({ setAppLoading }) {
 
       setAlertMessage({
         type: "error",
-        text: "Erro ao cadastrar fazenda.",
+        text: accountIdentifierMessage(error) || "Erro ao cadastrar fazenda.",
       })
     } finally {
       setLoading(false)
@@ -811,20 +835,6 @@ export default function CadastroCompleto({ setAppLoading }) {
               />
             </div>
 
-            <div className="input-group">
-              <label>Tipo de conta</label>
-
-              <select
-                name="role"
-                value={userData.role}
-                onChange={handleUserChange}
-              >
-                <option value={ACCOUNT_ROLES.ADMIN}>Administrador / Chefe</option>
-                <option value={ACCOUNT_ROLES.EMPLOYEE}>Funcionário</option>
-                <option value={ACCOUNT_ROLES.COLLABORATOR}>Colaborador</option>
-              </select>
-            </div>
-
             <div className="input-row">
 
               <div className="input-group">
@@ -931,11 +941,7 @@ export default function CadastroCompleto({ setAppLoading }) {
               onClick={handleNextUserStep}
               disabled={loading}
             >
-              {loading
-                ? "Criando conta..."
-                : isOperationalRole(userData.role)
-                  ? "Criar conta operacional"
-                  : "Próximo →"}
+              {loading ? "Criando conta..." : "Próximo →"}
             </button>
 
             <button

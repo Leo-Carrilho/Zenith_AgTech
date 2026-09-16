@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { onAuthStateChanged } from "firebase/auth"
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore"
+import { auth, db } from "../../../services/firebase"
+import { getUserAccessProfile, isAccountBlocked, isOperationalRole } from "../../../services/accessControl"
 import "../../../styles/App/AtividadesTab.css"
 
 const initialForm = {
@@ -9,7 +13,10 @@ const initialForm = {
   date: new Date().toISOString().split("T")[0],
   priority: "media",
   status: "pendente",
-  responsible: ""
+  responsible: "Toda a fazenda",
+  scope: "general",
+  assigneeId: "",
+  time: ""
 }
 
 const sampleActivities = [
@@ -142,26 +149,92 @@ export default function AtividadesTab() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [expandedActivityId, setExpandedActivityId] = useState(null)
   const [form, setForm] = useState(initialForm)
+  const [userProfile, setUserProfile] = useState(null)
+  const [employees, setEmployees] = useState([])
+  const [activityMessage, setActivityMessage] = useState("")
+
+  const isOwner = Boolean(userProfile) && !isOperationalRole(userProfile.role)
+
+  useEffect(() => onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      setUserProfile(null)
+      setActivities([])
+      return
+    }
+
+    try {
+      setUserProfile(await getUserAccessProfile(user.uid))
+    } catch (error) {
+      console.error("Erro ao carregar acesso das atividades:", error)
+      setActivityMessage("Não foi possível carregar seu acesso.")
+    }
+  }), [])
 
   useEffect(() => {
-    const saved = localStorage.getItem("activities")
-    if (saved) {
-      try {
-        const parsedActivities = JSON.parse(saved)
-        setActivities(Array.isArray(parsedActivities) ? parsedActivities : [])
-      } catch {
-        setActivities([])
-      }
-    } else {
-      setActivities(sampleActivities)
-      localStorage.setItem("activities", JSON.stringify(sampleActivities))
-    }
-  }, [])
+    const user = auth.currentUser
+    if (!user || !userProfile) return undefined
 
-  const saveActivities = (nextActivities) => {
-    setActivities(nextActivities)
-    localStorage.setItem("activities", JSON.stringify(nextActivities))
-  }
+    const unsubscribers = []
+
+    if (isOperationalRole(userProfile.role)) {
+      const ownerId = userProfile.ownerId || userProfile.teamId
+      let generalActivities = []
+      let assignedActivities = []
+      const syncActivities = () => {
+        setActivities([
+          ...new Map(
+            [...generalActivities, ...assignedActivities].map((activity) => [activity.id, activity])
+          ).values(),
+        ])
+      }
+
+      unsubscribers.push(onSnapshot(
+        query(collection(db, "activities"), where("ownerId", "==", ownerId), where("scope", "==", "general")),
+        (snapshot) => {
+          generalActivities = snapshot.docs.map((activityDoc) => ({ id: activityDoc.id, ...activityDoc.data() }))
+          syncActivities()
+        },
+        (error) => {
+          console.error("Erro ao sincronizar atividades gerais:", error)
+          setActivityMessage("Não foi possível carregar as atividades.")
+        }
+      ))
+
+      unsubscribers.push(onSnapshot(
+        query(collection(db, "activities"), where("assigneeId", "==", user.uid)),
+        (snapshot) => {
+          assignedActivities = snapshot.docs.map((activityDoc) => ({ id: activityDoc.id, ...activityDoc.data() }))
+          syncActivities()
+        },
+        (error) => {
+          console.error("Erro ao sincronizar tarefas atribuídas:", error)
+          setActivityMessage("Não foi possível carregar as tarefas atribuídas.")
+        }
+      ))
+    } else {
+      unsubscribers.push(onSnapshot(
+        query(collection(db, "activities"), where("ownerId", "==", user.uid)),
+        (snapshot) => {
+          setActivities(snapshot.docs.map((activityDoc) => ({ id: activityDoc.id, ...activityDoc.data() })))
+        },
+        (error) => {
+          console.error("Erro ao sincronizar atividades:", error)
+          setActivityMessage("Não foi possível carregar as atividades.")
+        }
+      ))
+
+      unsubscribers.push(onSnapshot(
+        query(collection(db, "employees"), where("ownerId", "==", user.uid)),
+        (snapshot) => {
+          setEmployees(snapshot.docs
+            .map((employeeDoc) => ({ id: employeeDoc.id, ...employeeDoc.data() }))
+            .filter((employee) => isOperationalRole(employee.role) && !isAccountBlocked(employee)))
+        }
+      ))
+    }
+
+    return () => unsubscribers.forEach((unsubscribe) => unsubscribe())
+  }, [userProfile])
 
   const filteredActivities = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase()
@@ -188,32 +261,63 @@ export default function AtividadesTab() {
     completed: activities.filter((activity) => activity.status === "concluida").length
   }), [activities])
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!form.title.trim()) return
+    const user = auth.currentUser
+    if (!form.title.trim() || !user || !isOwner) return
+
+    const assignee = employees.find((employee) => employee.id === form.assigneeId)
 
     const activity = {
       ...form,
-      id: Date.now(),
       title: form.title.trim(),
       description: form.description.trim(),
-      responsible: form.responsible.trim()
+      scope: form.assigneeId ? "individual" : "general",
+      assigneeId: form.assigneeId || "",
+      responsible: assignee?.name || "Toda a fazenda",
+      ownerId: user.uid,
+      createdBy: user.uid,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
-    saveActivities([activity, ...activities])
-    setForm(initialForm)
-    setShowForm(false)
+    try {
+      await addDoc(collection(db, "activities"), activity)
+      setForm(initialForm)
+      setShowForm(false)
+      setActivityMessage("")
+    } catch (error) {
+      console.error("Erro ao criar atividade:", error)
+      setActivityMessage("Não foi possível salvar a atividade.")
+    }
   }
 
-  const updateStatus = (id, status) => {
-    saveActivities(activities.map((activity) => (
-      activity.id === id ? { ...activity, status } : activity
-    )))
+  const updateStatus = async (activity, status) => {
+    if (!auth.currentUser) return
+    const now = new Date().toISOString()
+    const payload = {
+      status,
+      updatedAt: now,
+      ...(status === "em_andamento" ? { startedAt: now } : {}),
+      ...(status === "concluida" ? { completedAt: now } : {}),
+    }
+
+    try {
+      await updateDoc(doc(db, "activities", activity.id), payload)
+    } catch (error) {
+      console.error("Erro ao atualizar atividade:", error)
+      setActivityMessage("Não foi possível atualizar a atividade.")
+    }
   }
 
-  const deleteActivity = (id) => {
-    if (window.confirm("Deseja excluir esta atividade?")) {
-      saveActivities(activities.filter((activity) => activity.id !== id))
+  const deleteActivity = async (id) => {
+    if (!isOwner || !window.confirm("Deseja excluir esta atividade?")) return
+
+    try {
+      await deleteDoc(doc(db, "activities", id))
+    } catch (error) {
+      console.error("Erro ao excluir atividade:", error)
+      setActivityMessage("Não foi possível excluir a atividade.")
     }
   }
 
@@ -224,15 +328,19 @@ export default function AtividadesTab() {
           <h1>Atividades</h1>
           <p>Acompanhe e gerencie suas tarefas</p>
         </div>
-        <button
-          type="button"
-          className="activities-add-button"
-          aria-label="Criar nova atividade"
-          onClick={() => setShowForm(true)}
-        >
-          <span className="material-symbols-outlined" aria-hidden="true">add</span>
-        </button>
+        {isOwner && (
+          <button
+            type="button"
+            className="activities-add-button"
+            aria-label="Criar nova atividade"
+            onClick={() => setShowForm(true)}
+          >
+            <span className="material-symbols-outlined" aria-hidden="true">add</span>
+          </button>
+        )}
       </header>
+
+      {activityMessage && <p className="activities-feedback" role="status">{activityMessage}</p>}
 
       <nav className="activities-status-tabs" aria-label="Filtrar por status">
         {statusFilters.map((filter) => (
@@ -378,20 +486,22 @@ export default function AtividadesTab() {
                         exit={{ opacity: 0, height: 0 }}
                       >
                         {activity.status === "pendente" && (
-                          <button className="action-start" onClick={() => updateStatus(activity.id, "em_andamento")}>
+                          <button className="action-start" onClick={() => updateStatus(activity, "em_andamento")}>
                             <span className="material-symbols-outlined" aria-hidden="true">play_arrow</span>
                             Iniciar
                           </button>
                         )}
                         {activity.status !== "concluida" && activity.status !== "cancelada" && (
-                          <button className="action-complete" onClick={() => updateStatus(activity.id, "concluida")}>
+                          <button className="action-complete" onClick={() => updateStatus(activity, "concluida")}>
                             <span className="material-symbols-outlined" aria-hidden="true">check</span>
                             Concluir
                           </button>
                         )}
-                        <button className="action-delete" onClick={() => deleteActivity(activity.id)} aria-label="Excluir atividade">
-                          <span className="material-symbols-outlined" aria-hidden="true">delete</span>
-                        </button>
+                        {isOwner && (
+                          <button className="action-delete" onClick={() => deleteActivity(activity.id)} aria-label="Excluir atividade">
+                            <span className="material-symbols-outlined" aria-hidden="true">delete</span>
+                          </button>
+                        )}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -402,7 +512,7 @@ export default function AtividadesTab() {
             <div className="empty-state">
               <span className="material-symbols-outlined">assignment</span>
               <p>Nenhuma atividade encontrada</p>
-              <button onClick={() => setShowForm(true)}>Criar atividade</button>
+              {isOwner && <button onClick={() => setShowForm(true)}>Criar atividade</button>}
             </div>
           )}
         </div>
@@ -440,7 +550,7 @@ export default function AtividadesTab() {
       </section>
 
       <AnimatePresence>
-        {showForm && (
+        {showForm && isOwner && (
           <motion.div
             className="atividades-modal"
             initial={{ opacity: 0 }}
@@ -539,12 +649,16 @@ export default function AtividadesTab() {
 
               <div className="form-group">
                 <label htmlFor="activity-responsible">Responsável</label>
-                <input
+                <select
                   id="activity-responsible"
-                  value={form.responsible}
-                  onChange={(event) => setForm({ ...form, responsible: event.target.value })}
-                  placeholder="Nome ou equipe"
-                />
+                  value={form.assigneeId}
+                  onChange={(event) => setForm({ ...form, assigneeId: event.target.value })}
+                >
+                  <option value="">Toda a fazenda</option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>{employee.name}</option>
+                  ))}
+                </select>
               </div>
 
               <button type="submit" className="submit-btn">Salvar atividade</button>

@@ -19,10 +19,12 @@ const FarmInfoView = ({ farmData, onAddFarm, onEditFarm, formatPhone }) => {
         <h4>Nenhuma fazenda cadastrada</h4>
         <p>Cadastre sua primeira fazenda para começar a monitorar suas safras</p>
         
-        <button className="empty-action-btn" onClick={onAddFarm}>
-          <span className="material-symbols-outlined">add</span>
-          Cadastrar Fazenda
-        </button>
+        {onAddFarm && (
+          <button className="empty-action-btn" onClick={onAddFarm}>
+            <span className="material-symbols-outlined">add</span>
+            Cadastrar Fazenda
+          </button>
+        )}
       </motion.div>
     )
   }
@@ -74,7 +76,7 @@ const FarmInfoView = ({ farmData, onAddFarm, onEditFarm, formatPhone }) => {
     {
       icon: "call",
       label: "Telefone",
-      value: farmData.telefone ? formatPhone(farmData.telefone) : "Não informado",
+      value: farmData.telefone_mascarado || (farmData.telefone ? formatPhone(farmData.telefone) : "Não informado"),
     },
     {
       icon: "calendar_month",
@@ -107,13 +109,13 @@ const FarmInfoView = ({ farmData, onAddFarm, onEditFarm, formatPhone }) => {
 
       <div className="farm-data-list">
         {farmRows.map((row) => (
-          <button type="button" className="personal-data-row farm-data-row" onClick={onEditFarm} key={row.label}>
+          <button type="button" className="personal-data-row farm-data-row" onClick={onEditFarm} disabled={!onEditFarm} key={row.label}>
             <span className="personal-data-icon material-symbols-outlined" aria-hidden="true">{row.icon}</span>
             <span className="personal-data-copy">
               <small>{row.label}</small>
               <strong>{row.value}</strong>
             </span>
-            <span className="personal-data-action material-symbols-outlined" aria-hidden="true">edit</span>
+            {onEditFarm && <span className="personal-data-action material-symbols-outlined" aria-hidden="true">edit</span>}
           </button>
         ))}
       </div>

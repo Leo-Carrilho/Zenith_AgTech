@@ -20,7 +20,7 @@ export default function PersonalInfoView({
   const infoItems = [
     { icon: "person", label: "Nome completo", value: userData?.name },
     { icon: "mail", label: "E-mail", value: user?.email },
-    { icon: "call", label: "Telefone", value: userData?.phone },
+    { icon: "call", label: "Telefone", value: userData?.phoneMasked || userData?.phone },
     { icon: "location_on", label: "Localização", value: location },
     { icon: "badge", label: "Função", value: ROLE_LABELS[userData?.role] },
   ]
@@ -42,13 +42,13 @@ export default function PersonalInfoView({
 
       <div className="personal-data-list">
         {infoItems.map((item) => (
-          <button type="button" className="personal-data-row" key={item.label} onClick={onEdit}>
+          <button type="button" className="personal-data-row" key={item.label} onClick={onEdit} disabled={!onEdit}>
             <span className="personal-data-icon material-symbols-outlined" aria-hidden="true">{item.icon}</span>
             <span className="personal-data-copy">
               <small>{item.label}</small>
               <strong>{item.value || "Não informado"}</strong>
             </span>
-            <span className="personal-data-action material-symbols-outlined" aria-hidden="true">edit</span>
+            {onEdit && <span className="personal-data-action material-symbols-outlined" aria-hidden="true">edit</span>}
           </button>
         ))}
 

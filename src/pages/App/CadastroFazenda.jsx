@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom"
 import { auth } from "../../services/firebase"
 import { db } from "../../services/firebase"
 import { addDoc, collection, query, where, getDocs } from "firebase/firestore"
+import {
+  accountIdentifierMessage,
+  attachUniquePhoneToProfile,
+  maskAccountPhone,
+} from "../../services/accountIdentity"
 import "../../styles/App/CadastrarFazenda.css"
 
 export default function CadastrarFazenda({ setAppLoading }) {
@@ -52,8 +57,17 @@ export default function CadastrarFazenda({ setAppLoading }) {
         return
       }
 
+      await attachUniquePhoneToProfile({
+        profileCollection: "owners",
+        userId: user.uid,
+        phone: formData.telefone,
+      })
+
+      const { telefone, ...safeFarmData } = formData
       await addDoc(collection(db, "farms"), {
-        ...formData,
+        ...safeFarmData,
+        area_total: parseFloat(formData.area_total),
+        telefone_mascarado: maskAccountPhone(telefone),
         ownerId: user.uid,
         createdAt: new Date()
       })
@@ -66,7 +80,7 @@ export default function CadastrarFazenda({ setAppLoading }) {
 
     } catch (error) {
       console.error(error)
-      alert("Erro ao cadastrar fazenda")
+      alert(accountIdentifierMessage(error) || "Erro ao cadastrar fazenda")
     } finally {
       setLoading(false)
     }

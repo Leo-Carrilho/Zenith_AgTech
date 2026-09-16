@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore"
-import { auth, db } from "../../services/firebase"
+import { deleteApp, initializeApp } from "firebase/app"
+import { createUserWithEmailAndPassword, deleteUser, getAuth, signOut } from "firebase/auth"
+import { addDoc, collection, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore"
+import { auth, db, firebaseConfig } from "../../services/firebase"
 import MenuBar from "../../components/App/Global/MenuBar"
 import DroneIcon from "../../components/App/Global/DroneIcon"
 import { ACCOUNT_ROLES } from "../../services/accessControl"
+import { accountIdentifierMessage, createProfileWithUniqueIdentifiers } from "../../services/accountIdentity"
 import "../../styles/App/TeamAccess.css"
 
 const DRONE_MODELS = [
@@ -73,6 +76,11 @@ export default function AdminTeamDashboard() {
   const [newEmployee, setNewEmployee] = useState({
     name: "",
     email: "",
+    password: "",
+    age: "",
+    phone: "",
+    personType: "CPF",
+    document: "",
     position: "",
     sector: "",
     droneModel: "",
@@ -80,61 +88,89 @@ export default function AdminTeamDashboard() {
   })
 
   useEffect(() => {
-    async function loadEmployees() {
-      try {
-        const [usersSnap, tasksSnap] = await Promise.all([
-          getDocs(collection(db, "users")),
-          getDocs(collection(db, "tasks")),
-        ])
-        const ownerId = auth.currentUser?.uid
-        const employeeDocs = usersSnap.docs.filter((docSnap) => (
-          (docSnap.data().role === ACCOUNT_ROLES.EMPLOYEE ||
-            docSnap.data().role === ACCOUNT_ROLES.COLLABORATOR) &&
-          (docSnap.data().ownerId === ownerId || docSnap.data().teamId === ownerId)
-        ))
-        const tasks = tasksSnap.docs.map((taskDoc) => ({ id: taskDoc.id, ...taskDoc.data() }))
-
-        if (employeeDocs.length > 0) {
-          setEmployees(employeeDocs.map((docSnap) => {
-            const data = docSnap.data()
-            const employeeTasks = tasks.filter((task) => task.employeeId === docSnap.id)
-
-            return {
-              id: docSnap.id,
-              name: data.name || "Funcionário",
-              position: data.position || "Funcionário de campo",
-              sector: data.sector || "Campo",
-              status: data.status || "offline",
-              entry: data.entry || "--:--",
-              exit: data.exit || "--:--",
-              hours: Number(data.hours) || 0,
-              pending: employeeTasks.filter((task) => task.status === "pendente").length,
-              active: employeeTasks.filter((task) => task.status === "andamento").length,
-              done: employeeTasks.filter((task) => task.status === "concluida").length,
-              productivity: getCompletionRate(employeeTasks),
-              daily: getCompletionRate(employeeTasks, 1),
-              weekly: getCompletionRate(employeeTasks, 7),
-              monthly: getCompletionRate(employeeTasks, 30),
-              tasks: employeeTasks,
-              delays: Number(data.delays) || 0,
-              absences: Number(data.absences) || 0,
-              lastActivity: data.lastActivity || "Sem atividade registrada",
-              droneModel: data.droneModel || "",
-            }
-          }))
-          setSelectedId(employeeDocs[0].id)
-        } else {
-          setEmployees([])
-          setSelectedId("")
-        }
-      } catch (error) {
-        console.error("Erro ao carregar equipe:", error)
-      } finally {
-        setIsTeamLoading(false)
-      }
+    const ownerId = auth.currentUser?.uid
+    if (!ownerId) {
+      setIsTeamLoading(false)
+      return undefined
     }
 
-    loadEmployees()
+    let employeeDocs = []
+    let tasks = []
+
+    const syncTeam = () => {
+      const operationalEmployees = employeeDocs.filter((docSnap) => (
+        (docSnap.data().role === ACCOUNT_ROLES.EMPLOYEE ||
+          docSnap.data().role === ACCOUNT_ROLES.COLLABORATOR) &&
+        docSnap.data().archived !== true &&
+        docSnap.data().accessStatus !== "blocked"
+      ))
+
+      const nextEmployees = operationalEmployees.map((docSnap) => {
+        const data = docSnap.data()
+        const employeeTasks = tasks.filter((task) => task.assigneeId === docSnap.id)
+
+        return {
+          id: docSnap.id,
+          name: data.name || "Funcionário",
+          position: data.position || "Funcionário de campo",
+          sector: data.sector || "Campo",
+          status: data.status || "offline",
+          entry: data.entry || "--:--",
+          exit: data.exit || "--:--",
+          hours: Number(data.hours) || 0,
+          pending: employeeTasks.filter((task) => task.status === "pendente").length,
+          active: employeeTasks.filter((task) => task.status === "em_andamento" || task.status === "andamento").length,
+          done: employeeTasks.filter((task) => task.status === "concluida").length,
+          productivity: getCompletionRate(employeeTasks),
+          daily: getCompletionRate(employeeTasks, 1),
+          weekly: getCompletionRate(employeeTasks, 7),
+          monthly: getCompletionRate(employeeTasks, 30),
+          tasks: employeeTasks,
+          delays: Number(data.delays) || 0,
+          absences: Number(data.absences) || 0,
+          lastActivity: data.lastActivity || "Sem atividade registrada",
+          droneModel: data.droneModel || "",
+        }
+      })
+
+      setEmployees(nextEmployees)
+      setSelectedId((current) => (
+        nextEmployees.some((employee) => employee.id === current)
+          ? current
+          : nextEmployees[0]?.id || ""
+      ))
+      setIsTeamLoading(false)
+    }
+
+    const handleError = (error) => {
+      console.error("Erro ao carregar equipe:", error)
+      setIsTeamLoading(false)
+    }
+
+    const unsubscribeEmployees = onSnapshot(
+      query(collection(db, "employees"), where("ownerId", "==", ownerId)),
+      (snapshot) => {
+        employeeDocs = snapshot.docs
+        syncTeam()
+      },
+      handleError
+    )
+
+    const unsubscribeActivities = onSnapshot(
+      query(collection(db, "activities"), where("ownerId", "==", ownerId)),
+      (snapshot) => {
+        tasks = snapshot.docs
+          .map((taskDoc) => ({ id: taskDoc.id, ...taskDoc.data() }))
+          .filter((task) => task.scope === "individual" && task.assigneeId)
+        syncTeam()
+      },
+      handleError
+    )
+
+    return () => {
+      unsubscribeEmployees()
+      unsubscribeActivities()
+    }
   }, [])
 
   const sectors = useMemo(() => ["todos", ...new Set(employees.map((employee) => employee.sector))], [employees])
@@ -188,16 +224,22 @@ export default function AdminTeamDashboard() {
 
     try {
       const taskPayload = {
-        employeeId: selected.id,
-        employeeName: selected.name,
         title: taskTitle.trim(),
+        description: "",
+        type: "tarefa",
         status: "pendente",
-        priority: "Media",
-        due: filters.date || "Sem prazo",
+        priority: "media",
+        date: filters.date || new Date().toISOString().split("T")[0],
+        time: "",
+        scope: "individual",
+        assigneeId: selected.id,
+        responsible: selected.name,
         ownerId: auth.currentUser?.uid || "",
+        createdBy: auth.currentUser?.uid || "",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
-      const taskRef = await addDoc(collection(db, "tasks"), taskPayload)
+      const taskRef = await addDoc(collection(db, "activities"), taskPayload)
       setEmployees((current) => current.map((employee) => {
         if (employee.id !== selected.id) return employee
 
@@ -206,7 +248,7 @@ export default function AdminTeamDashboard() {
           ...employee,
           tasks: employeeTasks,
           pending: employeeTasks.filter((task) => task.status === "pendente").length,
-          active: employeeTasks.filter((task) => task.status === "andamento").length,
+          active: employeeTasks.filter((task) => task.status === "em_andamento" || task.status === "andamento").length,
           done: employeeTasks.filter((task) => task.status === "concluida").length,
           productivity: getCompletionRate(employeeTasks),
           daily: getCompletionRate(employeeTasks, 1),
@@ -221,11 +263,24 @@ export default function AdminTeamDashboard() {
   }
 
   const registerEmployee = async () => {
-    if (!newEmployee.name.trim() || !newEmployee.email.trim()) return
+    if (
+      !newEmployee.name.trim() ||
+      !newEmployee.email.trim() ||
+      newEmployee.password.length < 8 ||
+      newEmployee.phone.replace(/\D/g, "").length < 10 ||
+      !newEmployee.document.replace(/\D/g, "")
+    ) {
+      window.alert("Preencha nome, email, senha de 8 caracteres, telefone com DDD e CPF/CNPJ.")
+      return
+    }
 
     const employeePayload = {
       name: newEmployee.name.trim(),
       email: newEmployee.email.trim().toLowerCase(),
+      age: Number(newEmployee.age) || null,
+      phone: newEmployee.phone.replace(/\D/g, ""),
+      type: newEmployee.personType,
+      document: newEmployee.document.replace(/\D/g, ""),
       position: newEmployee.position.trim() || (newEmployee.role === ACCOUNT_ROLES.COLLABORATOR ? "Colaborador" : "Funcionário de campo"),
       sector: newEmployee.sector.trim() || "Campo",
       droneModel: newEmployee.droneModel,
@@ -239,14 +294,29 @@ export default function AdminTeamDashboard() {
       delays: 0,
       absences: 0,
       lastActivity: "Cadastro criado pelo administrador",
-      inviteStatus: "pending",
+      inviteStatus: "active",
+      authProvider: "password",
       createdAt: new Date().toISOString(),
     }
 
+    const secondaryApp = initializeApp(firebaseConfig, `mobile-employee-creation-${Date.now()}`)
+    const secondaryAuth = getAuth(secondaryApp)
+    let createdAuthUser = null
+
     try {
-      const docRef = await addDoc(collection(db, "users"), employeePayload)
+      const credential = await createUserWithEmailAndPassword(
+        secondaryAuth,
+        employeePayload.email,
+        newEmployee.password
+      )
+      createdAuthUser = credential.user
+      await createProfileWithUniqueIdentifiers({
+        profileCollection: "employees",
+        userId: credential.user.uid,
+        profileData: employeePayload,
+      })
       const createdEmployee = {
-        id: docRef.id,
+        id: credential.user.uid,
         ...employeePayload,
         entry: employeePayload.entry,
         exit: employeePayload.exit,
@@ -265,11 +335,18 @@ export default function AdminTeamDashboard() {
       }
 
       setEmployees((current) => [createdEmployee, ...current])
-      setSelectedId(docRef.id)
-      setNewEmployee({ name: "", email: "", position: "", sector: "", droneModel: "", role: ACCOUNT_ROLES.EMPLOYEE })
+      setSelectedId(credential.user.uid)
+      setNewEmployee({ name: "", email: "", password: "", age: "", phone: "", personType: "CPF", document: "", position: "", sector: "", droneModel: "", role: ACCOUNT_ROLES.EMPLOYEE })
       setShowNewEmployee(false)
     } catch (error) {
       console.error("Erro ao cadastrar funcionário:", error)
+      if (createdAuthUser) {
+        await deleteUser(createdAuthUser).catch(() => {})
+      }
+      window.alert(accountIdentifierMessage(error) || "Não foi possível criar o login do funcionário.")
+    } finally {
+      await signOut(secondaryAuth).catch(() => {})
+      await deleteApp(secondaryApp)
     }
   }
 
@@ -282,7 +359,7 @@ export default function AdminTeamDashboard() {
     )))
 
     try {
-      await updateDoc(doc(db, "users", selected.id), {
+      await updateDoc(doc(db, "employees", selected.id), {
         droneModel,
         updatedAt: new Date().toISOString(),
       })
@@ -375,6 +452,38 @@ export default function AdminTeamDashboard() {
                 onChange={(event) => setNewEmployee((current) => ({ ...current, email: event.target.value }))}
                 placeholder="Email de acesso"
                 type="email"
+              />
+              <input
+                value={newEmployee.password}
+                onChange={(event) => setNewEmployee((current) => ({ ...current, password: event.target.value }))}
+                placeholder="Senha inicial (mínimo 8 caracteres)"
+                type="password"
+                minLength="8"
+              />
+              <input
+                value={newEmployee.age}
+                onChange={(event) => setNewEmployee((current) => ({ ...current, age: event.target.value.replace(/\D/g, "").slice(0, 3) }))}
+                placeholder="Idade"
+                inputMode="numeric"
+              />
+              <input
+                value={newEmployee.phone}
+                onChange={(event) => setNewEmployee((current) => ({ ...current, phone: event.target.value }))}
+                placeholder="Telefone com DDD"
+                inputMode="tel"
+              />
+              <select
+                value={newEmployee.personType}
+                onChange={(event) => setNewEmployee((current) => ({ ...current, personType: event.target.value, document: "" }))}
+              >
+                <option value="CPF">Pessoa Física (CPF)</option>
+                <option value="PJ">Pessoa Jurídica (CNPJ)</option>
+              </select>
+              <input
+                value={newEmployee.document}
+                onChange={(event) => setNewEmployee((current) => ({ ...current, document: event.target.value }))}
+                placeholder={newEmployee.personType === "PJ" ? "CNPJ" : "CPF"}
+                inputMode="numeric"
               />
               <input
                 value={newEmployee.position}

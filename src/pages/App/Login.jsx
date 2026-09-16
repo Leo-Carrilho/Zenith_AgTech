@@ -5,8 +5,6 @@ import { getRoleHomePath, getUserAccessProfile } from "../../services/accessCont
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   GoogleAuthProvider,
   OAuthProvider,
 } from "firebase/auth"
@@ -16,6 +14,45 @@ import "../../styles/App/Login.css"
    UTILS
 ───────────────────────────────────────── */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const MOBILE_AUTH_HOSTS = new Set([
+  "instalacao-mobile.vercel.app",
+  "zenith-moblie.vercel.app",
+])
+
+const SOCIAL_PROVIDER_IDS = {
+  google: "google.com",
+  outlook: "microsoft.com",
+}
+
+function createSocialProvider(providerId) {
+  if (providerId === SOCIAL_PROVIDER_IDS.google) {
+    const provider = new GoogleAuthProvider()
+    provider.setCustomParameters({ prompt: "select_account" })
+    return provider
+  }
+
+  if (providerId === SOCIAL_PROVIDER_IDS.outlook) {
+    const provider = new OAuthProvider(SOCIAL_PROVIDER_IDS.outlook)
+    provider.addScope("email")
+    provider.addScope("profile")
+    provider.setCustomParameters({
+      prompt: "select_account",
+      tenant: "common",
+    })
+    return provider
+  }
+
+  return null
+}
+
+function isEmbeddedPage() {
+  try {
+    return window.self !== window.top
+  } catch {
+    return true
+  }
+}
 
 function isValidEmail(value) {
   return EMAIL_REGEX.test(value.trim())
@@ -42,7 +79,7 @@ const FIREBASE_ERROR_MESSAGES = {
   "auth/network-request-failed":
     "Erro de conexão! Verifique sua internet. 🌐",
   "auth/popup-blocked":
-    "O navegador bloqueou a janela. Vamos abrir o login em tela cheia.",
+    "O navegador bloqueou a janela do login. Autorize pop-ups para este site e tente novamente.",
   "auth/popup-closed-by-user":
     "Login cancelado antes de concluir.",
   "auth/unauthorized-domain":
@@ -213,25 +250,6 @@ export default function Login({ setAppLoading }) {
   const showAlertMsg  = useCallback((type, text) => setAlert({ type, text }), [])
   const clearAlertMsg = useCallback(() => setAlert({ type: "", text: "" }), [])
 
-  useEffect(() => {
-    async function finishRedirectLogin() {
-      try {
-        const result = await getRedirectResult(auth)
-
-        if (result?.user) {
-          showAlertMsg("success", "Login realizado com sucesso! 🚀")
-          await goToRoleHome(result.user)
-        }
-      } catch (error) {
-        console.error(error)
-        const message = FIREBASE_ERROR_MESSAGES[error.code] ?? FIREBASE_ERROR_DEFAULT
-        showAlertMsg("error", message)
-      }
-    }
-
-    finishRedirectLogin()
-  }, [goToRoleHome, showAlertMsg])
-
   /* ── Handlers ── */
   const handleEmailChange     = useCallback((e) => setEmail(e.target.value), [])
   const handlePasswordChange  = useCallback((e) => setPassword(e.target.value), [])
@@ -274,34 +292,58 @@ export default function Login({ setAppLoading }) {
     [handleLogin]
   )
 
-  const googleProvider = new GoogleAuthProvider()
-  googleProvider.setCustomParameters({ prompt: "select_account" })
+  const signInWithProvider = async (provider) => {
+    const hostname = window.location.hostname.toLowerCase()
+    const isLocalDevelopment = hostname === "localhost" || hostname === "127.0.0.1"
 
-  const outlookProvider = new OAuthProvider("microsoft.com")
-  outlookProvider.addScope("email")
-  outlookProvider.addScope("profile")
-  outlookProvider.setCustomParameters({
-    prompt: "select_account",
-    tenant: "common"
-  })
+    if (import.meta.env.PROD && !isLocalDevelopment && !MOBILE_AUTH_HOSTS.has(hostname)) {
+      showAlertMsg(
+        "error",
+        "Este endereço não está habilitado para o login do Zenith Mobile.",
+      )
+      return
+    }
 
-  const signInWithProvider = async (provider, successMessage) => {
     setLoading(true)
     clearAlertMsg()
 
+    if (isEmbeddedPage()) {
+      const externalLoginUrl = new URL("/login", window.location.origin)
+
+      try {
+        window.top.location.href = externalLoginUrl.toString()
+        setLoading(false)
+        return
+      } catch {
+        // O sandbox pode impedir a navegação da janela principal.
+      }
+
+      const externalWindow = window.open(externalLoginUrl.toString(), "_blank")
+
+      if (externalWindow) {
+        externalWindow.opener = null
+        setLoading(false)
+        return
+      }
+
+      showAlertMsg(
+        "error",
+        "O Google não permite login dentro do simulador. Abra o Zenith na nova aba e clique novamente em Entrar com Google.",
+      )
+      setLoading(false)
+      return
+    }
+
     try {
       const credential = await signInWithPopup(auth, provider)
+      const successMessage = provider.providerId === SOCIAL_PROVIDER_IDS.outlook
+        ? "Login com Outlook realizado com sucesso! 📧"
+        : "Login com Google realizado com sucesso! 🚀"
+
       showAlertMsg("success", successMessage)
       await goToRoleHome(credential.user)
     } catch (error) {
       console.error(error)
-
-      if (error.code === "auth/popup-blocked") {
-        showAlertMsg("error", FIREBASE_ERROR_MESSAGES[error.code])
-        await signInWithRedirect(auth, provider)
-        return
-      }
-
       const message = FIREBASE_ERROR_MESSAGES[error.code] ?? FIREBASE_ERROR_DEFAULT
       showAlertMsg("error", message)
     } finally {
@@ -310,11 +352,11 @@ export default function Login({ setAppLoading }) {
   }
 
   const handleGoogleLogin = async () => {
-    await signInWithProvider(googleProvider, "Login com Google realizado com sucesso! 🚀")
+    await signInWithProvider(createSocialProvider(SOCIAL_PROVIDER_IDS.google))
 }
 
 const handleOutlookLogin = async () => {
-    await signInWithProvider(outlookProvider, "Login com Outlook realizado com sucesso! 📧")
+    await signInWithProvider(createSocialProvider(SOCIAL_PROVIDER_IDS.outlook))
 }
 
   /* ── RENDER ── */

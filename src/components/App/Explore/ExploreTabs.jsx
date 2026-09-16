@@ -4,7 +4,9 @@ const tabs = [
   { id: "clima", icon: "cloud", label: "Clima" },
   { id: "diario", icon: "menu_book", label: "Diário" },
   { id: "mapa", icon: "map", label: "Mapa" },
-  { id: "estoque", icon: "inventory", label: "Estoque" }
+  { id: "estoque", icon: "inventory", label: "Estoque" },
+  { id: "atividades", icon: "assignment", label: "Atividades" },
+  { id: "legislacao", icon: "gavel", label: "Legislação" }
 ];
 
 export default function ExploreTabs({ activeTab, onTabChange }) {

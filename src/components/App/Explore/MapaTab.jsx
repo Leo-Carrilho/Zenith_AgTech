@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react"
-import { collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, query, where } from "firebase/firestore"
 import { useFarm } from "./hooks/useFarm"
 import { formatDiagnosisName } from "./Diagnostico/diagnosisLabels"
 import { auth, db } from "../../../services/firebase"
@@ -1051,13 +1051,16 @@ export default function MapaTab() {
           return
         }
 
-        const usersSnap = await getDocs(collection(db, "users"))
-        const nextEmployees = usersSnap.docs
+        const employeesSnap = await getDocs(
+          query(collection(db, "employees"), where("ownerId", "==", ownerId))
+        )
+        const nextEmployees = employeesSnap.docs
           .filter((docSnap) => {
             const data = docSnap.data()
             return (
               (data.role === ACCOUNT_ROLES.EMPLOYEE || data.role === ACCOUNT_ROLES.COLLABORATOR) &&
-              (data.ownerId === ownerId || data.teamId === ownerId)
+              data.archived !== true &&
+              data.accessStatus !== "blocked"
             )
           })
           .map((docSnap) => {

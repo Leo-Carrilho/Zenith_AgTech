@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { onAuthStateChanged } from "firebase/auth"
-import { addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
 import { auth, db } from "../../services/firebase"
 import MenuBar from "../../components/App/Global/MenuBar"
-import { ACCOUNT_ROLES } from "../../services/accessControl"
+import { ACCOUNT_ROLES, getUserAccessProfile } from "../../services/accessControl"
 import "../../styles/App/TeamAccess.css"
 
 export default function EmployeeWork() {
@@ -14,8 +14,6 @@ export default function EmployeeWork() {
   const [farmData, setFarmData] = useState(null)
   const [tasks, setTasks] = useState([])
   const [workStatus, setWorkStatus] = useState("trabalhando")
-  const [note, setNote] = useState("")
-  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -25,12 +23,10 @@ export default function EmployeeWork() {
       }
 
       setUser(currentUser)
-      const userSnap = await getDoc(doc(db, "users", currentUser.uid))
-      let userProfile = null
+      const userProfile = await getUserAccessProfile(currentUser.uid)
 
-      if (userSnap.exists()) {
-        const data = userSnap.data()
-        userProfile = { id: userSnap.id, ...data }
+      if (userProfile) {
+        const data = userProfile
         setProfile(userProfile)
         setWorkStatus(data.status === "offline" ? "trabalhando" : data.status || "trabalhando")
       }
@@ -50,19 +46,22 @@ export default function EmployeeWork() {
           farmSnap = await getDocs(query(farmsRef, where("ownerId", "==", ownerId)))
         }
 
-        if (!farmSnap || farmSnap.empty) {
-          farmSnap = await getDocs(farmsRef)
-        }
-
-        if (!farmSnap.empty) {
+        if (farmSnap && !farmSnap.empty) {
           const farmDoc = farmSnap.docs[0]
           setFarmData({ id: farmDoc.id, ...farmDoc.data() })
         }
       }
 
-      const taskQuery = query(collection(db, "tasks"), where("employeeId", "==", currentUser.uid))
+      const taskQuery = query(collection(db, "activities"), where("assigneeId", "==", currentUser.uid))
       const taskSnap = await getDocs(taskQuery)
-      setTasks(taskSnap.docs.map((taskDoc) => ({ id: taskDoc.id, ...taskDoc.data() })))
+      setTasks(taskSnap.docs.map((taskDoc) => {
+        const data = taskDoc.data()
+        return {
+          id: taskDoc.id,
+          ...data,
+          status: data.status === "andamento" ? "em_andamento" : data.status,
+        }
+      }))
     })
 
     return () => unsubscribe()
@@ -74,7 +73,7 @@ export default function EmployeeWork() {
 
     return {
       pending: tasks.filter((task) => task.status === "pendente").length,
-      active: tasks.filter((task) => task.status === "andamento").length,
+      active: tasks.filter((task) => task.status === "em_andamento").length,
       done,
       productivity: total === 0 ? null : Math.round((done / total) * 100),
     }
@@ -86,7 +85,7 @@ export default function EmployeeWork() {
     setTasks((current) => current.map((task) => task.id === taskId ? { ...task, status } : task))
 
     try {
-      await updateDoc(doc(db, "tasks", taskId), {
+      await updateDoc(doc(db, "activities", taskId), {
         status,
         updatedAt: new Date().toISOString(),
         ...(status === "concluida" ? { completedAt: new Date().toISOString() } : {}),
@@ -102,33 +101,13 @@ export default function EmployeeWork() {
     if (!user) return
 
     try {
-      await updateDoc(doc(db, "users", user.uid), {
+      await updateDoc(doc(db, profile?.profileCollection || "employees", user.uid), {
         status,
-        lastActivityAt: new Date().toISOString(),
+        lastActivity: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       })
     } catch (error) {
       console.error("Erro ao atualizar status:", error)
-    }
-  }
-
-  const submitNote = async () => {
-    if (!note.trim() || !user) return
-
-    setSaving(true)
-
-    try {
-      await addDoc(collection(db, "activities"), {
-        employeeId: user.uid,
-        employeeName: profile?.name || user.email,
-        type: "observacao",
-        note: note.trim(),
-        createdAt: new Date().toISOString(),
-      })
-      setNote("")
-    } catch (error) {
-      console.error("Erro ao salvar observacao:", error)
-    } finally {
-      setSaving(false)
     }
   }
 
@@ -189,7 +168,7 @@ export default function EmployeeWork() {
             <div className="employee-farm-grid">
               <span>Área total <strong>{farmData.area_total || "0"} ha</strong></span>
               <span>Plantação <strong>{farmData.plantacao || "Não informada"}</strong></span>
-              <span>Telefone <strong>{farmData.telefone || "Não informado"}</strong></span>
+              <span>Telefone <strong>{farmData.telefone_mascarado || farmData.telefone || "Não informado"}</strong></span>
               <span>CEP <strong>{farmData.cep || "Não informado"}</strong></span>
             </div>
           </>
@@ -209,32 +188,20 @@ export default function EmployeeWork() {
             <article className="task-card" key={task.id}>
               <div>
                 <strong>{task.title}</strong>
-                <p>Prazo: {task.due || "Sem prazo"} • Prioridade: {task.priority || "Não informada"}</p>
+                <p>Prazo: {task.date || task.dueDate || task.due || "Sem prazo"} • Prioridade: {task.priority || "Não informada"}</p>
               </div>
               <select value={task.status} onChange={(event) => updateTaskStatus(task.id, event.target.value)}>
-                <option value="pendente">Pendente</option>
-                <option value="andamento">Em andamento</option>
-                <option value="concluida">Concluída</option>
+                {task.status === "pendente" && <option value="pendente">Pendente</option>}
+                {task.status === "pendente" && <option value="em_andamento">Iniciar tarefa</option>}
+                {task.status === "em_andamento" && <option value="em_andamento">Em andamento</option>}
+                {task.status === "em_andamento" && <option value="concluida">Concluir tarefa</option>}
+                {task.status === "concluida" && <option value="concluida">Concluída</option>}
+                {task.status === "cancelada" && <option value="cancelada">Cancelada</option>}
               </select>
             </article>
           ))}
           {tasks.length === 0 && <p className="team-empty-text">Nenhuma tarefa atribuída.</p>}
         </div>
-      </section>
-
-      <section className="team-panel">
-        <div className="team-section-header">
-          <h2>Observações</h2>
-          <span>Enviar atualização</span>
-        </div>
-        <textarea
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-          placeholder="Descreva uma ocorrência, avanço ou necessidade no campo..."
-        />
-        <button className="team-primary-btn" onClick={submitNote} disabled={saving || !note.trim()}>
-          {saving ? "Enviando..." : "Enviar observação"}
-        </button>
       </section>
 
       <MenuBar />

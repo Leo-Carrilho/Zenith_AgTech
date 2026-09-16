@@ -1,6 +1,4 @@
 // components/Profile/ProfileEditForm.jsx
-import { ACCOUNT_ROLES } from "../../../services/accessControl"
-
 const profileIcons = ["👨‍🌾", "🚜", "🌱", "🌽", "🌻", "🐄", "🐓", "🍎", "🌾", "🧑‍🌾", "🌿", "🍊", "🐝", "🚛", "🏡"]
 
 export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
@@ -70,51 +68,6 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
             />
             <div className="input-glow"></div>
           </div>
-
-          <div className="input-group">
-            <span className="material-symbols-outlined">badge</span>
-            <select
-              className="tech-select"
-              name="role"
-              value={formData.role || ACCOUNT_ROLES.ADMIN}
-              onChange={onChange}
-            >
-              <option value={ACCOUNT_ROLES.ADMIN}>Administrador / Chefe</option>
-              <option value={ACCOUNT_ROLES.EMPLOYEE}>Funcionário</option>
-              <option value={ACCOUNT_ROLES.COLLABORATOR}>Colaborador</option>
-            </select>
-            <div className="input-glow"></div>
-          </div>
-
-          <div className="input-group">
-            <span className="material-symbols-outlined">assignment_ind</span>
-            <select
-              className="tech-select"
-              name="type"
-              value={formData.type}
-              onChange={onChange}
-            >
-              <option value="">Tipo de proprietário</option>
-              <option value="CPF">Pessoa Física (CPF)</option>
-              <option value="PJ">Pessoa Jurídica (CNPJ)</option>
-            </select>
-            <div className="input-glow"></div>
-          </div>
-
-          {formData.type && (
-            <div className="input-group">
-              <span className="material-symbols-outlined">assignment_ind</span>
-              <input
-                className="tech-input"
-                name="document"
-                value={formData.document}
-                placeholder={formData.type === "CPF" ? "CPF" : "CNPJ"}
-                maxLength={formData.type === "CPF" ? 11 : 14}
-                onChange={onChange}
-              />
-              <div className="input-glow"></div>
-            </div>
-          )}
 
           <div className="input-group">
             <span className="material-symbols-outlined">square_foot</span>
