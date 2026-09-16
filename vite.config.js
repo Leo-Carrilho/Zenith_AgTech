@@ -8,7 +8,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      manifestFilename: 'manifest-v4.webmanifest',
+      manifestFilename: 'manifest-v5.webmanifest',
       workbox: {
         globPatterns: [
           '**/*.{js,css,html,ico,svg,woff2}',
@@ -31,20 +31,14 @@ export default defineConfig({
   lang: 'pt-BR',
    icons: [
   {
-    src: "/assets/icons/icon-app-192-v3.png",
-    sizes: "192x192",
+    src: "/assets/icons/Logo.png?v=5",
+    sizes: "1080x1080",
     type: "image/png",
     purpose: "any"
   },
   {
-    src: "/assets/icons/icon-app-512-v3.png",
-    sizes: "512x512",
-    type: "image/png",
-    purpose: "any"
-  },
-  {
-    src: "/assets/icons/icon-app-512-v3.png",
-    sizes: "512x512",
+    src: "/assets/icons/Logo.png?v=5",
+    sizes: "1080x1080",
     type: "image/png",
     purpose: "maskable"
   }
