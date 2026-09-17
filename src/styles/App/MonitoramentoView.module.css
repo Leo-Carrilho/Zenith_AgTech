@@ -1917,3 +1917,375 @@
     width: 202px;
   }
 }
+
+/* Fluxo de envio de imagem das fileiras. */
+.uploadArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: -40px auto 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  background: rgba(250, 252, 251, 0.9);
+  box-shadow: 0 20px 45px rgba(15, 35, 24, 0.16);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  text-align: left;
+}
+
+.uploadArea::before {
+  display: none;
+}
+
+.uploadArea_arrastando {
+  border-color: #56a870;
+  transform: none;
+  box-shadow: 0 14px 30px rgba(45, 97, 64, 0.18);
+}
+
+.uploadArea_desabilitado {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: wait;
+}
+
+.uploadDropZone {
+  width: 100%;
+  min-height: 246px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 22px 18px;
+  border: 1.5px dashed rgba(45, 97, 64, 0.24);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.46);
+  color: #173326;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.uploadDropZone:hover,
+.uploadArea_arrastando .uploadDropZone {
+  border-color: #56a870;
+  background: rgba(245, 250, 242, 0.64);
+}
+
+.uploadArea_desabilitado .uploadDropZone {
+  cursor: wait;
+}
+
+.uploadDropZone .uploadTexto {
+  max-width: none;
+  color: #173326;
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.uploadDropZone .uploadVisual {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  margin: 6px 0 8px;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 50%;
+  background: rgba(202, 235, 211, 0.56);
+  color: #286b43;
+  box-shadow:
+    inset 0 1px 16px rgba(255, 255, 255, 0.26),
+    0 18px 32px rgba(45, 112, 71, 0.18),
+    0 0 42px rgba(86, 168, 112, 0.26);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+}
+
+.uploadDropZone .uploadVisual::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  display: block;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0) 52%);
+  pointer-events: none;
+}
+
+.uploadDropZone .uploadVisual::after {
+  display: none;
+}
+
+.uploadGlyph {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  color: inherit;
+}
+
+.uploadGlyph_loading {
+  animation: alignmentSpin 0.9s linear infinite;
+}
+
+.uploadDropTitle {
+  color: #31523e;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.uploadDropZone .uploadDica {
+  max-width: 38ch;
+  color: #7a877f;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.uploadFileError {
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid #f3b8b8;
+  border-radius: 12px;
+  background: rgba(255, 243, 243, 0.82);
+  color: #a43b3b;
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.uploadFileCard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 9px 22px rgba(15, 35, 24, 0.08);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.uploadFileThumb {
+  width: 62px;
+  height: 62px;
+  overflow: hidden;
+  border: 1px solid #d7e7d4;
+  border-radius: 16px;
+  background: #edf5e9;
+}
+
+.uploadFileThumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.uploadFileInfo {
+  min-width: 0;
+}
+
+.uploadFileInfo strong,
+.uploadFileInfo span {
+  display: block;
+}
+
+.uploadFileInfo strong {
+  overflow: hidden;
+  color: #203e2d;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploadFileInfo span {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #7a877f;
+  font-size: 0.6rem;
+  font-weight: 650;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploadFileRemove {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(45, 97, 64, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  color: #66766c;
+}
+
+.uploadFileRemove:disabled {
+  opacity: 0.5;
+}
+
+.uploadFileRemove .material-symbols-outlined {
+  color: inherit;
+  font-size: 18px;
+}
+
+.uploadProgress {
+  grid-column: 1 / -1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #dfe9dd;
+}
+
+.uploadProgress > span {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: #3d8057;
+}
+
+.uploadProgress > .uploadProgress_loading {
+  width: 38%;
+  animation: uploadProgressMove 1.2s ease-in-out infinite;
+}
+
+@keyframes uploadProgressMove {
+  0% { transform: translateX(-105%); }
+  100% { transform: translateX(275%); }
+}
+
+.uploadArea .uploadAcoes {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  gap: 12px;
+  margin: 0;
+}
+
+.uploadCancelar,
+.uploadArea .uploadAcao {
+  width: 100%;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-family: var(--n-font);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.uploadCancelar {
+  border: 1px solid rgba(45, 97, 64, 0.16);
+  background: rgba(255, 255, 255, 0.7);
+  color: #52665a;
+}
+
+.uploadArea .uploadAcao {
+  border: 1px solid #2d7047;
+  background: #2d7047;
+  color: #ffffff;
+}
+
+.uploadCancelar:disabled,
+.uploadArea .uploadAcao:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.uploadArea .uploadAcao .material-symbols-outlined {
+  color: inherit;
+  font-size: 18px;
+}
+
+.uploadArea_desabilitado .uploadAcao .material-symbols-outlined {
+  animation: alignmentSpin 0.9s linear infinite;
+}
+
+@media (max-width: 480px) {
+  .uploadArea {
+    gap: 13px;
+    margin-top: -34px;
+    padding: 13px;
+    border-radius: 24px;
+  }
+
+  .uploadDropZone {
+    min-height: 224px;
+    padding: 18px 14px;
+    border-radius: 19px;
+  }
+
+  .uploadDropZone .uploadVisual {
+    width: 80px;
+    height: 80px;
+  }
+
+  .uploadFileCard {
+    grid-template-columns: 56px minmax(0, 1fr) 38px;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 18px;
+  }
+
+  .uploadFileThumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+  }
+
+  .uploadFileRemove {
+    width: 38px;
+    height: 38px;
+  }
+
+  .alignmentCard {
+    border-radius: 24px;
+  }
+}
+
+@media (min-width: 481px) {
+  .alignmentCard {
+    border-radius: 28px;
+  }
+}
+
+/* Raio único para todos os cartões do Monitoramento. */
+.container {
+  --monitor-card-radius: 28px;
+}
+
+.alignmentCard,
+.uploadArea,
+.uploadDropZone,
+.uploadFileError,
+.uploadFileCard,
+.tipCard,
+.alertBanner,
+.imagemCard,
+.painelMetricas,
+.loadingContainer,
+.erroContainer,
+.plantingHistoryEmpty,
+.plantingHistoryCard {
+  border-radius: var(--monitor-card-radius);
+}
+
+@media (max-width: 480px) {
+  .container {
+    --monitor-card-radius: 24px;
+  }
+}

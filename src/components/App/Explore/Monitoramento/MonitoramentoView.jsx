@@ -331,17 +331,6 @@ export default function MonitoramentoView() {
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* Loading                                                             */}
-      {/* ------------------------------------------------------------------ */}
-      {loading && (
-        <div ref={feedbackRef} className={styles.loadingContainer} aria-live="polite">
-          <div className={styles.spinner} aria-hidden="true" />
-          <p className={styles.loadingTexto}>Analisando imagem...</p>
-          <p className={styles.loadingDica}>Isso pode levar alguns segundos</p>
-        </div>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
       {/* Erro                                                                */}
       {/* ------------------------------------------------------------------ */}
       {error && !loading && (
