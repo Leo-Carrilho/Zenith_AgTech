@@ -275,7 +275,10 @@ export default function MonitoramentoView() {
   };
 
   return (
-    <div className={styles.container} data-page-gutter="planting">
+    <div
+      className={`${styles.container} ${!mostrarResultados ? styles.containerUpload : ""}`}
+      data-page-gutter="planting"
+    >
       <section className={styles.hero}>
         <div className={styles.cabecalho}>
           <h2 className={styles.titulo}>Alinhamento da Plantação</h2>

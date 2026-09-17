@@ -2289,3 +2289,92 @@
     --monitor-card-radius: 24px;
   }
 }
+
+/* Mantém uma distância estável entre o resumo verde e o envio. */
+.containerUpload {
+  --monitor-card-gap: 16px;
+}
+
+.containerUpload .hero {
+  min-height: auto;
+  padding-bottom: 0;
+}
+
+.containerUpload .uploadArea {
+  margin: var(--monitor-card-gap) auto 12px;
+}
+
+/* Escala tipográfica exclusiva para celulares grandes. */
+@media screen and (min-width: 410px) and (max-width: 550px) {
+  .titulo {
+    font-size: 1.45rem;
+  }
+
+  .subtitulo {
+    font-size: 0.72rem;
+  }
+
+  .alignmentState {
+    font-size: 0.68rem;
+  }
+
+  .alignmentResult small {
+    font-size: 0.7rem;
+  }
+
+  .uploadDropZone .uploadTexto {
+    font-size: 1.08rem;
+  }
+
+  .uploadDropTitle {
+    font-size: 0.86rem;
+  }
+
+  .uploadDropZone .uploadDica {
+    font-size: 0.72rem;
+  }
+
+  .uploadFileInfo strong {
+    font-size: 0.86rem;
+  }
+
+  .uploadFileInfo span {
+    font-size: 0.66rem;
+  }
+
+  .uploadCancelar,
+  .uploadArea .uploadAcao {
+    font-size: 0.82rem;
+  }
+
+  .tipCard strong {
+    font-size: 0.76rem;
+  }
+
+  .tipCard p {
+    font-size: 0.63rem;
+  }
+
+  .plantingHistoryHeader h3 {
+    font-size: 1rem;
+  }
+
+  .plantingHistorySummary > span,
+  .plantingHistoryEmpty p,
+  .plantingHistoryInfo > small {
+    font-size: 0.64rem;
+  }
+
+  .plantingHistoryEmpty strong,
+  .plantingHistoryInfo strong {
+    font-size: 0.84rem;
+  }
+
+  .plantingHistoryMetrics small {
+    font-size: 0.56rem;
+  }
+
+  .plantingHistoryMetrics strong {
+    font-size: 0.78rem;
+  }
+}
