@@ -90,6 +90,13 @@
   -webkit-font-smoothing: antialiased;
 }
 
+html.material-symbols-loading .material-symbols-outlined {
+  width: 1em;
+  min-width: 1em;
+  overflow: hidden;
+  visibility: hidden;
+}
+
 * {
   margin: 0;
   padding: 0;
