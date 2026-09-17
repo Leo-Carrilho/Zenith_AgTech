@@ -3682,12 +3682,12 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-hero h1 {
-    font-size: 1.92rem;
+    font-size: 1.72rem;
   }
 
   .drone-law-dashboard .drone-law-hero p {
-    max-width: 250px;
-    font-size: 0.72rem;
+    max-width: 235px;
+    font-size: 0.67rem;
   }
 
   .drone-law-dashboard .drone-law-featured {
@@ -3703,20 +3703,20 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-featured strong {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
   }
 
   .drone-law-dashboard .drone-law-featured small {
-    font-size: 0.58rem;
+    font-size: 0.54rem;
   }
 
   .drone-law-dashboard .drone-law-featured-action {
     min-height: 34px;
-    font-size: 0.58rem;
+    font-size: 0.54rem;
   }
 
   .drone-law-dashboard .drone-law-section-heading h2 {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
   }
 
   .drone-law-dashboard .drone-law-section-heading > span {
@@ -3736,7 +3736,7 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-card strong {
-    font-size: 0.57rem;
+    font-size: 0.54rem;
   }
 
   .drone-law-dashboard .drone-law-links a {
@@ -3752,11 +3752,11 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-link-copy strong {
-    font-size: 0.69rem;
+    font-size: 0.64rem;
   }
 
   .drone-law-dashboard .drone-law-link-copy small {
-    font-size: 0.54rem;
+    font-size: 0.51rem;
   }
 
   .drone-law-dashboard .drone-law-quick-tips article {
@@ -3768,7 +3768,7 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-quick-tips p {
-    font-size: 0.53rem;
+    font-size: 0.5rem;
   }
 
   .drone-law-dashboard .drone-law-responsibility {
@@ -3777,10 +3777,10 @@ span[style*="color: var(--primary)"] {
   }
 
   .drone-law-dashboard .drone-law-responsibility strong {
-    font-size: 0.64rem;
+    font-size: 0.6rem;
   }
 
   .drone-law-dashboard .drone-law-responsibility p {
-    font-size: 0.53rem;
+    font-size: 0.5rem;
   }
 }

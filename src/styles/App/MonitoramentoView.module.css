@@ -1502,6 +1502,24 @@
   margin: 18px auto 0;
 }
 
+.plantingHistorySectionEmpty::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 30px;
+  bottom: -28px;
+  left: 50%;
+  width: 100vw;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 249, 239, 0) 0%,
+    #f4f9ef 24px,
+    #f4f9ef 100%
+  );
+  transform: translateX(-50%);
+}
+
 .plantingHistoryHeader {
   min-height: 38px;
   display: flex;

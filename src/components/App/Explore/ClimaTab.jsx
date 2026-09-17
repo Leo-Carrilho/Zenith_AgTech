@@ -314,10 +314,12 @@ export default function ClimaTab() {
         <div className="climate-overview-card">
           <div className="climate-reading">
             <div className="climate-condition">
-              <img
-                src={`https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`}
-                alt={weatherData.description}
-              />
+              <span
+                className={`material-symbols-outlined climate-weather-icon climate-weather-icon--${weatherData.icon?.slice(0, 2) || "default"}`}
+                aria-hidden="true"
+              >
+                {getWeatherSymbol(weatherData.icon)}
+              </span>
               <strong>{weatherData.description}</strong>
             </div>
             <div className="climate-temperature" aria-label={`${weatherData.temperature} graus Celsius`}>

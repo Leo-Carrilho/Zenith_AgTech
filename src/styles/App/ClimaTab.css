@@ -1592,3 +1592,30 @@
   display: none;
 }
 
+/* Ícone local do clima: evita o círculo vazio quando a imagem externa falha. */
+.climate-overview-card .climate-weather-icon {
+  width: 82px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  margin: -7px auto -11px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #edf6ef;
+  font-size: 50px;
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 48;
+  filter: drop-shadow(0 6px 7px rgba(0, 0, 0, 0.2));
+}
+
+.climate-overview-card :is(.climate-weather-icon--01, .climate-weather-icon--11) {
+  color: #ffd56a;
+}
+
+.climate-overview-card :is(.climate-weather-icon--09, .climate-weather-icon--10) {
+  color: #8ed8ff;
+}
+
+.climate-overview-card .climate-weather-icon--13 {
+  color: #dff7ff;
+}

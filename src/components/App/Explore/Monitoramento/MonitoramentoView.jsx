@@ -390,7 +390,10 @@ export default function MonitoramentoView() {
         </aside>
       )}
 
-      <section className={styles.plantingHistorySection} aria-labelledby="planting-history-title">
+      <section
+        className={`${styles.plantingHistorySection} ${history.length === 0 ? styles.plantingHistorySectionEmpty : ""}`}
+        aria-labelledby="planting-history-title"
+      >
         <div className={styles.plantingHistoryHeader}>
           <div>
             <span className="material-symbols-outlined" aria-hidden="true">history</span>

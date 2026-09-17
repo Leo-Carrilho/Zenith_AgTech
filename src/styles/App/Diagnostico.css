@@ -2692,3 +2692,25 @@
   border-radius: 0 0 var(--diagnostic-card-radius) var(--diagnostic-card-radius);
   box-shadow: 0 16px 34px rgba(15, 35, 24, 0.12);
 }
+
+.explore-container--diagnostico .diagnostic-hero {
+  margin-top: 6px;
+}
+
+.explore-container--diagnostico .diagnostic-header {
+  padding-top: 24px;
+}
+
+.explore-container--diagnostico .diagnostic-tip-card img {
+  display: block;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: calc(var(--diagnostic-card-radius) - 8px);
+}
+
+@media (max-width: 430px) {
+  .explore-container--diagnostico .desktop-feature-notice__icon {
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
