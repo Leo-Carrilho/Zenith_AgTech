@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import CameraView from "./CameraView"
 import BatchImagePreview from "./BatchImagePreview"
@@ -16,8 +16,116 @@ const MAX_FILE_SIZE = 20 * 1024 * 1024
 const MAX_BATCH_SIZE = 500 * 1024 * 1024
 const ACCEPTED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"])
 const ACCEPTED_EXTENSIONS = /\.(jpe?g|png|webp)$/i
+const DASHBOARD_MONTHS = 6
+const DASHBOARD_CHART_WIDTH = 600
+const DASHBOARD_CHART_BASELINE = 104
 
 const checkIsMobile = () => window.innerWidth < 1025
+
+function getHistoryTimestamp(item) {
+  const numericId = Number(item?.id)
+  if (Number.isFinite(numericId) && numericId > 1_000_000_000_000) return numericId
+
+  const parts = String(item?.date || "").match(
+    /(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,?\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/
+  )
+  if (!parts) return null
+
+  const [, day, month, year, hour = "0", minute = "0", second = "0"] = parts
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second)
+  ).getTime()
+}
+
+function averageConfidence(items) {
+  if (items.length === 0) return 0
+  return Math.round(
+    items.reduce((total, item) => total + Math.max(0, Math.min(100, Number(item?.confidence) || 0)), 0) /
+      items.length
+  )
+}
+
+function percentageChange(current, previous) {
+  if (previous === 0) return current > 0 ? 100 : 0
+  return Math.round(((current - previous) / previous) * 100)
+}
+
+function createSmoothPath(points) {
+  if (points.length === 0) return ""
+
+  return points.slice(1).reduce((path, point, index) => {
+    const previous = points[index]
+    const controlX = (previous.x + point.x) / 2
+    return `${path} C ${controlX} ${previous.y}, ${controlX} ${point.y}, ${point.x} ${point.y}`
+  }, `M ${points[0].x} ${points[0].y}`)
+}
+
+function createDashboardData(history) {
+  const now = new Date()
+  const months = Array.from({ length: DASHBOARD_MONTHS }, (_, index) => {
+    const offset = DASHBOARD_MONTHS - index - 1
+    const start = new Date(now.getFullYear(), now.getMonth() - offset, 1)
+    const end = new Date(start.getFullYear(), start.getMonth() + 1, 1)
+    return {
+      start: start.getTime(),
+      end: end.getTime(),
+      label: new Intl.DateTimeFormat("pt-BR", { month: "short" })
+        .format(start)
+        .replace(".", "")
+    }
+  })
+
+  const datedHistory = history.map((item) => ({ item, timestamp: getHistoryTimestamp(item) }))
+  const monthlyItems = months.map(({ start, end }) =>
+    datedHistory
+      .filter(({ timestamp }) => timestamp !== null && timestamp >= start && timestamp < end)
+      .map(({ item }) => item)
+  )
+  const monthlyCounts = monthlyItems.map((items) => items.length)
+  const currentItems = monthlyItems.at(-1) || []
+  const previousItems = monthlyItems.at(-2) || []
+  const currentAverage = averageConfidence(currentItems)
+  const previousAverage = averageConfidence(previousItems)
+  const maxCount = Math.max(1, ...monthlyCounts)
+  const points = monthlyCounts.map((count, index) => ({
+    x: 12 + (index * (DASHBOARD_CHART_WIDTH - 24)) / (DASHBOARD_MONTHS - 1),
+    y: DASHBOARD_CHART_BASELINE - (count / maxCount) * 74
+  }))
+  const linePath = createSmoothPath(points)
+
+  return {
+    total: history.length,
+    average: averageConfidence(history),
+    currentCount: currentItems.length,
+    countTrend: percentageChange(currentItems.length, previousItems.length),
+    confidenceTrend: currentItems.length > 0 && previousItems.length > 0
+      ? currentAverage - previousAverage
+      : 0,
+    monthLabels: months.map(({ label }) => label),
+    points,
+    linePath,
+    areaPath: linePath
+      ? `${linePath} L ${points.at(-1).x} ${DASHBOARD_CHART_BASELINE + 8} L ${points[0].x} ${DASHBOARD_CHART_BASELINE + 8} Z`
+      : ""
+  }
+}
+
+function trendIcon(value) {
+  if (value > 0) return "trending_up"
+  if (value < 0) return "trending_down"
+  return "trending_flat"
+}
+
+function trendTone(value) {
+  if (value > 0) return "positive"
+  if (value < 0) return "negative"
+  return "neutral"
+}
 
 function createImageId() {
   return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`
@@ -48,6 +156,7 @@ export default function DiagnosticoTab() {
   const [isDraggingImage, setIsDraggingImage] = useState(false)
   const [selectionNotice, setSelectionNotice] = useState(null)
   const [selectionSource, setSelectionSource] = useState(null)
+  const dashboardData = useMemo(() => createDashboardData(history), [history])
 
   useEffect(() => {
     selectedImagesRef.current = selectedImages
@@ -412,6 +521,76 @@ export default function DiagnosticoTab() {
             <span className="highlight">inteligência artificial.</span>
           </p>
         </div>
+
+        <section className="diagnostic-dashboard" aria-label="Resumo dos diagnósticos">
+          <div className="diagnostic-dashboard-metrics">
+            <div className="diagnostic-dashboard-metric">
+              <div className="diagnostic-dashboard-label">
+                <span className="material-symbols-outlined" aria-hidden="true">clinical_notes</span>
+                <span>Diagnósticos</span>
+              </div>
+              <div className="diagnostic-dashboard-value-row">
+                <strong>{dashboardData.total.toLocaleString("pt-BR")}</strong>
+                <span className={`diagnostic-dashboard-trend ${trendTone(dashboardData.countTrend)}`}>
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    {trendIcon(dashboardData.countTrend)}
+                  </span>
+                  {dashboardData.countTrend > 0 ? "+" : ""}{dashboardData.countTrend}%
+                </span>
+              </div>
+              <p>{dashboardData.currentCount} neste mês</p>
+            </div>
+
+            <div className="diagnostic-dashboard-metric">
+              <div className="diagnostic-dashboard-label">
+                <span className="material-symbols-outlined" aria-hidden="true">verified</span>
+                <span>Confiança média</span>
+              </div>
+              <div className="diagnostic-dashboard-value-row">
+                <strong>{dashboardData.average}%</strong>
+                <span className={`diagnostic-dashboard-trend ${trendTone(dashboardData.confidenceTrend)}`}>
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    {trendIcon(dashboardData.confidenceTrend)}
+                  </span>
+                  {dashboardData.confidenceTrend > 0 ? "+" : ""}{dashboardData.confidenceTrend} p.p.
+                </span>
+              </div>
+              <p>comparado ao mês anterior</p>
+            </div>
+          </div>
+
+          <div className="diagnostic-dashboard-chart">
+            <div className="diagnostic-dashboard-chart-heading">
+              <span>Atividade</span>
+              <small>últimos 6 meses</small>
+            </div>
+            <svg
+              viewBox={`0 0 ${DASHBOARD_CHART_WIDTH} 120`}
+              preserveAspectRatio="none"
+              role="img"
+              aria-label="Quantidade de diagnósticos nos últimos seis meses"
+            >
+              <path className="diagnostic-dashboard-area" d={dashboardData.areaPath} />
+              <path className="diagnostic-dashboard-line" d={dashboardData.linePath} />
+              {dashboardData.points.map((point, index) => (
+                <circle
+                  key={dashboardData.monthLabels[index]}
+                  className={index === dashboardData.points.length - 1 ? "is-current" : ""}
+                  cx={point.x}
+                  cy={point.y}
+                  r={index === dashboardData.points.length - 1 ? 6 : 3.5}
+                />
+              ))}
+            </svg>
+            <div className="diagnostic-dashboard-months" aria-hidden="true">
+              {dashboardData.monthLabels.map((month, index) => (
+                <span className={index === dashboardData.monthLabels.length - 1 ? "is-current" : ""} key={month}>
+                  {month}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
 
       {selectionNotice?.text && (
@@ -480,7 +659,7 @@ export default function DiagnosticoTab() {
           </button>
         </div>
 
-        <div className="history-list">
+        <div className={`history-list ${history.length > 5 ? "has-more" : ""}`}>
           {history.length === 0 ? (
             <div className="empty-history">
               <div className="empty-icon">
