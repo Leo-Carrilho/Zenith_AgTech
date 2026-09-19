@@ -142,8 +142,8 @@ export default function Explore() {
         >
           {activeTab === "diagnostico" && (
             <aside className="desktop-feature-notice" role="note" aria-label="Recurso exclusivo do aplicativo desktop">
-              <span className="desktop-feature-notice__icon material-symbols-outlined" aria-hidden="true">
-                desktop_windows
+              <span className="desktop-feature-notice__icon" aria-hidden="true">
+                <span className="material-symbols-outlined">desktop_windows</span>
               </span>
               <div className="desktop-feature-notice__copy">
                 <strong>Análise multiespectral</strong>

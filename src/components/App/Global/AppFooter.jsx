@@ -50,6 +50,18 @@ export default function AppFooter() {
           </ul>
         </div>
       </div>
+
+      <div className="footer-institutions" aria-label="Apoio institucional">
+        <span className="footer-institutions__label">Apoio institucional</span>
+        <div className="footer-institutions__logos">
+          <div className="footer-institution-logo footer-institution-logo--etec">
+            <img
+              src="/assets/image/logo-etec-cps.png"
+              alt="Etec Polivalente de Americana e Centro Paula Souza"
+            />
+          </div>
+        </div>
+      </div>
       
       <div className="footer-bottom">
         <div className="footer-stats">

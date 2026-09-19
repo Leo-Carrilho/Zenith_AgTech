@@ -237,6 +237,17 @@ body {
   font-size: 22px;
 }
 
+.desktop-feature-notice__icon .material-symbols-outlined {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  font-size: 22px;
+  line-height: 1;
+  transform: translateY(1px);
+}
+
 .desktop-feature-notice__copy {
   min-width: 0;
 }

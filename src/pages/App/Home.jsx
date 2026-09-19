@@ -512,8 +512,8 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
         {!isInstalled && onInstallRequest && (
           <section className="install-app-section">
             <button className="install-app-trigger" type="button" onClick={onInstallRequest}>
-              <span className="install-app-trigger__icon material-symbols-outlined" aria-hidden="true">
-                download
+              <span className="install-app-trigger__icon" aria-hidden="true">
+                <span className="material-symbols-outlined">download</span>
               </span>
               <span className="install-app-trigger__text">
                 <strong>Baixar aplicativo</strong>

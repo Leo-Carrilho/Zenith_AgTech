@@ -1,7 +1,7 @@
 @media (min-width: 390px) and (max-width: 550px),
   (pointer: coarse) and (min-width: 390px) and (max-width: 550px) {
   :root {
-    --app-content-gutter: 22px;
+    --app-content-gutter: 16px;
     --app-mobile-canvas-width: 100%;
     --app-mobile-nav-width: 382px;
   }

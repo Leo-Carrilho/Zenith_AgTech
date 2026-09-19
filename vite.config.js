@@ -13,6 +13,10 @@ export default defineConfig({
         globPatterns: [
           '**/*.{js,css,html,ico,svg,woff2}',
         ],
+        additionalManifestEntries: [
+          { url: 'assets/image/logo-governo-sp.jpeg', revision: '20260917' },
+          { url: 'assets/image/logo-etec-cps.jpeg', revision: '20260917' },
+        ],
         globIgnores: ['**/webodmService-*.js'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         skipWaiting: true,
