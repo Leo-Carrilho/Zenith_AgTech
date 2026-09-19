@@ -4633,3 +4633,18 @@ body:has(.home-shell),
     transform-origin: right center !important;
   }
 }
+
+/* Samsung A14 e celulares próximos de 412px */
+@media screen and (min-width: 400px) and (max-width: 419px) {
+  .home-shell .weather-illustration {
+    width: 240px !important;
+    height: 180px !important;
+    scale: 1.08 !important;
+    transform-origin: right center !important;
+  }
+
+  .home-shell .weather-illustration img {
+    transform: scale(1.08) !important;
+    transform-origin: center right !important;
+  }
+}
