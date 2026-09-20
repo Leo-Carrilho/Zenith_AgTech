@@ -3,7 +3,7 @@ import { auth, db } from "./firebase"
 
 export const FEATURE_LIMIT = 3
 export const FULL_ACCESS_EMAILS = new Set(["oarsilva6@gmail.com", "leocarrilhom@gmail.com", "samuel.vieirafreitas@outlook.com"])
-const COUNTERS = { diagnosis: "diagnosisUses", monitoring: "monitoringUses" }
+const COUNTERS = { diagnosis: "diagnosisUses", monitoring: "monitoringUses", reconstruction3d: "reconstruction3dUses" }
 
 export class FeatureLimitError extends Error {
   constructor(feature) {
