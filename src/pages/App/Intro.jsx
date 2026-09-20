@@ -20,7 +20,7 @@ import "../../styles/App/Intro.css"
 
 const Logo = "/assets/image/Logo-redonda.png"
 const SoyCutout = "/assets/image/soja-hero-cutout.png"
-const SITE_CHOICE_SESSION_KEY = "zenithContinueOnWebsite"
+export const SITE_CHOICE_SESSION_KEY = "zenithContinueOnWebsite"
 
 const highlights = [
   { icon: ShieldCheck, label: "Diagnóstico confiável" },
@@ -41,7 +41,17 @@ export default function Intro({ onInstallRequest, isInstalled = false }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigate("/home", { replace: true })
+        const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+          window.navigator.standalone === true
+        const choseWebsite = sessionStorage.getItem(SITE_CHOICE_SESSION_KEY) === "true"
+
+        if (isStandalone || isInstalled || choseWebsite) {
+          navigate("/home", { replace: true })
+          return
+        }
+
+        setShowAccessChoice(true)
+        setCheckingAuth(false)
         return
       }
 
@@ -49,7 +59,7 @@ export default function Intro({ onInstallRequest, isInstalled = false }) {
     })
 
     return unsubscribe
-  }, [navigate])
+  }, [isInstalled, navigate])
 
   useEffect(() => {
     if (isInstalled) setShowAccessChoice(false)
@@ -57,6 +67,12 @@ export default function Intro({ onInstallRequest, isInstalled = false }) {
 
   const continueOnWebsite = () => {
     sessionStorage.setItem(SITE_CHOICE_SESSION_KEY, "true")
+
+    if (auth.currentUser) {
+      navigate("/home", { replace: true })
+      return
+    }
+
     setShowAccessChoice(false)
   }
 

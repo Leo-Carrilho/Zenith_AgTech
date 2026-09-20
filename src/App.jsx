@@ -8,7 +8,7 @@ import { auth } from "./services/firebase"
 import { ACCOUNT_ROLES, getRoleHomePath, getUserAccessProfile } from "./services/accessControl"
 import { useLanguage } from "./contexts/LanguageContext"
 
-import Intro from "./pages/App/Intro"
+import Intro, { SITE_CHOICE_SESSION_KEY } from "./pages/App/Intro"
 import Login from "./pages/App/Login"
 import CadastroCompleto from "./pages/App/CadastroCompleto"
 import CadastrarFazenda from "./pages/App/CadastroFazenda"
@@ -148,6 +148,14 @@ function ProtectedRoute({ allowedRoles, children }) {
 
   if (state.loading) return <ProfileLoadingScreen message={t("common.loadingAccess")} />
   if (!state.user) return <Navigate to="/login" replace />
+
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  const choseWebsite = sessionStorage.getItem(SITE_CHOICE_SESSION_KEY) === "true"
+
+  if (!isStandalone && !choseWebsite) {
+    return <Navigate to="/" replace />
+  }
 
   const role = state.profile?.role || ACCOUNT_ROLES.ADMIN
 
