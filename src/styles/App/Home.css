@@ -3674,10 +3674,35 @@ body:has(.home-shell) .nav {
   box-shadow: 0 14px 30px rgba(45, 97, 64, 0.09);
 }
 
-.view-all-btn,
-.empty-action-btn {
+.view-all-btn {
   background: #161611 !important;
   box-shadow: 0 14px 30px rgba(22, 22, 17, 0.2);
+}
+
+.empty-action-btn {
+  width: min(100%, 204px);
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 1px solid #2d7145;
+  border-radius: 8px;
+  background: #2d7145 !important;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(45, 113, 69, 0.2);
+  transform: none;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.empty-action-btn:hover,
+.empty-action-btn:focus-visible {
+  border-color: #245d39;
+  background: #245d39 !important;
+  box-shadow: 0 9px 20px rgba(36, 93, 57, 0.24);
+  transform: none;
+}
+
+.empty-action-btn:focus-visible {
+  outline: 3px solid rgba(86, 168, 112, 0.28);
+  outline-offset: 3px;
 }
 
 .flight-action-btn {

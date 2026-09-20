@@ -28,7 +28,7 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
         </div>
         <h3>{t("activities.none")}</h3>
         <p>{t("activities.noneDescription")}</p>
-        <button className="empty-action-btn" onClick={onRegister}>
+        <button type="button" className="empty-action-btn" onClick={onRegister}>
           <span className="material-symbols-outlined">add</span>
           <span>{t("activities.registerFarm")}</span>
           <div className="btn-glow"></div>
