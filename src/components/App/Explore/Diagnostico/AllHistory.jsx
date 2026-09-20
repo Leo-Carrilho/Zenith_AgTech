@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { formatDiagnosisName } from "./diagnosisLabels"
+import { downloadDiagnosticHistoryReport } from "./diagnosticReportPdf"
 import "../../../../styles/App/AllHistory.css"
 
 export default function AllHistory({ onBack }) {
@@ -73,115 +74,6 @@ export default function AllHistory({ onBack }) {
     }
   }
 
-  const sanitizePdfText = (value) => {
-    return String(value ?? "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\x20-\x7E]/g, "")
-      .replace(/\\/g, "\\\\")
-      .replace(/\(/g, "\\(")
-      .replace(/\)/g, "\\)")
-  }
-
-  const wrapPdfText = (text, maxLength = 74) => {
-    const words = sanitizePdfText(text).split(" ")
-    const lines = []
-    let current = ""
-
-    words.forEach((word) => {
-      const next = current ? `${current} ${word}` : word
-      if (next.length > maxLength && current) {
-        lines.push(current)
-        current = word
-      } else {
-        current = next
-      }
-    })
-
-    if (current) lines.push(current)
-    return lines
-  }
-
-  const buildPdf = (lines) => {
-    const pageWidth = 595
-    const pageHeight = 842
-    const margin = 48
-    const lineHeight = 16
-    const pages = []
-    let currentPage = []
-    let y = pageHeight - margin
-
-    lines.forEach((line) => {
-      const wrapped = wrapPdfText(line.text, line.maxLength)
-      wrapped.forEach((wrappedLine, index) => {
-        if (y < margin) {
-          pages.push(currentPage)
-          currentPage = []
-          y = pageHeight - margin
-        }
-
-        currentPage.push({
-          text: wrappedLine,
-          x: margin + (line.indent || 0),
-          y,
-          size: line.size || 11,
-          bold: line.bold || false,
-        })
-        y -= line.after && index === wrapped.length - 1 ? line.after : lineHeight
-      })
-    })
-
-    if (currentPage.length) pages.push(currentPage)
-
-    const objects = []
-    const addObject = (content) => {
-      objects.push(content)
-      return objects.length
-    }
-
-    const fontRegular = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>")
-    const fontBold = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>")
-    const pageRefs = []
-
-    pages.forEach((page) => {
-      const content = [
-        "BT",
-        ...page.map((item) => {
-          const font = item.bold ? "F2" : "F1"
-          return `/${font} ${item.size} Tf 1 0 0 1 ${item.x} ${item.y} Tm (${item.text}) Tj`
-        }),
-        "ET",
-      ].join("\n")
-      const contentRef = addObject(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`)
-      const pageRef = addObject(
-        `<< /Type /Page /Parent 0 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 ${fontRegular} 0 R /F2 ${fontBold} 0 R >> >> /Contents ${contentRef} 0 R >>`
-      )
-      pageRefs.push(pageRef)
-    })
-
-    const pagesRef = addObject(`<< /Type /Pages /Kids [${pageRefs.map((ref) => `${ref} 0 R`).join(" ")}] /Count ${pageRefs.length} >>`)
-    pageRefs.forEach((pageRef) => {
-      objects[pageRef - 1] = objects[pageRef - 1].replace("/Parent 0 0 R", `/Parent ${pagesRef} 0 R`)
-    })
-    const catalogRef = addObject(`<< /Type /Catalog /Pages ${pagesRef} 0 R >>`)
-
-    let pdf = "%PDF-1.4\n"
-    const offsets = [0]
-    objects.forEach((object, index) => {
-      offsets.push(pdf.length)
-      pdf += `${index + 1} 0 obj\n${object}\nendobj\n`
-    })
-
-    const xrefOffset = pdf.length
-    pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`
-    offsets.slice(1).forEach((offset) => {
-      pdf += `${String(offset).padStart(10, "0")} 00000 n \n`
-    })
-    pdf += `trailer\n<< /Size ${objects.length + 1} /Root ${catalogRef} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`
-
-    return new Blob([pdf], { type: "application/pdf" })
-  }
-
   const totalDiagnostics = history.length
   const averageConfidence = history.length > 0
     ? Math.round(history.reduce((acc, item) => acc + getConfidence(item), 0) / history.length)
@@ -194,42 +86,32 @@ export default function AllHistory({ onBack }) {
       }, {})).sort((a, b) => b[1] - a[1])[0]?.[0] || "Nenhum"
     : "Nenhum"
 
-  const exportHistory = () => {
-    const lines = [
-      { text: "Historico de Diagnosticos", size: 20, bold: true, after: 24 },
-      { text: `Gerado em: ${new Date().toLocaleString("pt-BR")}`, size: 10, after: 22 },
-      { text: "Resumo", size: 14, bold: true, after: 18 },
-      { text: `Total de diagnosticos: ${totalDiagnostics}`, after: 16 },
-      { text: `Confianca media: ${averageConfidence}%`, after: 16 },
-      { text: `Diagnostico mais comum: ${mostCommonDisease}`, after: 24 },
-      { text: "Diagnosticos", size: 14, bold: true, after: 18 },
-    ]
-
-    history.forEach((item, index) => {
+  const exportHistory = async () => {
+    const items = history.map((item) => {
       const confidence = getConfidence(item)
-      lines.push(
-        { text: `${index + 1}. ${getDisplayName(item)}`, bold: true, after: 16 },
-        { text: `Data: ${item.date || "-"}`, indent: 16, after: 16 },
-        { text: `Confianca: ${confidence}% (${getConfidenceText(confidence)})`, indent: 16, after: 16 }
-      )
-
-      if (item.type === "batch") {
-        lines.push({
-          text: `Lote: ${item.imageCount || 0} fotos, ${item.reliableCount || 0} confiaveis, ${item.conditionCount || 0} condicoes`,
-          indent: 16,
-          after: 16,
-        })
+      return {
+        name: getDisplayName(item),
+        date: item.date || "-",
+        confidence,
+        confidenceText: getConfidenceText(confidence),
+        isBatch: item.type === "batch",
+        imageCount: item.imageCount || 0,
+        reliableCount: item.reliableCount || 0,
+        conditionCount: item.conditionCount || 0,
       }
-
-      lines.push({ text: "Observacao: use este resultado como apoio e acompanhe a planta nos proximos dias.", indent: 16, after: 22 })
     })
 
-    const url = URL.createObjectURL(buildPdf(lines))
-    const linkElement = document.createElement("a")
-    linkElement.href = url
-    linkElement.download = `diagnosticos_${new Date().toISOString().slice(0, 10)}.pdf`
-    linkElement.click()
-    URL.revokeObjectURL(url)
+    try {
+      await downloadDiagnosticHistoryReport({
+        items,
+        totalDiagnostics,
+        averageConfidence,
+        mostCommonDisease,
+      })
+    } catch (error) {
+      console.error("Não foi possível gerar o relatório de diagnósticos.", error)
+      window.alert("Não foi possível gerar o relatório agora. Tente novamente.")
+    }
   }
 
   return (

@@ -8,6 +8,7 @@ import DiagnosisResult from "./DiagnosisResult"
 import AllHistory from "./AllHistory"
 import { formatDiagnosisName } from "./diagnosisLabels"
 import { diagnosticarLote } from "../../../../services/sojaApi"
+import { useLanguage } from "../../../../contexts/LanguageContext"
 import "../../../../styles/App/Diagnostico.css"
 import "../../../../styles/App/BatchDiagnosis.css"
 
@@ -65,7 +66,7 @@ function createSmoothPath(points) {
   }, `M ${points[0].x} ${points[0].y}`)
 }
 
-function createDashboardData(history) {
+function createDashboardData(history, locale) {
   const now = new Date()
   const months = Array.from({ length: DASHBOARD_MONTHS }, (_, index) => {
     const offset = DASHBOARD_MONTHS - index - 1
@@ -74,7 +75,7 @@ function createDashboardData(history) {
     return {
       start: start.getTime(),
       end: end.getTime(),
-      label: new Intl.DateTimeFormat("pt-BR", { month: "short" })
+      label: new Intl.DateTimeFormat(locale, { month: "short" })
         .format(start)
         .replace(".", "")
     }
@@ -141,6 +142,7 @@ function fileIdentity(file) {
 }
 
 export default function DiagnosticoTab() {
+  const { locale, t } = useLanguage()
   const videoRef = useRef(null)
   const fileInputRef = useRef(null)
   const selectedImagesRef = useRef([])
@@ -156,7 +158,7 @@ export default function DiagnosticoTab() {
   const [isDraggingImage, setIsDraggingImage] = useState(false)
   const [selectionNotice, setSelectionNotice] = useState(null)
   const [selectionSource, setSelectionSource] = useState(null)
-  const dashboardData = useMemo(() => createDashboardData(history), [history])
+  const dashboardData = useMemo(() => createDashboardData(history, locale), [history, locale])
 
   useEffect(() => {
     selectedImagesRef.current = selectedImages
@@ -215,9 +217,9 @@ export default function DiagnosticoTab() {
     if (!general) return
 
     const conditions = general.ocorrencias_confiaveis || []
-    let title = "Lote inconclusivo"
+    let title = t("diagnosis.inconclusiveBatch")
 
-    if (conditions.length > 1) title = `${conditions.length} condições detectadas`
+    if (conditions.length > 1) title = t("diagnosis.detectedConditions", { count: conditions.length })
     else if (conditions.length === 1) title = formatDiagnosisName(conditions[0].classe)
     else if (general.condicao_predominante) title = formatDiagnosisName(general.condicao_predominante)
 
@@ -226,7 +228,7 @@ export default function DiagnosticoTab() {
       type: "batch",
       disease: title,
       confidence: Math.max(0, Math.min(100, Math.round(Number(general.confianca_media) || 0))),
-      date: new Date().toLocaleString("pt-BR"),
+      date: new Date().toLocaleString(locale),
       imageCount: Number(general.total_recebidas) || selectedImages.length,
       reliableCount: Number(general.resultados_confiaveis) || 0,
       conditionCount: conditions.length,
@@ -251,7 +253,7 @@ export default function DiagnosticoTab() {
       console.error("Câmera:", error)
       setSelectionNotice({
         type: "warning",
-        text: "Não foi possível acessar a câmera. Verifique a permissão do navegador ou selecione fotos da galeria."
+        text: t("diagnosis.cameraError")
       })
       if (selectedImagesRef.current.length > 0) {
         setStep("preview")
@@ -430,7 +432,7 @@ export default function DiagnosticoTab() {
       setResult({
         status: error?.status ? "erro_api" : "erro_conexao",
         resultado: "Erro",
-        mensagem: error?.message || "Não foi possível analisar o lote agora. Verifique a conexão e tente novamente."
+        mensagem: error?.message || t("diagnosis.batchError")
       })
     } finally {
       if (!controller.signal.aborted) setStep("result")
@@ -493,10 +495,10 @@ export default function DiagnosticoTab() {
           onRemoveImage={removeSelectedImage}
           onBack={reset}
           onAnalyze={analyzeBatch}
-          addImagesLabel={selectionSource === "camera" ? "Tirar outra foto" : "Adicionar fotos"}
+          addImagesLabel={selectionSource === "camera" ? t("diagnosis.takeAnother") : t("diagnosis.addPhotos")}
           addImagesIcon={selectionSource === "camera" ? "photo_camera" : "add_photo_alternate"}
-          addTileTitle={selectionSource === "camera" ? "Tirar foto" : "Adicionar"}
-          addTileSubtitle={selectionSource === "camera" ? "novamente" : "mais imagens"}
+          addTileTitle={selectionSource === "camera" ? t("diagnosis.takePhotoShort") : t("diagnosis.add")}
+          addTileSubtitle={selectionSource === "camera" ? t("diagnosis.again") : t("diagnosis.moreImages")}
         />
         {galleryInput}
       </>
@@ -515,22 +517,22 @@ export default function DiagnosticoTab() {
     <div className="diagnostic-container">
       <div className="diagnostic-hero">
         <div className="diagnostic-header">
-          <h1 className="diagnostico-title">Diagnóstico</h1>
+          <h1 className="diagnostico-title">{t("diagnosis.title")}</h1>
           <p>
-            Identifique doenças em plantas com{" "}
-            <span className="highlight">inteligência artificial.</span>
+            {t("diagnosis.subtitle")}{" "}
+            <span className="highlight">{t("diagnosis.ai")}</span>
           </p>
         </div>
 
-        <section className="diagnostic-dashboard" aria-label="Resumo dos diagnósticos">
+        <section className="diagnostic-dashboard" aria-label={t("diagnosis.summary")}>
           <div className="diagnostic-dashboard-metrics">
             <div className="diagnostic-dashboard-metric">
               <div className="diagnostic-dashboard-label">
                 <span className="material-symbols-outlined" aria-hidden="true">clinical_notes</span>
-                <span>Diagnósticos</span>
+                <span>{t("diagnosis.diagnoses")}</span>
               </div>
               <div className="diagnostic-dashboard-value-row">
-                <strong>{dashboardData.total.toLocaleString("pt-BR")}</strong>
+                <strong>{dashboardData.total.toLocaleString(locale)}</strong>
                 <span className={`diagnostic-dashboard-trend ${trendTone(dashboardData.countTrend)}`}>
                   <span className="material-symbols-outlined" aria-hidden="true">
                     {trendIcon(dashboardData.countTrend)}
@@ -538,13 +540,13 @@ export default function DiagnosticoTab() {
                   {dashboardData.countTrend > 0 ? "+" : ""}{dashboardData.countTrend}%
                 </span>
               </div>
-              <p>{dashboardData.currentCount} neste mês</p>
+              <p>{t("diagnosis.thisMonth", { count: dashboardData.currentCount })}</p>
             </div>
 
             <div className="diagnostic-dashboard-metric">
               <div className="diagnostic-dashboard-label">
                 <span className="material-symbols-outlined" aria-hidden="true">verified</span>
-                <span>Confiança média</span>
+                <span>{t("diagnosis.averageConfidence")}</span>
               </div>
               <div className="diagnostic-dashboard-value-row">
                 <strong>{dashboardData.average}%</strong>
@@ -555,20 +557,20 @@ export default function DiagnosticoTab() {
                   {dashboardData.confidenceTrend > 0 ? "+" : ""}{dashboardData.confidenceTrend} p.p.
                 </span>
               </div>
-              <p>comparado ao mês anterior</p>
+              <p>{t("diagnosis.previousMonth")}</p>
             </div>
           </div>
 
           <div className="diagnostic-dashboard-chart">
             <div className="diagnostic-dashboard-chart-heading">
-              <span>Atividade</span>
-              <small>últimos 6 meses</small>
+              <span>{t("diagnosis.activity")}</span>
+              <small>{t("diagnosis.lastMonths")}</small>
             </div>
             <svg
               viewBox={`0 0 ${DASHBOARD_CHART_WIDTH} 120`}
               preserveAspectRatio="none"
               role="img"
-              aria-label="Quantidade de diagnósticos nos últimos seis meses"
+              aria-label={t("diagnosis.chartLabel")}
             >
               <path className="diagnostic-dashboard-area" d={dashboardData.areaPath} />
               <path className="diagnostic-dashboard-line" d={dashboardData.linePath} />
@@ -597,7 +599,7 @@ export default function DiagnosticoTab() {
         <div className="tips-card" role="status">
           <div className="tips-header">
             <span className="material-symbols-outlined">warning</span>
-            <h4>Atenção</h4>
+            <h4>{t("diagnosis.attention")}</h4>
           </div>
           <p>{selectionNotice.text}</p>
         </div>
@@ -614,8 +616,8 @@ export default function DiagnosticoTab() {
                 </span>
               </div>
             </div>
-            <h3>Tirar foto</h3>
-            <p>Capture uma imagem agora</p>
+            <h3>{t("diagnosis.takePhoto")}</h3>
+            <p>{t("diagnosis.captureNow")}</p>
             <div className="card-action">
               <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
             </div>
@@ -639,8 +641,8 @@ export default function DiagnosticoTab() {
               </span>
             </div>
           </div>
-          <h3>Galeria</h3>
-          <p>Escolha até 100 imagens</p>
+          <h3>{t("diagnosis.gallery")}</h3>
+          <p>{t("diagnosis.chooseImages")}</p>
           <div className="card-action">
             <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
           </div>
@@ -651,10 +653,10 @@ export default function DiagnosticoTab() {
         <div className="section-header">
           <div className="section-title">
             <span className="material-symbols-outlined">history</span>
-            <h3>Histórico de diagnósticos</h3>
+            <h3>{t("diagnosis.history")}</h3>
           </div>
           <button type="button" className="section-link" onClick={viewAllHistory}>
-            Ver todos
+            {t("diagnosis.viewAll")}
             <span className="material-symbols-outlined">chevron_right</span>
           </button>
         </div>
@@ -665,20 +667,20 @@ export default function DiagnosticoTab() {
               <div className="empty-icon">
                 <span className="material-symbols-outlined">history</span>
               </div>
-              <p className="empty-title">Nenhum diagnóstico ainda</p>
+              <p className="empty-title">{t("diagnosis.noneYet")}</p>
               <p className="empty-description">
-                Realize seu primeiro diagnóstico tirando uma foto ou selecionando da galeria
+                {t("diagnosis.firstDiagnosis")}
               </p>
               <div className="empty-actions">
                 {isMobile && (
                   <button type="button" className="empty-action" onClick={startCamera}>
                     <span className="material-symbols-outlined">photo_camera</span>
-                    Tirar foto
+                    {t("diagnosis.takePhoto")}
                   </button>
                 )}
                 <button type="button" className="empty-action secondary" onClick={openGallery}>
                   <span className="material-symbols-outlined">photo_library</span>
-                  Galeria
+                  {t("diagnosis.gallery")}
                 </button>
               </div>
             </div>
@@ -692,11 +694,11 @@ export default function DiagnosticoTab() {
                 <div className="history-info">
                   <div className="history-name">{formatDiagnosisName(item.disease)}</div>
                   <div className="history-date">
-                    {item.type === "batch" && item.imageCount ? `${item.imageCount} fotos • ` : ""}{item.date}
+                    {item.type === "batch" && item.imageCount ? `${t("diagnosis.photos", { count: item.imageCount })} • ` : ""}{item.date}
                   </div>
                 </div>
 
-                <div className="history-confidence" title="Confiança média">
+                <div className="history-confidence" title={t("diagnosis.averageConfidence")}>
                   <div className="confidence-value">
                     {item.confidence}%
                   </div>
@@ -713,7 +715,7 @@ export default function DiagnosticoTab() {
         </div>
         {history.length > 5 && (
           <button type="button" className="show-more-history-btn" onClick={viewAllHistory}>
-            Ver mais
+            {t("diagnosis.showMore")}
             <span className="material-symbols-outlined">expand_more</span>
           </button>
         )}
@@ -725,14 +727,13 @@ export default function DiagnosticoTab() {
             <span className="material-symbols-outlined">
               tips_and_updates
             </span>
-            <h4>Dica</h4>
+            <h4>{t("diagnosis.tip")}</h4>
           </div>
           <p>
-            Fotografe a folha com boa iluminação e mantenha a câmera
-            estável para melhor resultado
+            {t("diagnosis.tipText")}
           </p>
         </div>
-        <img src="/assets/image/soja-intro.jpg" alt="Folhas de soja no campo" />
+        <img src="/assets/image/soja-intro.jpg" alt={t("diagnosis.soyLeaves")} />
       </div>
 
       {galleryInput}

@@ -210,24 +210,43 @@
 .delete-entry {
   width: 30px;
   min-width: 30px;
+  max-width: 30px;
   height: 30px;
-  display: grid;
+  min-height: 30px;
+  max-height: 30px;
+  display: inline-grid;
   place-items: center;
+  align-self: center;
+  justify-self: end;
   flex: 0 0 30px;
   padding: 0;
   border: 0;
   border-radius: 8px;
   background: #fff0f0;
   color: #ff565f;
+  line-height: 1;
+  transform: none;
 }
 
 .delete-entry .material-symbols-outlined {
+  width: 18px;
+  height: 18px;
+  display: block;
   color: inherit;
   font-size: 17px;
+  line-height: 18px;
+  text-align: center;
 }
 
-.delete-entry:hover {
+.delete-entry:hover,
+.delete-entry:focus-visible {
   background: #ffe2e3;
+  transform: none;
+}
+
+.delete-entry:focus-visible {
+  outline: 2px solid rgba(255, 86, 95, 0.32);
+  outline-offset: 2px;
 }
 
 .diario-empty {
@@ -310,16 +329,28 @@
 
 .diario-form .close-btn,
 .diario-detail > .close-btn {
+  position: relative;
+  top: auto;
+  right: auto;
   width: 36px;
   min-width: 36px;
+  max-width: 36px;
   height: 36px;
-  display: grid;
-  place-items: center;
+  min-height: 36px;
+  max-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
   padding: 0;
   border: 0;
   border-radius: 8px;
   background: #edf6eb;
   color: #2d6140;
+  box-shadow: none;
+  line-height: 1;
+  transform: none;
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 .diario-detail > .close-btn {
@@ -330,8 +361,37 @@
 
 .diario-form .close-btn .material-symbols-outlined,
 .diario-detail > .close-btn .material-symbols-outlined {
+  width: 22px;
+  height: 22px;
+  display: block;
   color: inherit;
   font-size: 21px;
+  line-height: 22px;
+  text-align: center;
+  transform: none;
+}
+
+.diario-form .close-btn:hover,
+.diario-form .close-btn:focus-visible,
+.diario-detail > .close-btn:hover,
+.diario-detail > .close-btn:focus-visible {
+  border: 0;
+  background: #fdebec;
+  color: #d73f4b;
+  box-shadow: none;
+  transform: none;
+}
+
+.diario-form .close-btn:focus-visible,
+.diario-detail > .close-btn:focus-visible {
+  outline: 2px solid rgba(215, 63, 75, 0.3);
+  outline-offset: 2px;
+}
+
+.diario-form .close-btn:active,
+.diario-detail > .close-btn:active {
+  background: #f9dfe1;
+  transform: none;
 }
 
 .diario-form .form-group {
@@ -492,7 +552,7 @@
   }
 
   .diario-card {
-    grid-template-columns: 58px minmax(0, 1fr) 34px;
+    grid-template-columns: 58px minmax(0, 1fr);
     min-height: 112px;
     padding: 13px;
   }

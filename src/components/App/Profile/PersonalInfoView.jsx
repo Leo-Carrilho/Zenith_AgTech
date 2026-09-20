@@ -1,8 +1,4 @@
-const ROLE_LABELS = {
-  admin: "Produtor / Gestor",
-  employee: "Funcionário",
-  collaborator: "Colaborador",
-}
+import { useLanguage } from "../../../contexts/LanguageContext"
 
 export default function PersonalInfoView({
   userData,
@@ -11,18 +7,25 @@ export default function PersonalInfoView({
   onChangePassword,
   passwordResetting,
 }) {
-  const displayName = userData?.name || user?.displayName || "Nome não informado"
-  const initial = displayName === "Nome não informado"
+  const { locale, t } = useLanguage()
+  const roleLabels = {
+    admin: t("personal.admin"),
+    employee: t("personal.employee"),
+    collaborator: t("personal.collaborator"),
+  }
+  const missingName = t("personal.nameMissing")
+  const displayName = userData?.name || user?.displayName || missingName
+  const initial = displayName === missingName
     ? "?"
-    : displayName.trim().charAt(0).toLocaleUpperCase("pt-BR")
+    : displayName.trim().charAt(0).toLocaleUpperCase(locale)
   const location = [userData?.city, userData?.state].filter(Boolean).join(" - ")
 
   const infoItems = [
-    { icon: "person", label: "Nome completo", value: userData?.name },
-    { icon: "mail", label: "E-mail", value: user?.email },
-    { icon: "call", label: "Telefone", value: userData?.phoneMasked || userData?.phone },
-    { icon: "location_on", label: "Localização", value: location },
-    { icon: "badge", label: "Função", value: ROLE_LABELS[userData?.role] },
+    { icon: "person", label: t("personal.name"), value: userData?.name },
+    { icon: "mail", label: t("personal.email"), value: user?.email },
+    { icon: "call", label: t("personal.phone"), value: userData?.phoneMasked || userData?.phone },
+    { icon: "location_on", label: t("personal.location"), value: location },
+    { icon: "badge", label: t("personal.role"), value: roleLabels[userData?.role] },
   ]
 
   return (
@@ -35,7 +38,7 @@ export default function PersonalInfoView({
             <span className="material-symbols-outlined" aria-hidden="true">
               {user?.emailVerified ? "verified_user" : "info"}
             </span>
-            {user?.emailVerified ? "Conta verificada" : "E-mail não verificado"}
+            {user?.emailVerified ? t("personal.verified") : t("personal.unverified")}
           </span>
         </div>
       </div>
@@ -46,7 +49,7 @@ export default function PersonalInfoView({
             <span className="personal-data-icon material-symbols-outlined" aria-hidden="true">{item.icon}</span>
             <span className="personal-data-copy">
               <small>{item.label}</small>
-              <strong>{item.value || "Não informado"}</strong>
+              <strong>{item.value || t("common.notInformed")}</strong>
             </span>
             {onEdit && <span className="personal-data-action material-symbols-outlined" aria-hidden="true">edit</span>}
           </button>
@@ -60,8 +63,8 @@ export default function PersonalInfoView({
         >
           <span className="personal-data-icon material-symbols-outlined" aria-hidden="true">shield</span>
           <span className="personal-data-copy">
-            <small>Segurança</small>
-            <strong>{passwordResetting ? "Enviando e-mail..." : "Alterar senha"}</strong>
+            <small>{t("personal.security")}</small>
+            <strong>{passwordResetting ? t("personal.sendingEmail") : t("profile.changePassword")}</strong>
           </span>
           <span className="personal-data-action material-symbols-outlined" aria-hidden="true">chevron_right</span>
         </button>

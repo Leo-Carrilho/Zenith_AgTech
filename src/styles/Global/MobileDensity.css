@@ -373,7 +373,7 @@
   }
 
   .diario-card {
-    grid-template-columns: 48px minmax(0, 1fr) 28px !important;
+    grid-template-columns: 48px minmax(0, 1fr) !important;
     min-height: 96px !important;
     padding: 10px !important;
   }
@@ -597,7 +597,6 @@
   .mapa-dashboard .mapa-header h1,
   .estoque-hero h1,
   .activities-dashboard .activities-page-header h1,
-  .drone-law-dashboard .drone-law-hero h1,
   .profile-redesign .profile-mobile-name h1,
   .team-hero h1 {
     font-size: 2rem !important;
@@ -610,7 +609,6 @@
   .mapa-dashboard .mapa-header p,
   .estoque-hero p,
   .activities-dashboard .activities-page-header p,
-  .drone-law-dashboard .drone-law-hero p,
   .profile-redesign .profile-mobile-name p,
   .team-hero p {
     font-size: 0.88rem !important;
@@ -640,12 +638,6 @@
   .activities-dashboard .activity-info small,
   .activities-dashboard .activity-info > span,
   .activities-dashboard .activity-row-side small,
-  .drone-law-dashboard .drone-law-featured small,
-  .drone-law-dashboard .drone-law-topic-detail p,
-  .drone-law-dashboard .drone-law-link-copy small,
-  .drone-law-dashboard .drone-law-quick-tips p,
-  .drone-law-dashboard .drone-law-responsibility p,
-  .drone-law-dashboard .drone-law-note,
   .profile-redesign small,
   .team-page small,
   .team-page p {
@@ -663,12 +655,6 @@
   .activities-dashboard .activity-info strong,
   .activities-dashboard .activities-summary > h2,
   .activities-dashboard .activities-recent > h2,
-  .drone-law-dashboard .drone-law-featured strong,
-  .drone-law-dashboard .drone-law-section-heading h2,
-  .drone-law-dashboard .drone-law-card strong,
-  .drone-law-dashboard .drone-law-topic-detail h3,
-  .drone-law-dashboard .drone-law-link-copy strong,
-  .drone-law-dashboard .drone-law-responsibility strong,
   .profile-redesign .profile-section-title h2,
   .profile-redesign .profile-setting-item strong,
   .team-section-header h2,
@@ -698,13 +684,13 @@
     font-size: 0.82rem !important;
   }
 
-  .explore-container--clima,
-  .explore-container--clima .climate-dashboard {
+  .explore-container--clima {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
   }
 
   .explore-container--clima .climate-dashboard {
+    overflow: visible !important;
     padding-bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important;
   }
 

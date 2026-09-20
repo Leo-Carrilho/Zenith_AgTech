@@ -1,8 +1,10 @@
 // components/App/Profile/FarmEditForm.jsx
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { useLanguage } from "../../../contexts/LanguageContext"
 
 const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: farmData?.name || "",
     area_total: farmData?.area_total || "",
@@ -38,7 +40,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
       const data = await response.json()
 
       if (data.erro) {
-        setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }))
+        setErrors(prev => ({ ...prev, cep: t("farm.postalNotFound") }))
         return baseData
       }
 
@@ -61,7 +63,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
       return updatedData
     } catch (error) {
       console.error("Erro ao buscar CEP:", error)
-      setErrors(prev => ({ ...prev, cep: "Não foi possível buscar o CEP" }))
+      setErrors(prev => ({ ...prev, cep: t("farm.postalLookupError") }))
       return baseData
     } finally {
       setCepLoading(false)
@@ -72,23 +74,23 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
     const newErrors = {}
 
     if (!data.name.trim()) {
-      newErrors.name = "Nome da fazenda é obrigatório"
+      newErrors.name = t("farm.nameRequired")
     }
 
     if (!data.area_total) {
-      newErrors.area_total = "Área total é obrigatória"
+      newErrors.area_total = t("farm.areaRequired")
     } else if (isNaN(data.area_total) || parseFloat(data.area_total) <= 0) {
-      newErrors.area_total = "Área deve ser um número positivo"
+      newErrors.area_total = t("farm.areaPositive")
     }
 
     if (!data.municipio.trim()) {
-      newErrors.municipio = "Município é obrigatório"
+      newErrors.municipio = t("farm.cityRequired")
     }
 
     if (!data.uf.trim()) {
-      newErrors.uf = "UF é obrigatória"
+      newErrors.uf = t("farm.stateRequired")
     } else if (data.uf.length > 2) {
-      newErrors.uf = "Use apenas a sigla (ex: SP)"
+      newErrors.uf = t("farm.stateAbbreviation")
     }
 
     setErrors(newErrors)
@@ -126,7 +128,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
     >
 
       <div className="card-header">
-        <h3 className="personal-info-title">Editar Fazenda</h3>
+        <h3 className="personal-info-title">{t("farm.edit")}</h3>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -134,17 +136,17 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
 
            <div className="edit-form-actions">
             <button type="button" onClick={onCancel} className="cancel-btn">
-              Cancelar
+              {t("common.cancel")}
             </button>
 
             <button type="submit" className="save-btn" disabled={saving}>
-              {saving ? "Salvando..." : "Salvar"}
+              {saving ? t("common.saving") : t("common.save")}
             </button>
           </div>
 
           {/* Nome */}
           <div className="input-group">
-            <label className="input-label">Nome da Fazenda</label>
+            <label className="input-label">{t("farm.nameField")}</label>
             <input
               type="text"
               name="name"
@@ -159,7 +161,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
           {/* Área + Cultura */}
           <div className="input-row-tech">
             <div className="input-group">
-              <label className="input-label">Área total (ha)</label>
+              <label className="input-label">{t("farm.totalArea")} (ha)</label>
               <input
                 type="number"
                 name="area_total"
@@ -173,7 +175,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
             </div>
 
             <div className="input-group">
-              <label className="input-label">Cultura</label>
+              <label className="input-label">{t("farm.crop")}</label>
               <select
                 name="plantacao"
                 value={formData.plantacao}
@@ -181,7 +183,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
                 className="tech-select"
                 disabled={saving}
               >
-                <option value="">Selecione</option>
+                <option value="">{t("common.select")}</option>
                 {culturaList.map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -192,7 +194,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
           {/* Localização */}
           <div className="input-row-tech">
             <div className="input-group">
-              <label className="input-label">Município</label>
+              <label className="input-label">{t("farm.city")}</label>
               <input
                 type="text"
                 name="municipio"
@@ -212,7 +214,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
                 className={`tech-select ${errors.uf ? 'error' : ''}`}
                 disabled={saving}
               >
-                <option value="">Selecione</option>
+                <option value="">{t("common.select")}</option>
                 {ufList.map(uf => (
                   <option key={uf} value={uf}>{uf}</option>
                 ))}
@@ -223,7 +225,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
           {/* Bairro + CEP */}
           <div className="input-row-tech">
             <div className="input-group">
-              <label className="input-label">Bairro</label>
+              <label className="input-label">{t("farm.neighborhood")}</label>
               <input
                 type="text"
                 name="bairro"
@@ -235,7 +237,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
             </div>
 
             <div className="input-group">
-              <label className="input-label">CEP</label>
+              <label className="input-label">{t("farm.postalCode")}</label>
               <input
                 type="text"
                 name="cep"
@@ -245,7 +247,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
                 className="tech-input"
                 disabled={saving || cepLoading}
               />
-              {cepLoading && <span className="error-message">Buscando CEP...</span>}
+              {cepLoading && <span className="error-message">{t("farm.searchingPostalCode")}</span>}
               {errors.cep && <span className="error-message">{errors.cep}</span>}
             </div>
           </div>
@@ -253,20 +255,20 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
           {/* Telefone + Data */}
           <div className="input-row-tech">
             <div className="input-group">
-              <label className="input-label">Telefone</label>
+              <label className="input-label">{t("personal.phone")}</label>
               <input
                 type="tel"
                 name="telefone"
                 value={formData.telefone}
                 onChange={handleChange}
                 className="tech-input"
-                placeholder={farmData?.telefone_mascarado || "Novo telefone"}
+                placeholder={farmData?.telefone_mascarado || t("farm.newPhone")}
                 disabled={saving}
               />
             </div>
 
             <div className="input-group">
-              <label className="input-label">Data de aquisição</label>
+              <label className="input-label">{t("farm.acquisitionDate")}</label>
               <input
                 type="date"
                 name="data_aquisicao"
@@ -280,7 +282,7 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
 
           {/* Tipo */}
           <div className="input-group">
-            <label className="input-label">Tipo de proprietário</label>
+            <label className="input-label">{t("farm.ownerType")}</label>
             <select
               name="tipo_proprietario"
               value={formData.tipo_proprietario}
@@ -288,11 +290,11 @@ const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
               className="tech-select"
               disabled={saving}
             >
-              <option>Proprietário</option>
-              <option>Arrendatário</option>
-              <option>Parceiro</option>
-              <option>Comodatário</option>
-              <option>Outros</option>
+              <option value="Proprietário">{t("farm.owner")}</option>
+              <option value="Arrendatário">{t("farm.tenant")}</option>
+              <option value="Parceiro">{t("farm.partner")}</option>
+              <option value="Comodatário">{t("farm.borrower")}</option>
+              <option value="Outros">{t("farm.others")}</option>
             </select>
           </div>
          

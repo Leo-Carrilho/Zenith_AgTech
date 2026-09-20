@@ -28,10 +28,11 @@ import AppFooter from "../../components/App/Global/AppFooter"
 import MenuBar from "../../components/App/Global/MenuBar"
 import AppHeader from "../../components/App/Global/AppHeader"  
 import { getUserAccessProfile, isOperationalRole } from "../../services/accessControl"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 import "../../styles/App/Home.css"
 
-function getWeatherVisual(weather) {
+function getWeatherVisual(weather, t) {
   const code = Number(weather?.conditionCode)
   const isNight = weather?.conditionIcon?.endsWith("n")
   let Icon = isNight ? CloudMoon : CloudSun
@@ -65,7 +66,7 @@ function getWeatherVisual(weather) {
   return {
     Icon,
     variant,
-    label: weather?.conditionDescription || "Clima atual"
+    label: weather?.conditionDescription || t("home.currentWeather")
   }
 }
 
@@ -102,13 +103,13 @@ function parseDiagnosticDate(diagnostic) {
   return new Date(Number(diagnostic?.id) || 0)
 }
 
-function formatDiagnosticTimestamp(diagnostic) {
+function formatDiagnosticTimestamp(diagnostic, locale, t) {
   const date = parseDiagnosticDate(diagnostic)
-  if (!date.getTime()) return { date: "Sem registro", time: "Nenhuma imagem analisada" }
+  if (!date.getTime()) return { date: t("home.noRecord"), time: t("home.noImage") }
 
   return {
-    date: date.toLocaleDateString("pt-BR"),
-    time: `às ${date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`,
+    date: date.toLocaleDateString(locale),
+    time: t("home.atTime", { time: date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }) }),
   }
 }
 
@@ -147,6 +148,7 @@ const HOME_REVEAL_SELECTOR = [
 ].join(", ")
 
 export default function Home({ onInstallRequest, isInstalled = false }) {
+  const { language, locale, t } = useLanguage()
   const [userData, setUserData] = useState(null)
   const [farmData, setFarmData] = useState(null)
   const [weather, setWeather] = useState(null)
@@ -181,7 +183,7 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
           setFarmData(farm)
 
           if (farm.municipio && farm.uf) {
-            const weatherData = await getWeatherByCity(farm.municipio, farm.uf)
+            const weatherData = await getWeatherByCity(farm.municipio, farm.uf, language)
             setWeather(weatherData)
           }
         } else {
@@ -194,7 +196,7 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [language])
 
   useEffect(() => {
     const syncLocalData = () => {
@@ -330,12 +332,14 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
   const farmArea = farmData?.area_total ? `${farmData.area_total} ha` : "--"
   const fieldYield = farmData?.produtividade || farmData?.rendimento || "7200 kg/ha"
   const cropName = farmData?.plantacao || farmData?.crop || "Soja"
-  const weatherVisual = getWeatherVisual(weather)
+  const weatherVisual = getWeatherVisual(weather, t)
   const WeatherConditionIcon = weatherVisual.Icon
   const latestDiagnosis = [...diagnosticHistory]
     .sort((a, b) => parseDiagnosticDate(b) - parseDiagnosticDate(a))[0]
   const lastFlightSummary = formatDiagnosticTimestamp(
-    lastAiImageSubmission ? { submittedAt: lastAiImageSubmission } : latestDiagnosis
+    lastAiImageSubmission ? { submittedAt: lastAiImageSubmission } : latestDiagnosis,
+    locale,
+    t
   )
   const diagnosisIsValid = isValidDiagnosis(latestDiagnosis?.disease)
   const diagnosisIsHealthy = diagnosisIsValid && isHealthyDiagnosis(latestDiagnosis?.disease)
@@ -349,31 +353,31 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
   const hasWeatherAlert = Number(weather?.conditionCode) >= 200 && Number(weather?.conditionCode) < 300
   const alertCount = overdueActivities.length + (diagnosisIsValid && !diagnosisIsHealthy ? 1 : 0) + (hasWeatherAlert ? 1 : 0)
   const healthSummary = !hasFarm
-    ? { value: "Aguardando", detail: "Cadastre a fazenda" }
+    ? { value: t("home.awaiting"), detail: t("home.registerFarmShort") }
     : !latestDiagnosis
-      ? { value: "Sem análise", detail: "Faça um diagnóstico" }
+      ? { value: t("home.noAnalysis"), detail: t("home.makeDiagnosis") }
       : !diagnosisIsValid
-        ? { value: "Inconclusivo", detail: "Repita a análise" }
+        ? { value: t("home.inconclusive"), detail: t("home.repeatAnalysis") }
         : diagnosisIsHealthy
-          ? { value: "Boa", detail: `${latestDiagnosis.confidence ?? "--"}% de confiança` }
-          : { value: "Atenção", detail: String(latestDiagnosis.disease).replaceAll("_", " ") }
+          ? { value: t("home.good"), detail: t("home.confidence", { value: latestDiagnosis.confidence ?? "--" }) }
+          : { value: t("home.attention"), detail: String(latestDiagnosis.disease).replaceAll("_", " ") }
   const alertSummary = !hasFarm
-    ? { value: "Sem dados", detail: "Cadastre a fazenda" }
+    ? { value: t("home.noData"), detail: t("home.registerFarmShort") }
     : alertCount === 0
-      ? { value: "Nenhum alerta", detail: "Tudo em ordem" }
+      ? { value: t("home.noAlerts"), detail: t("home.allGood") }
       : {
-          value: `${alertCount} ${alertCount === 1 ? "alerta" : "alertas"}`,
+          value: `${alertCount} ${alertCount === 1 ? t("home.alert") : t("home.alertPlural")}`,
           detail: hasWeatherAlert
             ? weather.conditionDescription
             : overdueActivities.length > 0
-              ? `${overdueActivities.length} ${overdueActivities.length === 1 ? "atividade atrasada" : "atividades atrasadas"}`
+              ? `${overdueActivities.length} ${overdueActivities.length === 1 ? t("home.overdueActivity") : t("home.overdueActivities")}`
               : String(latestDiagnosis.disease).replaceAll("_", " "),
         }
   const weatherStats = [
-    { icon: "device_thermostat", label: "Solo", value: hasFarm ? "+23 °C" : "--" },
-    { icon: "humidity_percentage", label: "Umidade", value: humidityValue },
-    { icon: "air", label: "Vento", value: hasFarm ? "7 m/s" : "--" },
-    { icon: "rainy", label: "Precipitação", value: hasFarm ? "0 mm" : "--" },
+    { icon: "device_thermostat", label: t("home.soil"), value: hasFarm ? "+23 °C" : "--" },
+    { icon: "humidity_percentage", label: t("home.humidity"), value: humidityValue },
+    { icon: "air", label: t("home.wind"), value: hasFarm ? "7 m/s" : "--" },
+    { icon: "rainy", label: t("home.precipitation"), value: hasFarm ? "0 mm" : "--" },
   ]
 
   return (
@@ -420,7 +424,7 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
               </div>
               <p>{weatherVisual.label}</p>
               <strong className="weather-farm-label">
-                {farmData?.name || "Cadastre sua fazenda"}
+                {farmData?.name || t("header.registerFarm")}
               </strong>
             </div>
 
@@ -450,10 +454,10 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
               <span className="material-symbols-outlined">agriculture</span>
             </div>
             <div>
-              <strong>{farmData?.name || "Minha fazenda"}</strong>
+              <strong>{farmData?.name || t("home.myFarm")}</strong>
               <span>
                 <span className="material-symbols-outlined">location_on</span>
-                {cityName || "Local não cadastrado"}
+                {cityName || t("home.locationMissing")}
               </span>
             </div>
             <em>{fieldYield}</em>
@@ -471,13 +475,13 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
         <section className="home-quick-summary" aria-labelledby="quick-summary-title">
           <h2 id="quick-summary-title" className="section-title">
             <span className="material-symbols-outlined">insights</span>
-            Resumo rápido
+            {t("home.quickSummary")}
           </h2>
           <div className="quick-summary-grid">
             <article className="quick-summary-card">
               <div className="quick-summary-heading">
                 <span className="material-symbols-outlined">flight</span>
-                <small>Último voo</small>
+                <small>{t("home.lastFlight")}</small>
               </div>
               <strong>{lastFlightSummary.date}</strong>
               <p>{lastFlightSummary.time}</p>
@@ -486,7 +490,7 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
             <article className="quick-summary-card">
               <div className="quick-summary-heading">
                 <span className="material-symbols-outlined">eco</span>
-                <small>Saúde da lavoura</small>
+                <small>{t("home.cropHealth")}</small>
               </div>
               <strong>{healthSummary.value}</strong>
               <p>{healthSummary.detail}</p>
@@ -495,7 +499,7 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
             <article className="quick-summary-card quick-summary-card--alert">
               <div className="quick-summary-heading">
                 <span className="material-symbols-outlined">warning</span>
-                <small>Alertas</small>
+                <small>{t("home.alerts")}</small>
               </div>
               <strong>{alertSummary.value}</strong>
               <p>{alertSummary.detail}</p>
@@ -516,8 +520,8 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
                 <span className="material-symbols-outlined">download</span>
               </span>
               <span className="install-app-trigger__text">
-                <strong>Baixar aplicativo</strong>
-                <small>Instale o Zenith neste celular</small>
+                <strong>{t("home.downloadApp")}</strong>
+                <small>{t("home.installZenith")}</small>
               </span>
               <span className="install-app-trigger__arrow material-symbols-outlined" aria-hidden="true">
                 chevron_right
@@ -534,8 +538,8 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
             >
               <span className="material-symbols-outlined">groups</span>
               <div>
-                <strong>Dashboard da Equipe</strong>
-                <p>Monitore funcionários, tarefas, horários e produtividade.</p>
+                <strong>{t("home.teamDashboard")}</strong>
+                <p>{t("home.teamDashboardDescription")}</p>
               </div>
               <span className="material-symbols-outlined">arrow_forward</span>
             </button>
@@ -546,14 +550,14 @@ export default function Home({ onInstallRequest, isInstalled = false }) {
           <div className="section-header">
             <h2 className="section-title">
               <span className="material-symbols-outlined">history</span>
-              Atividades Recentes
+              {t("home.recentActivities")}
             </h2>
             {hasFarm && (
               <button 
                 className="view-all-btn" 
                 onClick={() => goToInternalPage("/explore", { state: { activeTab: "atividades" } })}
               >
-                <span>Ver todas</span>
+                <span>{t("home.viewAll")}</span>
                 <span className="material-symbols-outlined">arrow_forward</span>
                 <div className="btn-glow"></div>
               </button>

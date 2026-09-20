@@ -16,19 +16,20 @@ import AtividadesTab from "../../components/App/Explore/AtividadesTab";
 import LegislacaoDronesTab from "../../components/App/Explore/LegislacaoDronesTab";
 
 import ParticleBackground from "../../components/App/Home/ParticleBackground";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 import "../../styles/App/Explore.css";
 
 // ================= TABS =================
 const tabs = [
-  { id: "diagnostico", label: "Diagnóstico", icon: "eco" },
-  { id: "monitoramento", label: "Monitoramento", icon: "psychiatry" },
-  { id: "clima", label: "Clima", icon: "cloud" },
-  { id: "diario", label: "Diário", icon: "menu_book" },
-  { id: "mapa", label: "Mapa", icon: "map" },
-  { id: "estoque", label: "Estoque", icon: "inventory" },
-  { id: "atividades", label: "Atividades", icon: "assignment" },
-  { id: "legislacao", label: "Legislação", icon: "gavel" }
+  { id: "diagnostico", labelKey: "modules.diagnosis", icon: "eco" },
+  { id: "monitoramento", labelKey: "modules.monitoring", icon: "psychiatry" },
+  { id: "clima", labelKey: "modules.weather", icon: "cloud" },
+  { id: "diario", labelKey: "modules.diary", icon: "menu_book" },
+  { id: "mapa", labelKey: "modules.map", icon: "map" },
+  { id: "estoque", labelKey: "modules.stock", icon: "inventory" },
+  { id: "atividades", labelKey: "modules.activities", icon: "assignment" },
+  { id: "legislacao", labelKey: "modules.legislation", icon: "gavel" }
 ];
 
 function normalizeTab(tabId) {
@@ -37,6 +38,7 @@ function normalizeTab(tabId) {
 
 export default function Explore() {
   const location = useLocation();
+  const { t } = useLanguage();
 
   // 🔒 valida tabs válidas
   const validTabs = tabs.map((t) => t.id);
@@ -124,7 +126,7 @@ export default function Explore() {
               <span className="explore-tab-icon material-symbols-outlined">
                 {tab.icon}
               </span>
-              <span className="explore-tab-label">{tab.label}</span>
+              <span className="explore-tab-label">{t(tab.labelKey)}</span>
             </button>
           ))}
         </div>
@@ -141,13 +143,13 @@ export default function Explore() {
           transition={{ duration: 0.2 }}
         >
           {activeTab === "diagnostico" && (
-            <aside className="desktop-feature-notice" role="note" aria-label="Recurso exclusivo do aplicativo desktop">
+            <aside className="desktop-feature-notice" role="note" aria-label={t("explore.multispectralDescription")}>
               <span className="desktop-feature-notice__icon" aria-hidden="true">
                 <span className="material-symbols-outlined">desktop_windows</span>
               </span>
               <div className="desktop-feature-notice__copy">
-                <strong>Análise multiespectral</strong>
-                <p>Este recurso avançado está disponível exclusivamente no aplicativo Zenith para desktop.</p>
+                <strong>{t("explore.multispectral")}</strong>
+                <p>{t("explore.multispectralDescription")}</p>
               </div>
               <span className="desktop-feature-notice__badge">Desktop</span>
             </aside>

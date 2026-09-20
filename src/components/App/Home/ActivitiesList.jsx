@@ -2,9 +2,11 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import DroneIcon from "../Global/DroneIcon"
+import { useLanguage } from "../../../contexts/LanguageContext"
 
 export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const [recentDiagnostics, setRecentDiagnostics] = useState([])
 
   // Carregar histórico de diagnósticos
@@ -24,11 +26,11 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
           <span className="material-symbols-outlined">inbox</span>
           <div className="empty-icon-ring"></div>
         </div>
-        <h3>Nenhuma atividade registrada</h3>
-        <p>Cadastre uma fazenda para começar a monitorar suas atividades em tempo real</p>
+        <h3>{t("activities.none")}</h3>
+        <p>{t("activities.noneDescription")}</p>
         <button className="empty-action-btn" onClick={onRegister}>
           <span className="material-symbols-outlined">add</span>
-          <span>Cadastrar Fazenda</span>
+          <span>{t("activities.registerFarm")}</span>
           <div className="btn-glow"></div>
         </button>
       </div>
@@ -63,20 +65,20 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
           </div>
           <div className="activity-content">
             <div className="activity-header">
-              <h4 className="activity-title">Atividades do Campo</h4>
-              <span className="activity-time">Gerencie suas tarefas</span>
+              <h4 className="activity-title">{t("activities.field")}</h4>
+              <span className="activity-time">{t("activities.manageTasks")}</span>
             </div>
             <p className="activity-description">
-              Visualize e gerencie todas as atividades da sua fazenda
+              {t("activities.fieldDescription")}
             </p>
             <div className="activity-metrics">
               <div className="metric">
                 <span className="material-symbols-outlined">checklist</span>
-                <span>Tarefas pendentes</span>
+                <span>{t("activities.pendingTasks")}</span>
               </div>
               <div className="metric">
                 <span className="material-symbols-outlined">chevron_right</span>
-                <span>Clique para acessar</span>
+                <span>{t("activities.clickAccess")}</span>
               </div>
             </div>
           </div>
@@ -92,8 +94,8 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
           </div>
           <div className="activity-content">
             <div className="activity-header">
-              <h4 className="activity-title">Diagnósticos Recentes</h4>
-              <span className="activity-time">Ver todos →</span>
+              <h4 className="activity-title">{t("activities.recentDiagnostics")}</h4>
+              <span className="activity-time">{t("home.viewAll")} →</span>
             </div>
             <p className="activity-description">
               {recentDiagnostics.slice(0, 2).map((diag, idx) => (
@@ -106,11 +108,11 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
             <div className="activity-metrics">
               <div className="metric">
                 <span className="material-symbols-outlined">inventory</span>
-                <span>{recentDiagnostics.length} diagnósticos salvos</span>
+                <span>{t("activities.savedDiagnostics", { count: recentDiagnostics.length })}</span>
               </div>
               <div className="metric">
                 <span className="material-symbols-outlined">trending_up</span>
-                <span>Clique para ver todos</span>
+                <span>{t("activities.clickViewAll")}</span>
               </div>
             </div>
           </div>
@@ -125,18 +127,18 @@ export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
         </div>
         <div className="activity-content">
           <div className="activity-header">
-            <h4 className="activity-title">Voo de Mapeamento</h4>
-            <span className="activity-time">2h atrás</span>
+            <h4 className="activity-title">{t("activities.mappingFlight")}</h4>
+            <span className="activity-time">{t("activities.twoHoursAgo")}</span>
           </div>
-          <p className="activity-description">Visualize áreas mapeadas no mapa interativo</p>
+          <p className="activity-description">{t("activities.mappingDescription")}</p>
           <div className="activity-metrics">
             <div className="metric">
               <span className="material-symbols-outlined">map</span>
-              <span>Ver no mapa</span>
+              <span>{t("activities.viewMap")}</span>
             </div>
             <div className="metric">
               <span className="material-symbols-outlined">chevron_right</span>
-              <span>Clique para acessar</span>
+              <span>{t("activities.clickAccess")}</span>
             </div>
           </div>
         </div>

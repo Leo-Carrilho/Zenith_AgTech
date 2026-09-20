@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useLanguage } from "../../../contexts/LanguageContext"
 import "../../../styles/Global/AppHeader.css"
 
 export default function AppHeader({
@@ -17,6 +18,7 @@ export default function AppHeader({
 
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
   const notificationRef = useRef(null)
   const notificationPanelRef = useRef(null)
   const notificationButtonRef = useRef(null)
@@ -37,15 +39,15 @@ export default function AppHeader({
       return [
         {
           icon: "add_location_alt",
-          title: "Cadastro da fazenda pendente",
-          description: "Cadastre sua fazenda para liberar clima, área e monitoramento.",
-          action: "Cadastrar agora",
+          title: t("header.pendingFarm"),
+          description: t("header.pendingFarmDescription"),
+          action: t("header.registerNow"),
           onClick: onRegister,
         },
         {
           icon: "tips_and_updates",
-          title: "Primeiro passo",
-          description: "Depois do cadastro, o painel passa a mostrar dados do campo em tempo real.",
+          title: t("header.firstStep"),
+          description: t("header.firstStepDescription"),
         },
       ]
     }
@@ -53,23 +55,23 @@ export default function AppHeader({
     return [
       {
         icon: "check_circle",
-        title: "Sistema online",
+        title: t("header.systemOnline"),
         description: farmName
-          ? `Monitoramento ativo para ${farmName}.`
-          : "Monitoramento ativo para sua fazenda.",
+          ? t("header.monitoringFarm", { farm: farmName })
+          : t("header.monitoringYourFarm"),
       },
       {
         icon: "assignment",
-        title: "Atividades do campo",
-        description: "Revise tarefas, diagnósticos e registros recentes.",
-        action: "Ver atividades",
+        title: t("header.fieldActivities"),
+        description: t("header.fieldActivitiesDescription"),
+        action: t("header.viewActivities"),
         onClick: () => {
           sessionStorage.setItem("zenithShowWhiteLoaderOnce", "true")
           navigate("/explore", { state: { activeTab: "atividades" } })
         },
       },
     ]
-  }, [farmName, hasFarm, navigate, onRegister])
+  }, [farmName, hasFarm, navigate, onRegister, t])
 
   useEffect(() => {
     if (!notificationsOpen) return
@@ -135,7 +137,7 @@ export default function AppHeader({
 
     if (enabled) {
       new Notification("Zenith", {
-        body: "Notificações ativadas com sucesso.",
+        body: t("header.alertsEnabled"),
         icon: "/assets/image/Logo-redonda.png",
       })
     }
@@ -151,18 +153,18 @@ export default function AppHeader({
         <div
           className="notification-panel"
           role="dialog"
-          aria-label="Central de notificações"
+          aria-label={t("header.notificationCenter")}
           ref={notificationPanelRef}
           style={notificationPanelStyle}
         >
           <div className="notification-panel-header">
             <div>
-              <strong>Notificações</strong>
-              <span>{notifications.length} atualizações</span>
+              <strong>{t("header.notifications")}</strong>
+              <span>{notifications.length} {t("header.updates")}</span>
             </div>
             <button
               className="notification-close"
-              aria-label="Fechar notificações"
+              aria-label={t("header.closeNotifications")}
               onClick={() => setNotificationsOpen(false)}
             >
               <span className="material-symbols-outlined">close</span>
@@ -194,7 +196,7 @@ export default function AppHeader({
               onClick={handleEnableNotifications}
             >
               <span className="material-symbols-outlined">notifications_active</span>
-              Ativar alertas do navegador
+              {t("header.enableAlerts")}
             </button>
           )}
         </div>,
@@ -218,11 +220,11 @@ export default function AppHeader({
         {showHomeContent ? (
           <button className="home-user-heading" onClick={() => goToInternalPage("/home")}>
             <span>
-              Olá, <strong>{userName || "Agricultor"}</strong>
+              {t("header.hello")} <strong>{userName || t("header.farmer")}</strong>
             </span>
             <small>
               <span className="material-symbols-outlined">location_on</span>
-              {cityName || farmName || "Cadastre sua fazenda"}
+              {cityName || farmName || t("header.registerFarm")}
             </small>
           </button>
         ) : (
@@ -237,7 +239,7 @@ export default function AppHeader({
               <button
                 ref={notificationButtonRef}
                 className={`notification-btn ${notificationsOpen ? "active" : ""}`}
-                aria-label="Notificações"
+                aria-label={t("header.notifications")}
                 aria-expanded={notificationsOpen}
                 aria-haspopup="dialog"
                 onClick={() => setNotificationsOpen((isOpen) => !isOpen)}
@@ -254,7 +256,7 @@ export default function AppHeader({
             <button
               className="profile-avatar-btn"
               onClick={() => goToInternalPage("/profile")}
-              aria-label="Abrir perfil"
+              aria-label={t("header.openProfile")}
             >
               <span className="material-symbols-outlined">account_circle</span>
             </button>

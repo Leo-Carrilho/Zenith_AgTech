@@ -1,6 +1,47 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import "../../../styles/App/EstoqueTab.css"
+
+const EMPTY_PRODUCT = {
+  name: "",
+  category: "insumo",
+  quantity: "",
+  unit: "unidade",
+  minQuantity: "",
+  price: "",
+  supplier: "",
+  expiryDate: ""
+}
+
+function validateNewProduct(product) {
+  const errors = {}
+  const quantity = Number(product.quantity)
+  const minQuantity = Number(product.minQuantity)
+  const price = Number(product.price)
+
+  if (!product.name.trim()) errors.name = "Informe o nome do produto."
+  if (!product.category) errors.category = "Selecione uma categoria."
+  if (product.quantity === "") {
+    errors.quantity = "Informe a quantidade."
+  } else if (!Number.isFinite(quantity) || quantity <= 0) {
+    errors.quantity = "A quantidade deve ser maior que zero."
+  }
+  if (!product.unit) errors.unit = "Selecione uma unidade."
+  if (product.minQuantity === "") {
+    errors.minQuantity = "Informe a quantidade mínima."
+  } else if (!Number.isFinite(minQuantity) || minQuantity < 0) {
+    errors.minQuantity = "A quantidade mínima não pode ser negativa."
+  }
+  if (product.price === "") {
+    errors.price = "Informe o preço unitário."
+  } else if (!Number.isFinite(price) || price <= 0) {
+    errors.price = "O preço deve ser maior que zero."
+  }
+  if (!product.supplier.trim()) errors.supplier = "Informe o fornecedor."
+  if (!product.expiryDate) errors.expiryDate = "Informe a data de validade."
+
+  return errors
+}
 
 export default function EstoqueTab() {
   const [products, setProducts] = useState([])
@@ -10,16 +51,9 @@ export default function EstoqueTab() {
   const [filterCategory, setFilterCategory] = useState("todos")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [movements, setMovements] = useState([])
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    category: "insumo",
-    quantity: "",
-    unit: "unidade",
-    minQuantity: "",
-    price: "",
-    supplier: "",
-    expiryDate: ""
-  })
+  const [newProduct, setNewProduct] = useState({ ...EMPTY_PRODUCT })
+  const [newProductErrors, setNewProductErrors] = useState({})
+  const newProductFormRef = useRef(null)
 
   // Categorias disponíveis
   const categories = [
@@ -123,30 +157,47 @@ export default function EstoqueTab() {
   }
 
   // Adicionar produto
+  const updateNewProductField = (field, value) => {
+    setNewProduct(current => ({ ...current, [field]: value }))
+    setNewProductErrors(current => {
+      if (!current[field]) return current
+      const nextErrors = { ...current }
+      delete nextErrors[field]
+      return nextErrors
+    })
+  }
+
+  const closeNewProductForm = () => {
+    setShowForm(false)
+    setNewProductErrors({})
+  }
+
   const addProduct = () => {
-    if (!newProduct.name.trim()) return
+    const validationErrors = validateNewProduct(newProduct)
+
+    if (Object.keys(validationErrors).length > 0) {
+      setNewProductErrors(validationErrors)
+      requestAnimationFrame(() => {
+        newProductFormRef.current?.querySelector('[aria-invalid="true"]')?.focus()
+      })
+      return
+    }
 
     const product = {
       id: Date.now(),
       ...newProduct,
-      quantity: parseFloat(newProduct.quantity) || 0,
-      minQuantity: parseFloat(newProduct.minQuantity) || 0,
-      price: parseFloat(newProduct.price) || 0,
+      name: newProduct.name.trim(),
+      supplier: newProduct.supplier.trim(),
+      quantity: Number(newProduct.quantity),
+      minQuantity: Number(newProduct.minQuantity),
+      price: Number(newProduct.price),
       createdAt: new Date().toISOString()
     }
 
     saveProducts([...products, product])
     recordMovement(product.id, "entrada", product.quantity)
-    setNewProduct({
-      name: "",
-      category: "insumo",
-      quantity: "",
-      unit: "unidade",
-      minQuantity: "",
-      price: "",
-      supplier: "",
-      expiryDate: ""
-    })
+    setNewProduct({ ...EMPTY_PRODUCT })
+    setNewProductErrors({})
     setShowForm(false)
   }
 

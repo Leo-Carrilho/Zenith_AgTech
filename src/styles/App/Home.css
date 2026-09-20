@@ -29,6 +29,461 @@
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* Footer institucional Zenith */
+.home-container .app-footer.zenith-footer {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  margin: 48px 0 0 calc(50% - 50vw);
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-top: 3px solid rgba(239, 247, 235, 0.92);
+  background: #10492f;
+  color: #f5fbf3;
+}
+
+.zenith-footer,
+.zenith-footer * {
+  box-sizing: border-box;
+}
+
+.zenith-footer__main {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 46px 28px 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(190px, 0.7fr) minmax(270px, 1fr);
+  gap: 54px;
+}
+
+.zenith-footer__brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zenith-footer__brand-lockup > img {
+  width: 58px;
+  height: 58px;
+  display: block;
+  flex: 0 0 58px;
+  object-fit: contain;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.zenith-footer__brand-lockup > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.zenith-footer__brand-lockup strong {
+  color: #ffffff;
+  font-size: 1.45rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.zenith-footer__brand-lockup span {
+  color: #d1e5d3;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.zenith-footer__brand > p {
+  max-width: 530px;
+  margin: 22px 0 18px;
+  color: #c4d8c8;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.zenith-footer__capabilities,
+.zenith-footer__navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.zenith-footer__capabilities {
+  display: grid;
+  gap: 7px;
+}
+
+.zenith-footer__capabilities li {
+  min-height: 38px;
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(204, 230, 208, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #e9f4e7;
+}
+
+.zenith-footer__capabilities .material-symbols-outlined {
+  color: #94c79d;
+  font-size: 17px;
+}
+
+.zenith-footer__capabilities strong {
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.zenith-footer__navigation h2,
+.zenith-footer__contact h2 {
+  margin: 4px 0 16px;
+  color: #8dc697;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.zenith-footer__navigation li + li {
+  margin-top: 4px;
+}
+
+.zenith-footer__navigation button {
+  width: 100%;
+  min-height: 38px;
+  padding: 6px 2px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-bottom: 1px solid rgba(209, 229, 211, 0.1);
+  border-radius: 0;
+  background: transparent;
+  color: #e7f2e5;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zenith-footer__navigation button:hover,
+.zenith-footer__navigation button:focus-visible {
+  color: #ffffff;
+  border-bottom-color: rgba(188, 222, 192, 0.38);
+  outline: none;
+}
+
+.zenith-footer__navigation button .material-symbols-outlined {
+  color: #a8cdae;
+  font-size: 18px;
+}
+
+.zenith-footer__navigation button .material-symbols-outlined:last-child {
+  justify-self: end;
+  color: #6fa27a;
+  font-size: 15px;
+}
+
+.zenith-footer__navigation button strong {
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 730;
+  line-height: 1.25;
+}
+
+.zenith-footer__contact-list {
+  display: grid;
+  gap: 9px;
+}
+
+.zenith-footer__contact-list > a {
+  min-width: 0;
+  min-height: 56px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  border: 1px solid rgba(204, 230, 208, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.zenith-footer__contact-list > a:hover,
+.zenith-footer__contact-list > a:focus-visible {
+  border-color: rgba(204, 230, 208, 0.46);
+  background: rgba(255, 255, 255, 0.085);
+  outline: none;
+}
+
+.zenith-footer__contact-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: 0 0 40px;
+  padding: 0;
+  border-radius: 7px;
+  background: rgba(131, 191, 143, 0.18);
+  color: #a7d4ae;
+}
+
+.zenith-footer__contact-icon > .material-symbols-outlined,
+.zenith-footer__project-icon > .material-symbols-outlined {
+  width: 22px;
+  height: 22px;
+  display: block;
+  font-size: 19px;
+  line-height: 22px;
+  text-align: center;
+  transform: none;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 500,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.zenith-footer__contact-list > a > span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.zenith-footer__contact-list small {
+  color: #95ae9a;
+  font-size: 0.58rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.zenith-footer__contact-list strong {
+  min-width: 0;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.zenith-footer__project-band {
+  padding: 26px max(28px, calc((100vw - 1124px) / 2));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 430px);
+  align-items: center;
+  gap: 54px;
+  border-top: 1px solid rgba(218, 236, 219, 0.13);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.zenith-footer__project {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.zenith-footer__project-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: 0 0 40px;
+  padding: 0;
+  border: 1px solid rgba(200, 227, 204, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #9acda3;
+}
+
+.zenith-footer__project > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.zenith-footer__project small {
+  color: #8dc697;
+  font-size: 0.6rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.zenith-footer__project strong {
+  max-width: 520px;
+  color: #f7fbf6;
+  font-size: 0.8rem;
+  font-weight: 780;
+  line-height: 1.4;
+}
+
+.zenith-footer__project p {
+  color: #9fb5a3;
+  font-size: 0.66rem;
+  line-height: 1.4;
+}
+
+.zenith-footer__institutions {
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  padding: 12px 18px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.zenith-footer__institutions img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.zenith-footer__bottom {
+  min-height: 62px;
+  padding: 16px max(28px, calc((100vw - 1124px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: #093720;
+}
+
+.zenith-footer__bottom p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #91aa96;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.zenith-footer__bottom .material-symbols-outlined {
+  color: #78b685;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .home-container .app-footer.zenith-footer {
+    width: 100vw !important;
+    margin: 34px 0 0 calc(50% - 50vw) !important;
+    padding: 0 !important;
+  }
+
+  .zenith-footer__main {
+    padding: 30px 18px 26px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .zenith-footer__brand-lockup > img {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+  }
+
+  .zenith-footer__brand-lockup strong {
+    font-size: 1.35rem;
+  }
+
+  .zenith-footer__brand > p {
+    margin: 18px 0 16px;
+    font-size: 0.76rem;
+  }
+
+  .zenith-footer__capabilities {
+    gap: 6px;
+  }
+
+  .zenith-footer__capabilities li {
+    min-height: 40px;
+  }
+
+  .zenith-footer__navigation h2,
+  .zenith-footer__contact h2 {
+    margin-bottom: 11px;
+    font-size: 0.65rem;
+  }
+
+  .zenith-footer__navigation ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
+  }
+
+  .zenith-footer__navigation li + li {
+    margin-top: 0;
+  }
+
+  .zenith-footer__navigation button {
+    min-height: 44px;
+  }
+
+  .zenith-footer__contact-list > a {
+    min-height: 58px;
+  }
+
+  .zenith-footer__project-band {
+    padding: 24px 18px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .zenith-footer__project {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .zenith-footer__project-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .zenith-footer__institutions {
+    width: min(100%, 380px);
+    margin: 0 auto;
+    padding: 10px 14px;
+  }
+
+  .zenith-footer__bottom {
+    min-height: 0;
+    padding: 18px 18px calc(112px + env(safe-area-inset-bottom, 0px));
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .zenith-footer__bottom p {
+    font-size: 0.61rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .zenith-footer__navigation ul {
+    grid-template-columns: 1fr;
+  }
+
+  .zenith-footer__contact-list strong {
+    font-size: 0.68rem;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;

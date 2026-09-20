@@ -827,6 +827,12 @@
   background: #ffffff;
   box-shadow: 0 3px 12px rgba(34, 78, 47, 0.04);
   backdrop-filter: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.estoque-dashboard .search-bar:focus-within {
+  border-color: rgba(45, 113, 69, 0.48);
+  box-shadow: 0 0 0 3px rgba(86, 168, 112, 0.14);
 }
 
 .estoque-dashboard .search-bar span {
@@ -841,6 +847,12 @@
   padding: 0;
   color: #233e2c;
   font-size: 0.72rem;
+}
+
+.estoque-dashboard .search-bar input:focus,
+.estoque-dashboard .search-bar input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .estoque-dashboard .filter-toggle,

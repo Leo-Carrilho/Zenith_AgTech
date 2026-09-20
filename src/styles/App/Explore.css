@@ -3148,6 +3148,7 @@ span[style*="color: var(--primary)"] {
 
 .drone-law-dashboard .drone-law-link-copy {
   min-width: 0;
+  padding-left: 5px;
 }
 
 .drone-law-dashboard .drone-law-link-copy strong,

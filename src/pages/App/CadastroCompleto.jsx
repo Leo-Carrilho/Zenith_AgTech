@@ -13,6 +13,7 @@ import {
   maskAccountDocument,
   maskAccountPhone,
 } from "../../services/accountIdentity"
+import { useLanguage } from "../../contexts/LanguageContext"
 import "../../styles/App/CadastroCompleto.css"
 
 const PROBLEMAS_LAVOURA = [
@@ -37,6 +38,7 @@ const UFS_BRASIL = [
 
 export default function CadastroCompleto({ setAppLoading }) {
   const navigate = useNavigate()
+  const { setLanguage } = useLanguage()
 
   const [etapa, setEtapa] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -55,6 +57,7 @@ export default function CadastroCompleto({ setAppLoading }) {
     document: "",
     email: "",
     password: "",
+    language: "",
     role: ACCOUNT_ROLES.ADMIN,
   })
 
@@ -211,7 +214,8 @@ export default function CadastroCompleto({ setAppLoading }) {
       !userData.type ||
       !userData.document ||
       !userData.email ||
-      !userData.password
+      !userData.password ||
+      !userData.language
     ) {
       setAlertMessage({
         type: "error",
@@ -448,6 +452,7 @@ export default function CadastroCompleto({ setAppLoading }) {
           type: userData.type,
           document: userData.document,
           email: userCred.user.email || userData.email,
+          language: userData.language,
           hectares: 0,
           role: ACCOUNT_ROLES.ADMIN,
           position: "Administrador",
@@ -533,9 +538,12 @@ export default function CadastroCompleto({ setAppLoading }) {
         doc(db, "owners", userId),
         {
           hectares: parseFloat(farmData.area_total),
+          language: userData.language,
         },
         { merge: true }
       )
+
+      setLanguage(userData.language)
 
       setAlertMessage({
         type: "success",
@@ -928,6 +936,23 @@ export default function CadastroCompleto({ setAppLoading }) {
                 placeholder="Sua senha"
                 maxLength={64}
               />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="register-language">Idioma do aplicativo</label>
+
+              <select
+                id="register-language"
+                name="language"
+                value={userData.language}
+                onChange={handleUserChange}
+                required
+              >
+                <option value="">Selecione seu idioma</option>
+                <option value="pt-BR">Português</option>
+                <option value="en">Inglês</option>
+                <option value="es">Espanhol</option>
+              </select>
             </div>
 
             {alertMessage.text && (

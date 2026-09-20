@@ -304,7 +304,9 @@ export default function BatchDiagnosisResult({ result, selectedImages = [], onRe
                   <span className="batch-eyebrow">VISÃO GERAL</span>
                   <h2>Probabilidade média</h2>
                 </div>
-                <span className="material-symbols-outlined batch-heading-symbol">donut_large</span>
+                <span className="batch-heading-symbol" aria-hidden="true">
+                  <span className="material-symbols-outlined">donut_large</span>
+                </span>
               </div>
               <div className="batch-probability-list">
                 {probabilities.map((item) => (
@@ -327,7 +329,9 @@ export default function BatchDiagnosisResult({ result, selectedImages = [], onRe
                   <span className="batch-eyebrow">PRÓXIMAS AÇÕES</span>
                   <h2>Como usar o resultado</h2>
                 </div>
-                <span className="material-symbols-outlined batch-heading-symbol">route</span>
+                <span className="batch-heading-symbol" aria-hidden="true">
+                  <span className="material-symbols-outlined">route</span>
+                </span>
               </div>
               <ol className="batch-guidance-list">
                 {nextSteps.map((step, index) => (

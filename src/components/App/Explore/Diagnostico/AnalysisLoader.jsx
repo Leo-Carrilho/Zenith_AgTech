@@ -1,4 +1,7 @@
+import { useLanguage } from "../../../../contexts/LanguageContext"
+
 export default function AnalysisLoader({ imageCount = 1 }) {
+  const { t } = useLanguage()
   const isBatch = imageCount > 1
 
   return (
@@ -9,12 +12,12 @@ export default function AnalysisLoader({ imageCount = 1 }) {
         <div className="analysis-topbar">
           <div className="analysis-chip">
             <span className="material-symbols-outlined">auto_awesome</span>
-            Inteligência artificial
+            {t("diagnosis.artificialIntelligence")}
           </div>
 
           <div className="analysis-status">
             <span className="analysis-status-dot"></span>
-            Processando
+            {t("diagnosis.processing")}
           </div>
         </div>
 
@@ -40,18 +43,18 @@ export default function AnalysisLoader({ imageCount = 1 }) {
 
         <div className="analysis-copy">
           <h3>
-            {isBatch ? `Analisando ${imageCount} imagens` : "Analisando imagem"}
+            {isBatch ? t("diagnosis.analyzingImages", { count: imageCount }) : t("diagnosis.analyzingImage")}
           </h3>
 
           <p>
             {isBatch
-              ? "Consolidando o levantamento e identificando padrões com inteligência artificial."
-              : "Processando a imagem e preparando o diagnóstico com inteligência artificial."}
+              ? t("diagnosis.batchProcessing")
+              : t("diagnosis.imageProcessing")}
           </p>
         </div>
 
         <div className="progress-meta">
-          <span>Análise em andamento</span>
+          <span>{t("diagnosis.inProgress")}</span>
           <span>Zenith IA</span>
         </div>
 
@@ -65,8 +68,8 @@ export default function AnalysisLoader({ imageCount = 1 }) {
               <span className="material-symbols-outlined">filter_center_focus</span>
             </div>
             <div className="step-text">
-              <strong>Pré-processamento</strong>
-              <span>Preparação da imagem</span>
+              <strong>{t("diagnosis.preprocessing")}</strong>
+              <span>{t("diagnosis.imagePreparation")}</span>
             </div>
           </div>
 
@@ -75,8 +78,8 @@ export default function AnalysisLoader({ imageCount = 1 }) {
               <span className="material-symbols-outlined">psychology</span>
             </div>
             <div className="step-text">
-              <strong>Inferência</strong>
-              <span>Leitura pela IA</span>
+              <strong>{t("diagnosis.inference")}</strong>
+              <span>{t("diagnosis.aiReading")}</span>
             </div>
           </div>
 
@@ -85,15 +88,15 @@ export default function AnalysisLoader({ imageCount = 1 }) {
               <span className="material-symbols-outlined">analytics</span>
             </div>
             <div className="step-text">
-              <strong>{isBatch ? "Consolidação" : "Resultado final"}</strong>
-              <span>Geração do diagnóstico</span>
+              <strong>{isBatch ? t("diagnosis.consolidation") : t("diagnosis.finalResult")}</strong>
+              <span>{t("diagnosis.resultGeneration")}</span>
             </div>
           </div>
         </div>
 
         <div className="analysis-footer">
           <span className="material-symbols-outlined">verified_user</span>
-          <span>O resultado aparecerá automaticamente quando o processamento for concluído.</span>
+          <span>{t("diagnosis.automaticResult")}</span>
         </div>
       </div>
 
@@ -101,13 +104,10 @@ export default function AnalysisLoader({ imageCount = 1 }) {
         .analysis-container {
           width: 100%;
           max-width: 560px;
-
-          margin: -55px auto 0;
-
-          padding: 20px 16px 120px;
-
-          display: flex;
-          justify-content: center;
+          min-height: 0;
+          margin: 0 auto;
+          padding: 0 16px calc(112px + env(safe-area-inset-bottom, 0px));
+          display: block;
           box-sizing: border-box;
           user-select: none;
         }
@@ -115,6 +115,10 @@ export default function AnalysisLoader({ imageCount = 1 }) {
         .analysis-content {
           position: relative;
           width: 100%;
+          max-width: none;
+          display: block;
+          align-items: initial;
+          gap: 0;
           overflow: hidden;
           padding: 22px 20px 18px;
           border-radius: 28px;
@@ -504,7 +508,7 @@ export default function AnalysisLoader({ imageCount = 1 }) {
 
         @media (max-width: 480px) {
           .analysis-container {
-            padding: 18px 14px 120px;
+            padding: 0 14px calc(108px + env(safe-area-inset-bottom, 0px));
           }
 
           .analysis-content {
@@ -513,7 +517,7 @@ export default function AnalysisLoader({ imageCount = 1 }) {
           }
 
           .loader-wrapper {
-            height: 128px;
+            height: 118px;
           }
 
           .loader-ring {

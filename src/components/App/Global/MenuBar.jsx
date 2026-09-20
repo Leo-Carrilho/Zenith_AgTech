@@ -3,30 +3,32 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../../../services/firebase"
 import { ACCOUNT_ROLES, getUserAccessProfile, isOperationalRole } from "../../../services/accessControl"
+import { useLanguage } from "../../../contexts/LanguageContext"
 import "../../../styles/Global/MenuBar.css"
 
 const adminItems = [
-  { path: "/home", icon: "home", label: "Início" },
-  { path: "/admin/team", icon: "groups", label: "Equipe" },
-  { action: "create", icon: "add", label: "Adicionar", isPrimary: true },
-  { path: "/explore", hash: "#mapa", icon: "grid_view", label: "Explore" },
-  { path: "/profile", icon: "person", label: "Perfil" },
+  { path: "/home", icon: "home", labelKey: "menu.home" },
+  { path: "/admin/team", icon: "groups", labelKey: "menu.team" },
+  { action: "create", icon: "add", labelKey: "menu.add", isPrimary: true },
+  { path: "/explore", hash: "#mapa", icon: "grid_view", labelKey: "menu.explore" },
+  { path: "/profile", icon: "person", labelKey: "menu.profile" },
 ]
 
 const createActions = [
-  { path: "/admin/team", hash: "#novo-funcionario", icon: "person_add", label: "Novo funcionário" },
-  { path: "/admin/team", hash: "#nova-tarefa", icon: "assignment_add", label: "Nova tarefa" },
-  { path: "/admin/team", hash: "#configurar-drone", icon: "flight", label: "Configurar drone" },
+  { path: "/admin/team", hash: "#novo-funcionario", icon: "person_add", labelKey: "menu.newEmployee" },
+  { path: "/admin/team", hash: "#nova-tarefa", icon: "assignment_add", labelKey: "menu.newTask" },
+  { path: "/admin/team", hash: "#configurar-drone", icon: "flight", labelKey: "menu.configureDrone" },
 ]
 
 const employeeItems = [
-  { path: "/funcionarios", icon: "assignment", label: "Tarefas" },
-  { path: "/profile", icon: "person", label: "Perfil" },
+  { path: "/funcionarios", icon: "assignment", labelKey: "menu.tasks" },
+  { path: "/profile", icon: "person", labelKey: "menu.profile" },
 ]
 
 export default function MenuBar() {
   const navigate  = useNavigate()
   const location  = useLocation()
+  const { t } = useLanguage()
   const lastScrollYRef = useRef(0)
   const tickingRef = useRef(false)
   const createMenuRef = useRef(null)
@@ -129,18 +131,19 @@ export default function MenuBar() {
       className={`nav ${isVisible ? "nav--visible" : "nav--hidden"}${isCreateMenuOpen ? " nav--create-open" : ""}`}
     >
       {isCreateMenuOpen && !isOperationalRole(role) && (
-        <div className="nav__create-menu" role="menu" aria-label="Ações da equipe">
+        <div className="nav__create-menu" role="menu" aria-label={t("menu.teamActions")}>
           {createActions.map((action) => (
             <button key={action.hash} type="button" role="menuitem" onClick={() => goToInternalPage(action)}>
               <span className="material-symbols-outlined" aria-hidden="true">{action.icon}</span>
-              <span>{action.label}</span>
+              <span>{t(action.labelKey)}</span>
             </button>
           ))}
         </div>
       )}
       <ul className="nav__items" style={{ "--nav-item-count": items.length }}>
         {items.map((item) => {
-          const { path, hash, action, icon, label, isPrimary } = item
+          const { path, hash, action, icon, labelKey, isPrimary } = item
+          const label = t(labelKey)
           const active = isActive(item)
           return (
             <li

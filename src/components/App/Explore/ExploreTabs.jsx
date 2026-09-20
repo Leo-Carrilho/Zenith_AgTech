@@ -1,18 +1,22 @@
+import { useLanguage } from "../../../contexts/LanguageContext"
+
 const tabs = [
-  { id: "diagnostico", icon: "eco", label: "Diagnóstico" },
-  { id: "monitoramento", icon: "analytics", label: "Monitoramento" },
-  { id: "clima", icon: "cloud", label: "Clima" },
-  { id: "diario", icon: "menu_book", label: "Diário" },
-  { id: "mapa", icon: "map", label: "Mapa" },
-  { id: "estoque", icon: "inventory", label: "Estoque" },
-  { id: "atividades", icon: "assignment", label: "Atividades" },
-  { id: "legislacao", icon: "gavel", label: "Legislação" }
+  { id: "diagnostico", icon: "eco", labelKey: "modules.diagnosis" },
+  { id: "monitoramento", icon: "analytics", labelKey: "modules.monitoring" },
+  { id: "clima", icon: "cloud", labelKey: "modules.weather" },
+  { id: "diario", icon: "menu_book", labelKey: "modules.diary" },
+  { id: "mapa", icon: "map", labelKey: "modules.map" },
+  { id: "estoque", icon: "inventory", labelKey: "modules.stock" },
+  { id: "atividades", icon: "assignment", labelKey: "modules.activities" },
+  { id: "legislacao", icon: "gavel", labelKey: "modules.legislation" }
 ];
 
 export default function ExploreTabs({ activeTab, onTabChange }) {
+  const { t } = useLanguage()
+
   return (
     <div className="explore-tabs-header">
-      <div className="explore-tabs-modern" role="tablist" aria-label="Módulos de exploração">
+      <div className="explore-tabs-modern" role="tablist" aria-label={t("explore.modules")}>
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -23,7 +27,7 @@ export default function ExploreTabs({ activeTab, onTabChange }) {
             onClick={() => onTabChange(tab.id)}
           >
             <span className="material-symbols-outlined explore-tab-icon">{tab.icon}</span>
-            <span className="explore-tab-label">{tab.label}</span>
+            <span className="explore-tab-label">{t(tab.labelKey)}</span>
           </button>
         ))}
       </div>

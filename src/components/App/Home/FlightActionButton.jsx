@@ -1,7 +1,10 @@
 // components/Home/FlightActionButton.jsx
 import DroneIcon from "../Global/DroneIcon"
+import { useLanguage } from "../../../contexts/LanguageContext"
 
 export default function FlightActionButton({ onNavigate }) {
+  const { t } = useLanguage()
+
   return (
     <section className="action-section">
       <button className="flight-action-btn glass" onClick={onNavigate}>
@@ -11,7 +14,7 @@ export default function FlightActionButton({ onNavigate }) {
             <div className="btn-icon-glow"></div>
           </div>
           <div className="btn-text">
-            <span className="btn-title">Iniciar Monitoramento</span>
+            <span className="btn-title">{t("home.startMonitoring")}</span>
           </div>
           <div className="btn-arrow-wrapper">
             <span className="material-symbols-outlined btn-arrow">arrow_forward</span>

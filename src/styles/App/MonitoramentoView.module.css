@@ -1569,10 +1569,16 @@
 
 .plantingHistorySummary > button {
   width: 32px;
+  min-width: 32px;
+  max-width: 32px;
   height: 32px;
+  min-height: 32px;
+  max-height: 32px;
   display: grid;
   place-items: center;
   flex: 0 0 32px;
+  box-sizing: border-box;
+  aspect-ratio: 1;
   padding: 0;
   border: 1px solid rgba(45, 97, 64, 0.16);
   border-radius: 8px;
@@ -1582,12 +1588,14 @@
 }
 
 .plantingHistoryHeader .plantingHistorySummary > button .material-symbols-outlined {
+  display: block;
   width: auto;
   height: auto;
   border-radius: 0;
   background: transparent;
   color: inherit;
   font-size: 18px;
+  line-height: 1;
 }
 
 .plantingHistoryEmpty {
@@ -1649,7 +1657,7 @@
 
 .plantingHistoryCardTop {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
@@ -1662,7 +1670,13 @@
   border-radius: 50%;
   background: #edf5e9;
   color: #4a8557;
+}
+
+.plantingHistoryIcon .material-symbols-outlined {
+  display: block;
+  color: inherit;
   font-size: 21px;
+  line-height: 1;
 }
 
 .plantingHistoryInfo {
@@ -1728,10 +1742,17 @@
 
 .plantingHistoryDelete {
   width: 32px;
+  min-width: 32px;
+  max-width: 32px;
   height: 32px;
+  min-height: 32px;
+  max-height: 32px;
   display: grid;
   place-items: center;
   flex: 0 0 32px;
+  align-self: center;
+  box-sizing: border-box;
+  aspect-ratio: 1;
   padding: 0;
   border: 1px solid #ffadad;
   border-radius: 8px;
@@ -1740,8 +1761,10 @@
 }
 
 .plantingHistoryDelete .material-symbols-outlined {
+  display: block;
   color: inherit;
   font-size: 16px;
+  line-height: 1;
 }
 
 .plantingHistoryMetrics {

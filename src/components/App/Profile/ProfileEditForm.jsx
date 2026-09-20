@@ -1,7 +1,11 @@
 // components/Profile/ProfileEditForm.jsx
+import { useLanguage } from "../../../contexts/LanguageContext"
+
 const profileIcons = ["👨‍🌾", "🚜", "🌱", "🌽", "🌻", "🐄", "🐓", "🍎", "🌾", "🧑‍🌾", "🌿", "🍊", "🐝", "🚛", "🏡"]
 
 export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
+  const { t } = useLanguage()
+
   return (
     <div className="profile-card glass edit-card">
       <div className="card-corner"></div>
@@ -11,7 +15,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
         <div className="icon-selector-tech">
           <label>
             <span className="material-symbols-outlined">emoji_emotions</span>
-            Escolha seu ícone
+            {t("editor.chooseIcon")}
           </label>
           <div className="icon-grid-tech">
             {profileIcons.map((icon, index) => (
@@ -36,7 +40,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
               className="tech-input"
               name="name"
               value={formData.name}
-              placeholder="Nome completo"
+              placeholder={t("personal.name")}
               onChange={onChange}
             />
             <div className="input-glow"></div>
@@ -49,7 +53,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
               type="number"
               name="age"
               value={formData.age}
-              placeholder="Idade"
+              placeholder={t("editor.age")}
               min="0"
               max="120"
               onChange={onChange}
@@ -63,7 +67,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
               className="tech-input"
               name="phone"
               value={formData.phone}
-              placeholder="Telefone"
+              placeholder={t("personal.phone")}
               onChange={onChange}
             />
             <div className="input-glow"></div>
@@ -76,7 +80,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
               type="number"
               name="hectares"
               value={formData.hectares}
-              placeholder="Hectares totais"
+              placeholder={t("editor.totalHectares")}
               min="0"
               step="0.1"
               onChange={onChange}
@@ -91,7 +95,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
                 className="tech-input"
                 name="city"
                 value={formData.city}
-                placeholder="Cidade"
+                placeholder={t("editor.city")}
                 onChange={onChange}
               />
               <div className="input-glow"></div>
@@ -102,7 +106,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
                 className="tech-input"
                 name="state"
                 value={formData.state}
-                placeholder="UF"
+                placeholder={t("editor.state")}
                 maxLength="2"
                 onChange={onChange}
               />
@@ -113,7 +117,7 @@ export default function ProfileEditForm({ formData, onChange, onIconSelect }) {
 
         <div className="info-note">
           <span className="material-symbols-outlined">info</span>
-          <p>Estas informações serão usadas como padrão para novas propriedades</p>
+          <p>{t("editor.note")}</p>
         </div>
       </div>
     </div>

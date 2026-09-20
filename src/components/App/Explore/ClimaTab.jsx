@@ -1,11 +1,73 @@
 import { useState, useEffect } from "react"
 import { useFarm } from "./hooks/useFarm"
+import { getWeatherBundleByCity } from "../../../services/weatherService"
+import { useLanguage } from "../../../contexts/LanguageContext"
 import "../../../styles/App/Explore.css"
 import "../../../styles/App/ClimaTab.css"
 
-const API_KEY = "d77668673cf15b7d0488f921007cbd6b"
+const getLocationDateKey = (unixSeconds, timezoneOffset = 0) =>
+  new Date((unixSeconds + timezoneOffset) * 1000).toISOString().slice(0, 10)
+
+const formatLocationTime = (unixSeconds, timezoneOffset = 0, locale = "pt-BR") =>
+  new Intl.DateTimeFormat(locale, {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+  }).format(new Date((unixSeconds + timezoneOffset) * 1000))
+
+const capitalize = (value = "") => value.charAt(0).toUpperCase() + value.slice(1)
+
+const buildDailyForecast = (items = [], timezoneOffset = 0, referenceUnix = Date.now() / 1000, locale = "pt-BR", t) => {
+  const todayKey = getLocationDateKey(referenceUnix, timezoneOffset)
+  const tomorrowKey = getLocationDateKey(referenceUnix + 86400, timezoneOffset)
+  const groupedDays = new Map()
+
+  items.forEach((item) => {
+    const dateKey = getLocationDateKey(item.dt, timezoneOffset)
+    if (dateKey === todayKey) return
+
+    if (!groupedDays.has(dateKey)) groupedDays.set(dateKey, [])
+    groupedDays.get(dateKey).push(item)
+  })
+
+  return Array.from(groupedDays.entries()).slice(0, 5).map(([dateKey, dayItems]) => {
+    const representative = dayItems.reduce((closest, item) => {
+      const locationHour = new Date((item.dt + timezoneOffset) * 1000).getUTCHours()
+      const closestHour = new Date((closest.dt + timezoneOffset) * 1000).getUTCHours()
+      return Math.abs(locationHour - 12) < Math.abs(closestHour - 12) ? item : closest
+    })
+    const locationDate = new Date((representative.dt + timezoneOffset) * 1000)
+    const weekday = new Intl.DateTimeFormat(locale, {
+      weekday: "short",
+      timeZone: "UTC",
+    }).format(locationDate).replace(".", "")
+    const date = new Intl.DateTimeFormat(locale, {
+      day: "2-digit",
+      month: "2-digit",
+      timeZone: "UTC",
+    }).format(locationDate)
+
+    return {
+      dateKey,
+      dayLabel: dateKey === tomorrowKey ? t("climate.tomorrow") : capitalize(weekday),
+      date,
+      description: representative.weather?.[0]?.description || t("climate.dailyForecast"),
+      icon: representative.weather?.[0]?.icon || "03d",
+      tempMin: Math.round(Math.min(...dayItems.map((item) => item.main.temp_min))),
+      tempMax: Math.round(Math.max(...dayItems.map((item) => item.main.temp_max))),
+      rainChance: Math.round(Math.max(...dayItems.map((item) => (item.pop || 0) * 100))),
+      rainVolume: dayItems.reduce((total, item) => total + (item.rain?.["3h"] || 0), 0),
+    }
+  })
+}
+
+const formatWeatherNumber = (value, maximumFractionDigits = 1, locale = "pt-BR") => {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "N/D"
+  return Number(value).toLocaleString(locale, { maximumFractionDigits })
+}
 
 export default function ClimaTab() {
+  const { language, locale, t } = useLanguage()
   const { farmData, loading: farmLoading } = useFarm()
 
   const [weatherData, setWeatherData] = useState(null)
@@ -13,58 +75,51 @@ export default function ClimaTab() {
   const [error, setError] = useState(null)
   const [expandedRecommendation, setExpandedRecommendation] = useState(null)
 
-  const fetchWeather = async () => {
+  const fetchWeather = async (silent = false) => {
     if (!farmData) {
-      setError("Nenhuma fazenda cadastrada")
-      setLoading(false)
+      if (!silent) {
+        setError(t("climate.noFarm"))
+        setLoading(false)
+      }
       return
     }
 
     if (!farmData.municipio || !farmData.uf) {
-      setError("Localização da fazenda incompleta")
-      setLoading(false)
+      if (!silent) {
+        setError(t("climate.incompleteLocation"))
+        setLoading(false)
+      }
       return
     }
 
-    setLoading(true)
-    setError(null)
+    if (!silent) setLoading(true)
 
     try {
-      const city = encodeURIComponent(farmData.municipio)
       const state = farmData.uf
-
-      // 🔥 1. CLIMA ATUAL
-      const weatherRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city},${state},BR&appid=${API_KEY}&units=metric&lang=pt_br`
+      const { weather, forecast, location } = await getWeatherBundleByCity(
+        farmData.municipio,
+        state,
+        language
       )
-      const weather = await weatherRes.json()
 
-      // 🔥 2. FORECAST (MÍN/MAX DO DIA)
-      const forecastRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city},${state},BR&appid=${API_KEY}&units=metric&lang=pt_br`
-      )
-      const forecast = await forecastRes.json()
+      const timezoneOffset = weather.timezone || 0
 
       let minTempDay = weather.main.temp
       let maxTempDay = weather.main.temp
 
-      if (forecast.cod === "200") {
-        const today = new Date().toISOString().split("T")[0]
-
-        const todayList = forecast.list.filter(item =>
-          item.dt_txt.startsWith(today)
+      if (forecast && Number(forecast.cod) === 200) {
+        const today = getLocationDateKey(weather.dt, timezoneOffset)
+        const todayList = forecast.list.filter((item) =>
+          getLocationDateKey(item.dt, timezoneOffset) === today
         )
 
         if (todayList.length > 0) {
-          const temps = todayList.map(item => item.main.temp)
-
-          minTempDay = Math.min(...temps)
-          maxTempDay = Math.max(...temps)
+          minTempDay = Math.min(...todayList.map((item) => item.main.temp_min))
+          maxTempDay = Math.max(...todayList.map((item) => item.main.temp_max))
         }
       }
 
-      if (weather.cod === 200) {
-        setWeatherData({
+      setWeatherData({
           city: weather.name,
           state,
           farmName: farmData.name,
@@ -80,48 +135,71 @@ export default function ClimaTab() {
 
           windSpeed: weather.wind.speed,
           windDeg: weather.wind.deg,
-          windGust: weather.wind.gust || 0,
+          windGust: weather.wind.gust ?? null,
 
-          rain: weather.rain?.["1h"] || 0,
+          rain: weather.rain?.["1h"] ?? 0,
 
           description: weather.weather[0].description,
           icon: weather.weather[0].icon,
           clouds: weather.clouds.all,
 
-          visibility: weather.visibility / 1000,
+          visibility: weather.visibility === undefined ? null : weather.visibility / 1000,
 
-          sunrise: new Date(weather.sys.sunrise * 1000).toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          sunset: new Date(weather.sys.sunset * 1000).toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+          sunrise: formatLocationTime(weather.sys.sunrise, timezoneOffset, locale),
+          sunset: formatLocationTime(weather.sys.sunset, timezoneOffset, locale),
 
-          date: new Date().toLocaleDateString("pt-BR", {
+          date: new Intl.DateTimeFormat(locale, {
             weekday: "long",
             day: "numeric",
             month: "long",
-          }),
+            timeZone: "UTC",
+          }).format(new Date((weather.dt + timezoneOffset) * 1000)),
+          forecastDays: forecast && Number(forecast.cod) === 200
+            ? buildDailyForecast(forecast.list, timezoneOffset, weather.dt, locale, t)
+            : [],
+          updatedAt: formatLocationTime(weather.dt, timezoneOffset, locale),
+          sourceLocation: location.name,
+          coordinates: location.lat !== null && location.lon !== null
+            ? { latitude: location.lat, longitude: location.lon }
+            : null,
         })
-      } else {
-        setError("Cidade não encontrada")
-      }
+      setError(null)
     } catch (err) {
       console.error(err)
-      setError("Erro ao buscar clima")
+      if (!silent) {
+        setError(
+          err instanceof TypeError
+            ? t("climate.noConnection")
+            : (err.message || t("climate.fetchError"))
+        )
+      }
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!farmLoading) fetchWeather()
-  }, [farmData, farmLoading])
+    if (farmLoading) return undefined
+
+    fetchWeather()
+    const refreshInterval = window.setInterval(() => fetchWeather(true), 10 * 60 * 1000)
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") fetchWeather(true)
+    }
+
+    document.addEventListener("visibilitychange", refreshWhenVisible)
+
+    return () => {
+      window.clearInterval(refreshInterval)
+      document.removeEventListener("visibilitychange", refreshWhenVisible)
+    }
+  }, [farmData?.municipio, farmData?.uf, farmLoading, language, locale, t])
 
   const getWindDirection = (deg) => {
-    const dirs = ["N", "NE", "L", "SE", "S", "SO", "O", "NO"]
+    if (!Number.isFinite(deg)) return "N/D"
+    const dirs = language === "en"
+      ? ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+      : ["N", "NE", "L", "SE", "S", "SO", "O", "NO"]
     return dirs[Math.round(deg / 45) % 8]
   }
 
@@ -153,60 +231,66 @@ export default function ClimaTab() {
     // Solo seco
     if (weatherData.humidity < 50 && weatherData.rain === 0) {
       recommendations.push({
+        kind: "humidity",
         type: "warning",
         icon: "water_drop",
-        title: "Solo seco",
-        message: "Irrigação recomendada"
+        title: t("climate.drySoil"),
+        message: t("climate.irrigationRecommended")
       })
     }
 
     // Alta umidade
     if (weatherData.humidity > 80) {
       recommendations.push({
+        kind: "humidity",
         type: "warning",
         icon: "humidity_high",
-        title: "Alta umidade",
-        message: "Risco de fungos. Monitore as plantas"
+        title: t("climate.highHumidity"),
+        message: t("climate.fungusRisk")
       })
     }
 
     // Calor intenso
     if (weatherData.temperature > 32) {
       recommendations.push({
+        kind: "temperature",
         type: "warning",
         icon: "whatshot",
-        title: "Calor intenso",
-        message: "Proteja plantas sensíveis do sol forte"
+        title: t("climate.intenseHeat"),
+        message: t("climate.protectFromSun")
       })
     }
 
     // Temperatura baixa
     if (weatherData.temperature < 15) {
       recommendations.push({
+        kind: "temperature",
         type: "warning",
         icon: "ac_unit",
-        title: "Temperatura baixa",
-        message: "Risco de geada. Proteja as plantas"
+        title: t("climate.lowTemperature"),
+        message: t("climate.frostRisk")
       })
     }
 
     // Vento forte
     if (weatherData.windSpeed > 8) {
       recommendations.push({
+        kind: "wind",
         type: "warning",
         icon: "wind_power",
-        title: "Vento forte",
-        message: "Evite pulverização e verifique estruturas"
+        title: t("climate.strongWind"),
+        message: t("climate.avoidSpraying")
       })
     }
 
     // Chuva forte
     if (weatherData.rain > 5) {
       recommendations.push({
+        kind: "rain",
         type: "info",
         icon: "rainy",
-        title: "Chuva forte",
-        message: "Suspenda irrigação e verifique drenagem"
+        title: t("climate.heavyRain"),
+        message: t("climate.checkDrainage")
       })
     }
 
@@ -215,20 +299,22 @@ export default function ClimaTab() {
         weatherData.temperature >= 20 && weatherData.temperature <= 30 && 
         weatherData.windSpeed <= 5 && weatherData.rain === 0) {
       recommendations.push({
+        kind: "general",
         type: "success",
         icon: "sentiment_satisfied",
-        title: "Condições ideais",
-        message: "Perfeito para atividades no campo"
+        title: t("climate.idealConditions"),
+        message: t("climate.perfectForField")
       })
     }
 
     // 🌟 RECOMENDAÇÃO PADRÃO - Sempre mostrar pelo menos uma recomendação
     if (recommendations.length === 0) {
       recommendations.push({
+        kind: "general",
         type: "info",
         icon: "agriculture",
-        title: "Clima estável",
-        message: "Condições normais para as atividades agrícolas"
+        title: t("climate.stableWeather"),
+        message: t("climate.normalConditions")
       })
     }
 
@@ -243,9 +329,9 @@ export default function ClimaTab() {
           <div style={styles.loadingIcon}>
             <span className="material-symbols-outlined" style={{ fontSize: '48px', color: 'var(--primary)' }}>cloud</span>
           </div>
-          <h3 style={styles.loadingTitle}>Buscando clima</h3>
+          <h3 style={styles.loadingTitle}>{t("climate.searching")}</h3>
           <p style={styles.loadingText}>
-            {farmData ? `Obtendo dados para ${farmData.municipio}...` : 'Carregando...'}
+            {farmData ? t("climate.fetchingFor", { city: farmData.municipio }) : t("climate.loading")}
           </p>
         </div>
       </div>
@@ -260,12 +346,12 @@ export default function ClimaTab() {
           <div style={styles.errorIcon}>
             <span className="material-symbols-outlined" style={{ fontSize: '48px', color: 'var(--danger)' }}>error</span>
           </div>
-          <h3 style={styles.errorTitle}>Ops!</h3>
-          <p style={styles.errorText}>{error || "Não foi possível obter os dados"}</p>
+          <h3 style={styles.errorTitle}>{t("climate.errorTitle")}</h3>
+          <p style={styles.errorText}>{error || t("climate.noData")}</p>
           {farmData && (
             <button style={styles.retryButton} onClick={retry}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>refresh</span>
-              Tentar novamente
+              {t("climate.retry")}
             </button>
           )}
         </div>
@@ -274,30 +360,42 @@ export default function ClimaTab() {
   }
 
   const recommendations = getRecommendations()
-  const updatedTime = new Date().toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })
+  const updatedTime = weatherData.updatedAt
   const getRecommendationAccent = (type) => {
     if (type === "warning") return "#ffaa00"
     if (type === "success") return "#56a870"
     return "#0066ff"
   }
 
-  const getRecommendationDetails = (title) => {
-    if (title === "Solo seco" || title === "Alta umidade") {
-      return `Umidade atual de ${weatherData.humidity}% e chuva de ${weatherData.rain} mm na última hora.`
+  const getRecommendationDetails = (kind) => {
+    if (kind === "humidity") {
+      return t("climate.humidityRainDetails", {
+        humidity: weatherData.humidity,
+        rain: formatWeatherNumber(weatherData.rain, 1, locale),
+      })
     }
-    if (title === "Calor intenso" || title === "Temperatura baixa") {
-      return `Temperatura atual de ${weatherData.temperature}°C, com sensação de ${weatherData.feelsLike}°C.`
+    if (kind === "temperature") {
+      return t("climate.temperatureDetails", {
+        temperature: weatherData.temperature,
+        feelsLike: weatherData.feelsLike,
+      })
     }
-    if (title === "Vento forte") {
-      return `Vento atual de ${weatherData.windSpeed} m/s, com rajadas de ${weatherData.windGust} m/s.`
+    if (kind === "wind") {
+      return t("climate.windDetails", {
+        wind: formatWeatherNumber(weatherData.windSpeed, 1, locale),
+        gust: formatWeatherNumber(weatherData.windGust, 1, locale),
+      })
     }
-    if (title === "Chuva forte") {
-      return `Volume registrado de ${weatherData.rain} mm na última hora.`
+    if (kind === "rain") {
+      return t("climate.rainDetails", {
+        rain: formatWeatherNumber(weatherData.rain, 1, locale),
+      })
     }
-    return `Temperatura de ${weatherData.temperature}°C, umidade de ${weatherData.humidity}% e vento de ${weatherData.windSpeed} m/s.`
+    return t("climate.generalDetails", {
+      temperature: weatherData.temperature,
+      humidity: weatherData.humidity,
+      wind: formatWeatherNumber(weatherData.windSpeed, 1, locale),
+    })
   }
 
   return (
@@ -322,7 +420,7 @@ export default function ClimaTab() {
               </span>
               <strong>{weatherData.description}</strong>
             </div>
-            <div className="climate-temperature" aria-label={`${weatherData.temperature} graus Celsius`}>
+            <div className="climate-temperature" aria-label={t("climate.degreesCelsius", { value: weatherData.temperature })}>
               <strong>{weatherData.temperature}</strong>
               <span>°C</span>
             </div>
@@ -331,45 +429,102 @@ export default function ClimaTab() {
           <div className="climate-highlights">
             <div>
               <span className="material-symbols-outlined climate-min-icon">arrow_downward</span>
-              <small>Mínima</small>
+              <small>{t("climate.minimum")}</small>
               <strong>{weatherData.tempMin}°</strong>
             </div>
             <div>
               <span className="material-symbols-outlined climate-max-icon">arrow_upward</span>
-              <small>Máxima</small>
+              <small>{t("climate.maximum")}</small>
               <strong>{weatherData.tempMax}°</strong>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="climate-stats" aria-label="Detalhes meteorológicos">
-        {[
-          ["humidity_percentage", "Umidade", `${weatherData.humidity}%`],
-          ["air", "Vento", `${weatherData.windSpeed} m/s`, getWindDirection(weatherData.windDeg)],
-          ["speed", "Pressão", `${weatherData.pressure} hPa`],
-          ["rainy", "Chuva", `${weatherData.rain} mm`],
-          ["airwave", "Rajada", `${weatherData.windGust} m/s`],
-          ["visibility", "Visibilidade", `${weatherData.visibility} km`],
-          ["cloud", "Nuvens", `${weatherData.clouds}%`],
-          ["wb_twilight", "Nascer", weatherData.sunrise],
-          ["wb_twilight", "Pôr", weatherData.sunset],
-        ].map(([icon, label, value, detail]) => (
-          <article className="climate-stat-card" key={label}>
-            <span className="material-symbols-outlined" aria-hidden="true">{icon}</span>
-            <div>
-              <small>{label}</small>
-              <strong>{value}</strong>
-              {detail && <em>{detail}</em>}
-            </div>
-          </article>
-        ))}
+      <section className="climate-metrics" aria-labelledby="climate-metrics-title">
+        <header className="climate-section-heading">
+          <h2 id="climate-metrics-title">
+            <span className="material-symbols-outlined" aria-hidden="true">monitoring</span>
+            {t("climate.metrics")}
+          </h2>
+          <span className="climate-section-chip">{t("climate.today")}</span>
+        </header>
+
+        <div className="climate-stats" aria-label={t("climate.details")}>
+          {[
+            ["humidity_percentage", t("home.humidity"), `${weatherData.humidity}%`],
+            ["air", t("home.wind"), `${formatWeatherNumber(weatherData.windSpeed, 1, locale)} m/s`, getWindDirection(weatherData.windDeg)],
+            ["speed", t("climate.pressure"), `${weatherData.pressure} hPa`],
+            ["rainy", t("climate.rain1h"), `${formatWeatherNumber(weatherData.rain, 1, locale)} mm`],
+            ["airwave", t("climate.gust"), weatherData.windGust === null ? "N/D" : `${formatWeatherNumber(weatherData.windGust, 1, locale)} m/s`],
+            ["visibility", t("climate.visibility"), `${formatWeatherNumber(weatherData.visibility, 1, locale)} km`],
+            ["cloud", t("climate.clouds"), `${weatherData.clouds}%`],
+            ["wb_twilight", t("climate.sunrise"), weatherData.sunrise],
+            ["dark_mode", t("climate.sunset"), weatherData.sunset],
+            ["update", t("climate.apiUpdated"), updatedTime],
+          ].map(([icon, label, value, detail]) => (
+            <article className="climate-stat-card" key={label}>
+              <span className="material-symbols-outlined" aria-hidden="true">{icon}</span>
+              <div>
+                <small>{label}</small>
+                <strong>{value}</strong>
+                {detail && <em>{detail}</em>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="climate-forecast" aria-labelledby="climate-forecast-title">
+        <header className="climate-section-heading">
+          <h2 id="climate-forecast-title">
+            <span className="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+            {t("climate.nextDays")}
+          </h2>
+          <p>{t("climate.planningForecast")}</p>
+        </header>
+
+        {weatherData.forecastDays.length > 0 ? (
+          <div className="climate-forecast-grid">
+            {weatherData.forecastDays.map((day) => (
+              <article className="climate-forecast-card" key={day.dateKey}>
+                <header>
+                  <div>
+                    <strong>{day.dayLabel}</strong>
+                    <small>{day.date}</small>
+                  </div>
+                  <span
+                    className={`material-symbols-outlined climate-forecast-icon climate-weather-icon--${day.icon.slice(0, 2)}`}
+                    aria-hidden="true"
+                  >
+                    {getWeatherSymbol(day.icon)}
+                  </span>
+                </header>
+                <p>{day.description}</p>
+                <div className="climate-forecast-temperature">
+                  <strong>{day.tempMax}°</strong>
+                  <span>{day.tempMin}°</span>
+                </div>
+                <footer>
+                  <span className="material-symbols-outlined" aria-hidden="true">water_drop</span>
+                  <strong>{day.rainChance}%</strong>
+                  <span>· {formatWeatherNumber(day.rainVolume, 1, locale)} mm</span>
+                </footer>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="climate-forecast-empty">
+            <span className="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+            {t("climate.forecastUnavailable")}
+          </div>
+        )}
       </section>
 
       <section className="climate-recommendations">
         <h2>
           <span className="material-symbols-outlined" aria-hidden="true">eco</span>
-          Recomendações
+          {t("climate.recommendations")}
         </h2>
         <div className="climate-recommendation-list">
           {recommendations.map((rec, index) => (
@@ -389,14 +544,14 @@ export default function ClimaTab() {
                 aria-expanded={expandedRecommendation === index}
                 onClick={() => setExpandedRecommendation(expandedRecommendation === index ? null : index)}
               >
-                {expandedRecommendation === index ? "Ocultar" : "Ver detalhes"}
+                {expandedRecommendation === index ? t("climate.hide") : t("climate.viewDetails")}
                 <span className="material-symbols-outlined" aria-hidden="true">
                   {expandedRecommendation === index ? "expand_less" : "chevron_right"}
                 </span>
               </button>
               {expandedRecommendation === index && (
                 <p className="climate-recommendation-details">
-                  {getRecommendationDetails(rec.title)}
+                  {getRecommendationDetails(rec.kind)}
                 </p>
               )}
             </article>
@@ -406,7 +561,7 @@ export default function ClimaTab() {
 
       <p className="climate-updated">
         <span className="material-symbols-outlined" aria-hidden="true">update</span>
-        Atualizado agora · {updatedTime}
+        OpenWeather · {weatherData.sourceLocation} · {t("climate.updatedAt", { time: updatedTime })}
       </p>
     </div>
   )
@@ -739,18 +894,21 @@ const styles = {
     fontSize: '0.9rem',
   },
   retryButton: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '26px',
-    padding: '10px 20px',
+    minHeight: '42px',
+    background: '#2d6140',
+    border: '1px solid #2d6140',
+    borderRadius: '10px',
+    padding: '10px 18px',
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: '750',
     fontSize: '0.9rem',
     cursor: 'pointer',
     transition: 'all 0.2s',
     display: 'inline-flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: '6px',
+    boxShadow: '0 8px 18px rgba(45, 97, 64, 0.18)',
   },
 
   // Footer

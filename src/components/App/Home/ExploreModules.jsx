@@ -1,5 +1,6 @@
 // components/Home/ExploreModules.jsx
 import { useNavigate } from "react-router-dom"
+import { useLanguage } from "../../../contexts/LanguageContext"
 
 const modules = [
   { 
@@ -7,8 +8,8 @@ const modules = [
     path: "/explore", 
     tab: "diagnostico",
     icon: "eco", 
-    label: "Diagnóstico", 
-    sublabel: "Análise de plantas", 
+    labelKey: "modules.diagnosis",
+    sublabelKey: "modules.diagnosisDescription",
     type: "diagnose" 
   },
   { 
@@ -16,8 +17,8 @@ const modules = [
     path: "/explore", 
     tab: "clima",
     icon: "cloud", 
-    label: "Clima", 
-    sublabel: "Previsão 7 dias", 
+    labelKey: "modules.weather",
+    sublabelKey: "modules.weatherDescription",
     type: "weather" 
   },
   {
@@ -25,8 +26,8 @@ const modules = [
     path: "/explore",
     tab: "monitoramento",
     icon: "monitoring",
-    label: "Monitoramento",
-    sublabel: "Análise do plantio",
+    labelKey: "modules.monitoring",
+    sublabelKey: "modules.monitoringDescription",
     type: "monitoring"
   },
   { 
@@ -34,8 +35,8 @@ const modules = [
     path: "/explore", 
     tab: "diario",
     icon: "menu_book", 
-    label: "Diário", 
-    sublabel: "Registros da plantação", 
+    labelKey: "modules.diary",
+    sublabelKey: "modules.diaryDescription",
     type: "diary" 
   },
   { 
@@ -43,8 +44,8 @@ const modules = [
     path: "/explore", 
     tab: "mapa",
     icon: "map", 
-    label: "Mapa", 
-    sublabel: "Visualização 3D", 
+    labelKey: "modules.map",
+    sublabelKey: "modules.mapDescription",
     type: "map" 
   },
   { 
@@ -52,8 +53,8 @@ const modules = [
     path: "/explore", 
     tab: "estoque",
     icon: "inventory", 
-    label: "Estoque", 
-    sublabel: "Insumos e materiais", 
+    labelKey: "modules.stock",
+    sublabelKey: "modules.stockDescription",
     type: "stock" 
   },
   { 
@@ -61,14 +62,15 @@ const modules = [
     path: "/explore", 
     tab: "atividades",
     icon: "assignment", 
-    label: "Atividades", 
-    sublabel: "Tarefas do campo", 
+    labelKey: "modules.activities",
+    sublabelKey: "modules.activitiesDescription",
     type: "reports"
   }
 ]
 
 export default function ExploreModules({ onNavigate }) {
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   const handleNavigate = (module) => {
     // Se houver onNavigate prop, usa ela, senão usa navigate
@@ -84,7 +86,7 @@ export default function ExploreModules({ onNavigate }) {
     <section className="explore-section">
       <h2 className="section-title">
         <span className="material-symbols-outlined">explore</span>
-        Módulos do Sistema
+        {t("modules.title")}
       </h2>
 
       <div className="explore-grid">
@@ -98,8 +100,8 @@ export default function ExploreModules({ onNavigate }) {
               <span className="material-symbols-outlined">{module.icon}</span>
               <div className="icon-glow"></div>
             </div>
-            <span className="explore-label">{module.label}</span>
-            <span className="explore-sublabel">{module.sublabel}</span>
+            <span className="explore-label">{t(module.labelKey)}</span>
+            <span className="explore-sublabel">{t(module.sublabelKey)}</span>
           </button>
         ))}
       </div>

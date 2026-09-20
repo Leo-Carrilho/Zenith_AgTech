@@ -303,6 +303,17 @@ html[data-text-size="2"] :where(
   color: #fff;
   box-shadow: 0 12px 28px rgba(15, 35, 24, 0.22);
   cursor: pointer;
+  opacity: 1;
+  transition: opacity 280ms ease, transform 160ms ease;
+}
+
+.accessibility-widget.idle:not(.open) .accessibility-toggle {
+  opacity: 0.52;
+}
+
+.accessibility-widget.idle:not(.open) .accessibility-toggle:hover,
+.accessibility-widget.idle:not(.open) .accessibility-toggle:focus-visible {
+  opacity: 1;
 }
 
 .accessibility-toggle:active {

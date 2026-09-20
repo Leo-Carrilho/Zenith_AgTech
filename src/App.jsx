@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth"
 import { Navigate } from "react-router-dom"
 import { auth } from "./services/firebase"
 import { ACCOUNT_ROLES, getRoleHomePath, getUserAccessProfile } from "./services/accessControl"
+import { useLanguage } from "./contexts/LanguageContext"
 
 import Intro from "./pages/App/Intro"
 import Login from "./pages/App/Login"
@@ -124,6 +125,7 @@ function RouteChangeLoader() {
 }
 
 function ProtectedRoute({ allowedRoles, children }) {
+  const { t } = useLanguage()
   const [state, setState] = useState({
     loading: true,
     user: null,
@@ -144,7 +146,7 @@ function ProtectedRoute({ allowedRoles, children }) {
     return () => unsubscribe()
   }, [])
 
-  if (state.loading) return <ProfileLoadingScreen message="Carregando acesso..." />
+  if (state.loading) return <ProfileLoadingScreen message={t("common.loadingAccess")} />
   if (!state.user) return <Navigate to="/login" replace />
 
   const role = state.profile?.role || ACCOUNT_ROLES.ADMIN

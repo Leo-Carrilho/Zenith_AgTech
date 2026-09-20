@@ -11,6 +11,85 @@ import "leaflet/dist/leaflet.css"
 import * as turf from "@turf/turf"
 
 const MOBILE_MAP_QUERY = "(max-width: 767px), (pointer: coarse)"
+const NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
+
+function normalizeCep(value = "") {
+  return String(value).replace(/\D/g, "")
+}
+
+function parseLocation(latitude, longitude, addressLabel) {
+  const lat = Number(latitude)
+  const lng = Number(longitude)
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null
+
+  return { lat, lng, addressLabel }
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Serviço de localização indisponível (${response.status})`)
+  }
+
+  return response.json()
+}
+
+async function geocodeAddress(query) {
+  const params = new URLSearchParams({
+    q: query,
+    format: "jsonv2",
+    limit: "1",
+    countrycodes: "br",
+    "accept-language": "pt-BR",
+  })
+  const results = await fetchJson(`${NOMINATIM_SEARCH_URL}?${params.toString()}`)
+  const result = Array.isArray(results) ? results[0] : null
+
+  if (!result) return null
+
+  return parseLocation(
+    result.lat,
+    result.lon,
+    result.display_name?.split(",").slice(0, 4).join(",") || query,
+  )
+}
+
+async function resolveCepLocation(cep) {
+  try {
+    const data = await fetchJson(`https://brasilapi.com.br/api/cep/v2/${cep}`)
+    const addressLabel = [data.street, data.neighborhood, data.city, data.state]
+      .filter(Boolean)
+      .join(", ")
+    const location = parseLocation(
+      data.location?.coordinates?.latitude,
+      data.location?.coordinates?.longitude,
+      addressLabel,
+    )
+
+    if (location) return location
+  } catch (error) {
+    console.warn("BrasilAPI não conseguiu localizar o CEP; tentando fallback.", error)
+  }
+
+  const data = await fetchJson(`https://viacep.com.br/ws/${cep}/json/`)
+  if (data.erro) throw new Error("CEP não encontrado")
+
+  const addressLabel = [data.logradouro, data.bairro, data.localidade, data.uf]
+    .filter(Boolean)
+    .join(", ")
+  const geocodingQuery = [data.logradouro, data.localidade, data.uf, "Brasil"]
+    .filter(Boolean)
+    .join(", ")
+  const location = await geocodeAddress(geocodingQuery)
+
+  if (!location) throw new Error("Não foi possível localizar esse CEP no mapa")
+
+  return { ...location, addressLabel: addressLabel || location.addressLabel }
+}
 
 // corrigir ícones
 delete L.Icon.Default.prototype._getIconUrl
@@ -1610,48 +1689,28 @@ export default function MapaTab() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    if (!searchAddress.trim()) return
+    const query = searchAddress.trim()
+    if (!query) return
 
     setSearching(true)
 
     try {
-      let lat, lng, addressLabel
+      const normalizedCep = normalizeCep(query)
+      const containsOnlyCepCharacters = /^[\d.\-\s]+$/.test(query)
 
-      if (/^\d{8}$/.test(searchAddress.replace("-", ""))) {
-        const cep = searchAddress.replace("-", "")
-
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        const data = await res.json()
-        if (data.erro) throw new Error("CEP não encontrado")
-
-        const fullAddress = [data.logradouro, data.bairro, data.localidade, data.uf]
-          .filter(Boolean)
-          .join(", ")
-        addressLabel = fullAddress || `${data.localidade}, ${data.uf}`
-
-        const geo = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressLabel)}&format=json&limit=1`
-        )
-
-        const geoData = await geo.json()
-        if (!geoData.length) throw new Error("Endereço não encontrado")
-
-        lat = parseFloat(geoData[0].lat)
-        lng = parseFloat(geoData[0].lon)
-      } else {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchAddress)}&format=json&limit=1`
-        )
-
-        const data = await response.json()
-        if (!data.length) throw new Error("Endereço não encontrado")
-
-        lat = parseFloat(data[0].lat)
-        lng = parseFloat(data[0].lon)
-        addressLabel = data[0].display_name?.split(",").slice(0, 3).join(",") || searchAddress.trim()
+      if (containsOnlyCepCharacters && normalizedCep.length !== 8) {
+        throw new Error("Digite um CEP válido com 8 números")
       }
 
-      mapInstanceRef.current.setView([lat, lng], 16)
+      const location = normalizedCep.length === 8 && containsOnlyCepCharacters
+        ? await resolveCepLocation(normalizedCep)
+        : await geocodeAddress(query)
+
+      if (!location) throw new Error("Endereço não encontrado")
+      if (!mapInstanceRef.current) throw new Error("O mapa ainda está carregando")
+
+      const { lat, lng, addressLabel } = location
+      mapInstanceRef.current.setView([lat, lng], 16, { animate: true })
 
       if (searchMarkerRef.current) {
         searchMarkerRef.current.remove()
@@ -1667,8 +1726,9 @@ export default function MapaTab() {
         })
         .openTooltip()
 
-    } catch {
-      alert("Erro ao buscar localização")
+    } catch (error) {
+      console.error("Erro ao buscar localização:", error)
+      alert(error instanceof Error ? error.message : "Erro ao buscar localização")
     } finally {
       setSearching(false)
     }

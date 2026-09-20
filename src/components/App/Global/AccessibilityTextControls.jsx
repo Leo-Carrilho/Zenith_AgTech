@@ -12,6 +12,7 @@ export default function AccessibilityTextControls() {
   const controlRef = useRef(null)
 
   const [open, setOpen] = useState(false)
+  const [idle, setIdle] = useState(false)
   const [hiddenByOverlay, setHiddenByOverlay] = useState(false)
   const [levelIndex, setLevelIndex] = useState(() => {
     const saved = Number(localStorage.getItem("accessibilityTextLevel"))
@@ -40,6 +41,15 @@ export default function AccessibilityTextControls() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    setIdle(false)
+
+    if (open || hiddenByOverlay) return undefined
+
+    const idleTimer = window.setTimeout(() => setIdle(true), 3000)
+    return () => window.clearTimeout(idleTimer)
+  }, [open, hiddenByOverlay])
+
   const toggleOpen = () => {
     setOpen((current) => !current)
   }
@@ -47,7 +57,7 @@ export default function AccessibilityTextControls() {
   return (
     <div
       ref={controlRef}
-      className={`accessibility-widget${open ? " open" : ""}${hiddenByOverlay ? " hidden" : ""}`}
+      className={`accessibility-widget${open ? " open" : ""}${idle ? " idle" : ""}${hiddenByOverlay ? " hidden" : ""}`}
     >
       <button
         type="button"

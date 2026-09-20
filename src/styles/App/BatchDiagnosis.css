@@ -204,7 +204,7 @@
   cursor: pointer;
   font-size: 0.86rem;
   font-weight: 700;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
 }
 
 .batch-button .material-symbols-outlined {
@@ -212,7 +212,7 @@
 }
 
 .batch-button:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .batch-button:focus-visible,
@@ -549,10 +549,15 @@
 }
 
 .batch-score-ring > div {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  box-sizing: border-box;
   width: 92px;
   height: 92px;
+  padding-bottom: 8px;
   border-radius: 50%;
   background: #0a1710;
 }
@@ -570,9 +575,10 @@
 }
 
 .batch-score-ring span {
-  margin-top: -12px;
+  margin-top: 0;
   color: #718496;
   font-size: 0.57rem;
+  line-height: 1;
 }
 
 .batch-result-score > p {
@@ -695,7 +701,13 @@
 }
 
 .batch-heading-symbol {
+  line-height: 1;
+}
+
+.batch-heading-symbol .material-symbols-outlined {
+  display: block;
   font-size: 21px;
+  line-height: 1;
 }
 
 .batch-condition-list,
@@ -1530,7 +1542,13 @@
   border-color: var(--g5, #3d8057);
   color: #fff;
   background: linear-gradient(135deg, var(--g5, #3d8057), var(--g6, #56a870));
-  box-shadow: 0 12px 28px rgba(45, 97, 64, 0.22);
+  box-shadow: 0 4px 10px rgba(45, 97, 64, 0.14);
+}
+
+.batch-button-primary:hover:not(:disabled) {
+  border-color: var(--g4, #2d6140);
+  background: linear-gradient(135deg, var(--g4, #2d6140), var(--g5, #3d8057));
+  box-shadow: 0 6px 14px rgba(45, 97, 64, 0.18);
 }
 
 .batch-button-secondary,
@@ -1544,6 +1562,7 @@
 .batch-button-ghost:hover {
   border-color: rgba(45, 97, 64, 0.3);
   background: rgba(234, 246, 237, 0.72);
+  box-shadow: 0 3px 8px rgba(45, 97, 64, 0.1);
 }
 
 .batch-thumbnail-image,

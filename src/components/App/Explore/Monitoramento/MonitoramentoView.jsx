@@ -3,6 +3,7 @@ import { useMonitoramento } from "../hooks/useMonitoramento";
 import UploadImage   from "./UploadImage";
 import OverlayResult from "./OverlayResult";
 import MetricsPanel  from "./MetricsPanel";
+import { downloadMonitoringHistoryReport } from "./monitoringReportPdf";
 import { interpretar } from "../../utils/Interpretations";
 import styles from "../../../../styles/App/MonitoramentoView.module.css";
 
@@ -20,114 +21,6 @@ function readPlantingHistory() {
 function toPercentage(value) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? Math.round(numericValue * 100) : null;
-}
-
-function sanitizePdfText(value) {
-  return String(value ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\x20-\x7E]/g, "")
-    .replace(/\\/g, "\\\\")
-    .replace(/\(/g, "\\(")
-    .replace(/\)/g, "\\)");
-}
-
-function wrapPdfText(text, maxLength = 74) {
-  const words = sanitizePdfText(text).split(" ");
-  const lines = [];
-  let current = "";
-
-  words.forEach((word) => {
-    const next = current ? `${current} ${word}` : word;
-    if (next.length > maxLength && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = next;
-    }
-  });
-
-  if (current) lines.push(current);
-  return lines;
-}
-
-function buildHistoryPdf(lines) {
-  const pageWidth = 595;
-  const pageHeight = 842;
-  const margin = 48;
-  const lineHeight = 16;
-  const pages = [];
-  let currentPage = [];
-  let y = pageHeight - margin;
-
-  lines.forEach((line) => {
-    const wrapped = wrapPdfText(line.text, line.maxLength);
-    wrapped.forEach((wrappedLine, index) => {
-      if (y < margin) {
-        pages.push(currentPage);
-        currentPage = [];
-        y = pageHeight - margin;
-      }
-
-      currentPage.push({
-        text: wrappedLine,
-        x: margin + (line.indent || 0),
-        y,
-        size: line.size || 11,
-        bold: line.bold || false,
-      });
-      y -= line.after && index === wrapped.length - 1 ? line.after : lineHeight;
-    });
-  });
-
-  if (currentPage.length) pages.push(currentPage);
-
-  const objects = [];
-  const addObject = (content) => {
-    objects.push(content);
-    return objects.length;
-  };
-  const fontRegular = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-  const fontBold = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
-  const pageRefs = [];
-
-  pages.forEach((page) => {
-    const content = [
-      "BT",
-      ...page.map((item) => {
-        const font = item.bold ? "F2" : "F1";
-        return `/${font} ${item.size} Tf 1 0 0 1 ${item.x} ${item.y} Tm (${item.text}) Tj`;
-      }),
-      "ET",
-    ].join("\n");
-    const contentRef = addObject(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
-    const pageRef = addObject(
-      `<< /Type /Page /Parent 0 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 ${fontRegular} 0 R /F2 ${fontBold} 0 R >> >> /Contents ${contentRef} 0 R >>`
-    );
-    pageRefs.push(pageRef);
-  });
-
-  const pagesRef = addObject(`<< /Type /Pages /Kids [${pageRefs.map((ref) => `${ref} 0 R`).join(" ")}] /Count ${pageRefs.length} >>`);
-  pageRefs.forEach((pageRef) => {
-    objects[pageRef - 1] = objects[pageRef - 1].replace("/Parent 0 0 R", `/Parent ${pagesRef} 0 R`);
-  });
-  const catalogRef = addObject(`<< /Type /Catalog /Pages ${pagesRef} 0 R >>`);
-
-  let pdf = "%PDF-1.4\n";
-  const offsets = [0];
-  objects.forEach((object, index) => {
-    offsets.push(pdf.length);
-    pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
-  });
-
-  const xrefOffset = pdf.length;
-  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  offsets.slice(1).forEach((offset) => {
-    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
-  });
-  pdf += `trailer\n<< /Size ${objects.length + 1} /Root ${catalogRef} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
-
-  return new Blob([pdf], { type: "application/pdf" });
 }
 
 /**
@@ -231,41 +124,32 @@ export default function MonitoramentoView() {
 
   const visibleHistory = showAllHistory ? history : history.slice(0, 5);
 
-  const exportHistory = () => {
+  const exportHistory = async () => {
     const validAlignments = history
       .map((item) => Number(item.alignment))
       .filter(Number.isFinite);
     const averageAlignment = validAlignments.length > 0
       ? Math.round(validAlignments.reduce((total, value) => total + value, 0) / validAlignments.length)
       : null;
-    const lines = [
-      { text: "Historico de Alinhamento da Plantacao", size: 20, bold: true, after: 24 },
-      { text: `Gerado em: ${new Date().toLocaleString("pt-BR")}`, size: 10, after: 22 },
-      { text: "Resumo", size: 14, bold: true, after: 18 },
-      { text: `Total de analises: ${history.length}`, after: 16 },
-      { text: `Alinhamento medio: ${averageAlignment == null ? "Nao calculado" : `${averageAlignment}%`}`, after: 24 },
-      { text: "Resultados", size: 14, bold: true, after: 18 },
-    ];
+    const items = history.map((item) => ({
+      date: item.date || "-",
+      coverage: item.coverage,
+      uniformity: item.uniformity,
+      alignment: item.alignment,
+      rowsDetected: Boolean(item.rowsDetected),
+      status: getHistoryStatus(item).label,
+    }));
 
-    history.forEach((item, index) => {
-      const status = getHistoryStatus(item).label;
-      lines.push(
-        { text: `${index + 1}. Analise do talhao`, bold: true, after: 16 },
-        { text: `Data: ${item.date || "-"}`, indent: 16, after: 16 },
-        { text: `Cobertura: ${item.coverage == null ? "Nao calculada" : `${item.coverage}%`}`, indent: 16, after: 16 },
-        { text: `Uniformidade: ${item.uniformity == null ? "Nao calculada" : `${item.uniformity}%`}`, indent: 16, after: 16 },
-        { text: `Alinhamento: ${item.alignment == null ? "Nao calculado" : `${item.alignment}%`}`, indent: 16, after: 16 },
-        { text: `Fileiras: ${item.rowsDetected ? "Identificadas" : "Nao identificadas"}`, indent: 16, after: 16 },
-        { text: `Situacao: ${status}`, indent: 16, after: 24 }
-      );
-    });
-
-    const url = URL.createObjectURL(buildHistoryPdf(lines));
-    const linkElement = document.createElement("a");
-    linkElement.href = url;
-    linkElement.download = `historico_alinhamento_${new Date().toISOString().slice(0, 10)}.pdf`;
-    linkElement.click();
-    URL.revokeObjectURL(url);
+    try {
+      await downloadMonitoringHistoryReport({
+        items,
+        totalAnalyses: history.length,
+        averageAlignment,
+      });
+    } catch (reportError) {
+      console.error("Não foi possível gerar o relatório de monitoramento.", reportError);
+      window.alert("Não foi possível gerar o relatório agora. Tente novamente.");
+    }
   };
 
   const getHistoryStatus = (item) => {
@@ -424,8 +308,8 @@ export default function MonitoramentoView() {
               return (
                 <article className={styles.plantingHistoryCard} key={item.id}>
                   <div className={styles.plantingHistoryCardTop}>
-                    <span className={`${styles.plantingHistoryIcon} material-symbols-outlined`} aria-hidden="true">
-                      psychiatry
+                    <span className={styles.plantingHistoryIcon} aria-hidden="true">
+                      <span className="material-symbols-outlined">psychiatry</span>
                     </span>
                     <div className={styles.plantingHistoryInfo}>
                       <div>
