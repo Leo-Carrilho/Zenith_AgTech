@@ -5128,3 +5128,37 @@ body:has(.home-shell),
     transform-origin: center right !important;
   }
 }
+
+/* Mantem a acao do estado vazio compacta no card de atividades mobile. */
+@media screen and (max-width: 480px) {
+  .home-shell .activities-section .empty-state {
+    padding-bottom: 28px;
+  }
+
+  .home-shell .activities-section .empty-action-btn {
+    width: auto;
+    min-width: 174px;
+    min-height: 40px;
+    padding: 7px 14px;
+    border-color: #161611;
+    border-radius: 999px;
+    background: #161611 !important;
+    box-shadow: 0 8px 18px rgba(22, 22, 17, 0.2);
+  }
+
+  .home-shell .activities-section .empty-action-btn span:not(.material-symbols-outlined) {
+    font-size: 13px !important;
+    white-space: nowrap;
+  }
+
+  .home-shell .activities-section .empty-action-btn .material-symbols-outlined {
+    font-size: 18px !important;
+  }
+
+  .home-shell .activities-section .empty-action-btn:hover,
+  .home-shell .activities-section .empty-action-btn:focus-visible {
+    border-color: #26261f;
+    background: #26261f !important;
+    box-shadow: 0 9px 20px rgba(22, 22, 17, 0.24);
+  }
+}
