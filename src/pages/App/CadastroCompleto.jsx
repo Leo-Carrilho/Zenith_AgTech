@@ -912,8 +912,8 @@ export default function CadastroCompleto({ setAppLoading }) {
 
                 <label>
                   {userData.type === "CPF"
-                    ? "CPF"
-                    : "CNPJ"}
+                    ? "CPF Fictício"
+                    : "CNPJ Fictício"}
                 </label>
 
                 <input
