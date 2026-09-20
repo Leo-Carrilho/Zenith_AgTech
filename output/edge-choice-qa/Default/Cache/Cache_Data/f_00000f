@@ -1,0 +1,488 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/App/CadastroFazenda.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useState = __vite__cjsImport1_react["useState"];
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=6258fd2e";
+import { auth } from "/src/services/firebase.js";
+import { db } from "/src/services/firebase.js";
+import { addDoc, collection, query, where, getDocs } from "/node_modules/.vite/deps/firebase_firestore.js?v=0bf92d27";
+import {
+  accountIdentifierMessage,
+  attachUniquePhoneToProfile,
+  maskAccountPhone
+} from "/src/services/accountIdentity.js";
+import "/src/styles/App/CadastrarFazenda.css";
+export default function CadastrarFazenda({ setAppLoading }) {
+  _s();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    tipo_proprietario: "",
+    data_aquisicao: "",
+    cep: "",
+    bairro: "",
+    municipio: "",
+    uf: "",
+    area_total: "",
+    telefone: "",
+    plantacao: ""
+  });
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  }
+  async function handleRegister(e) {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Usuário não autenticado");
+      return;
+    }
+    try {
+      setLoading(true);
+      const q = query(
+        collection(db, "farms"),
+        where("ownerId", "==", user.uid)
+      );
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        alert("Você já possui uma fazenda cadastrada.");
+        navigate("/home");
+        return;
+      }
+      await attachUniquePhoneToProfile({
+        profileCollection: "owners",
+        userId: user.uid,
+        phone: formData.telefone
+      });
+      const { telefone, ...safeFarmData } = formData;
+      await addDoc(collection(db, "farms"), {
+        ...safeFarmData,
+        area_total: parseFloat(formData.area_total),
+        telefone_mascarado: maskAccountPhone(telefone),
+        ownerId: user.uid,
+        createdAt: /* @__PURE__ */ new Date()
+      });
+      alert("Fazenda cadastrada com sucesso!");
+      sessionStorage.removeItem("zenithShowWhiteLoaderOnce");
+      sessionStorage.setItem("zenithBlockWhiteLoaderUntil", String(Date.now() + 5e3));
+      setAppLoading?.(true);
+      navigate("/home", { replace: true });
+    } catch (error) {
+      console.error(error);
+      alert(accountIdentifierMessage(error) || "Erro ao cadastrar fazenda");
+    } finally {
+      setLoading(false);
+    }
+  }
+  return /* @__PURE__ */ jsxDEV("div", { className: "register-container", children: [
+    /* @__PURE__ */ jsxDEV("header", { className: "register-header", children: [
+      /* @__PURE__ */ jsxDEV("button", { onClick: () => navigate("/home"), children: "← Voltar" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 94,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("h1", { children: "Cadastro de Fazenda" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 97,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+      lineNumber: 93,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "register-card", children: /* @__PURE__ */ jsxDEV("form", { onSubmit: handleRegister, children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Nome da Fazenda" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 104,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "name",
+            value: formData.name,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 105,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 103,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Tipo de Proprietário" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 115,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "select",
+          {
+            name: "tipo_proprietario",
+            value: formData.tipo_proprietario,
+            onChange: handleChange,
+            required: true,
+            children: [
+              /* @__PURE__ */ jsxDEV("option", { value: "", children: "Selecione" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 122,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("option", { value: "PF", children: "Pessoa Física" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 123,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("option", { value: "PJ", children: "Pessoa Jurídica" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 124,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 116,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 114,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Data de Aquisição" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 129,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "date",
+            name: "data_aquisicao",
+            value: formData.data_aquisicao,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 130,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 128,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "CEP" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 140,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "cep",
+            value: formData.cep,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 141,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 139,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Bairro" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 151,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "bairro",
+            value: formData.bairro,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 152,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 150,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Município" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 162,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "municipio",
+            value: formData.municipio,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 163,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 161,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "UF" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 173,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "uf",
+            maxLength: "2",
+            value: formData.uf,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 174,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 172,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Área Total (hectares)" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 185,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "number",
+            inputMode: "decimal",
+            name: "area_total",
+            value: formData.area_total,
+            onChange: handleChange,
+            placeholder: "Digite a área em hectares",
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 186,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 184,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Telefone do Proprietário" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 198,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "input",
+          {
+            type: "text",
+            name: "telefone",
+            value: formData.telefone,
+            onChange: handleChange,
+            required: true
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 199,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 197,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+        /* @__PURE__ */ jsxDEV("label", { children: "Principal Plantação" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 209,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "select",
+          {
+            name: "plantacao",
+            value: formData.plantacao,
+            onChange: handleChange,
+            required: true,
+            children: [
+              /* @__PURE__ */ jsxDEV("option", { value: "", children: "Selecione" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 216,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("option", { value: "Soja", children: "Soja" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 217,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("option", { value: "Tomate", children: "Tomate" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 218,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("option", { value: "Café", children: "Café" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+                lineNumber: 219,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+            lineNumber: 210,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+        lineNumber: 208,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        "button",
+        {
+          type: "submit",
+          className: "btn-submit",
+          disabled: loading,
+          children: loading ? "Cadastrando..." : "Cadastrar Fazenda"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+          lineNumber: 223,
+          columnNumber: 11
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+      lineNumber: 101,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+      lineNumber: 100,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx",
+    lineNumber: 90,
+    columnNumber: 5
+  }, this);
+}
+_s(CadastrarFazenda, "vM6nyHRtKb/aAnskGz0C56jqItg=", false, function() {
+  return [useNavigate];
+});
+_c = CadastrarFazenda;
+var _c;
+$RefreshReg$(_c, "CadastrarFazenda");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/CadastroFazenda.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFVLG1CQUFtQjtBQUFBO0FBQUEsUUFMaEM7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLE1BTUE7QUFBQSxTQWhJRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBa0lBLEtBbklGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FvSUE7QUFBQSxPQTlJRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBK0lBO0FBRUo7QUFBQ0YsR0E5TnVCRixrQkFBZ0I7QUFBQSxVQUNyQlgsV0FBVztBQUFBO0FBQUEsS0FETlc7QUFBZ0IsSUFBQWdEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbInVzZVN0YXRlIiwidXNlTmF2aWdhdGUiLCJhdXRoIiwiZGIiLCJhZGREb2MiLCJjb2xsZWN0aW9uIiwicXVlcnkiLCJ3aGVyZSIsImdldERvY3MiLCJhY2NvdW50SWRlbnRpZmllck1lc3NhZ2UiLCJhdHRhY2hVbmlxdWVQaG9uZVRvUHJvZmlsZSIsIm1hc2tBY2NvdW50UGhvbmUiLCJDYWRhc3RyYXJGYXplbmRhIiwic2V0QXBwTG9hZGluZyIsIl9zIiwibmF2aWdhdGUiLCJsb2FkaW5nIiwic2V0TG9hZGluZyIsImZvcm1EYXRhIiwic2V0Rm9ybURhdGEiLCJuYW1lIiwidGlwb19wcm9wcmlldGFyaW8iLCJkYXRhX2FxdWlzaWNhbyIsImNlcCIsImJhaXJybyIsIm11bmljaXBpbyIsInVmIiwiYXJlYV90b3RhbCIsInRlbGVmb25lIiwicGxhbnRhY2FvIiwiaGFuZGxlQ2hhbmdlIiwiZSIsInZhbHVlIiwidGFyZ2V0IiwiaGFuZGxlUmVnaXN0ZXIiLCJwcmV2ZW50RGVmYXVsdCIsInVzZXIiLCJjdXJyZW50VXNlciIsImFsZXJ0IiwicSIsInVpZCIsInNuYXBzaG90IiwiZW1wdHkiLCJwcm9maWxlQ29sbGVjdGlvbiIsInVzZXJJZCIsInBob25lIiwic2FmZUZhcm1EYXRhIiwicGFyc2VGbG9hdCIsInRlbGVmb25lX21hc2NhcmFkbyIsIm93bmVySWQiLCJjcmVhdGVkQXQiLCJEYXRlIiwic2Vzc2lvblN0b3JhZ2UiLCJyZW1vdmVJdGVtIiwic2V0SXRlbSIsIlN0cmluZyIsIm5vdyIsInJlcGxhY2UiLCJlcnJvciIsImNvbnNvbGUiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJDYWRhc3Ryb0ZhemVuZGEuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCJcbmltcG9ydCB7IHVzZU5hdmlnYXRlIH0gZnJvbSBcInJlYWN0LXJvdXRlci1kb21cIlxuaW1wb3J0IHsgYXV0aCB9IGZyb20gXCIuLi8uLi9zZXJ2aWNlcy9maXJlYmFzZVwiXG5pbXBvcnQgeyBkYiB9IGZyb20gXCIuLi8uLi9zZXJ2aWNlcy9maXJlYmFzZVwiXG5pbXBvcnQgeyBhZGREb2MsIGNvbGxlY3Rpb24sIHF1ZXJ5LCB3aGVyZSwgZ2V0RG9jcyB9IGZyb20gXCJmaXJlYmFzZS9maXJlc3RvcmVcIlxuaW1wb3J0IHtcbiAgYWNjb3VudElkZW50aWZpZXJNZXNzYWdlLFxuICBhdHRhY2hVbmlxdWVQaG9uZVRvUHJvZmlsZSxcbiAgbWFza0FjY291bnRQaG9uZSxcbn0gZnJvbSBcIi4uLy4uL3NlcnZpY2VzL2FjY291bnRJZGVudGl0eVwiXG5pbXBvcnQgXCIuLi8uLi9zdHlsZXMvQXBwL0NhZGFzdHJhckZhemVuZGEuY3NzXCJcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQ2FkYXN0cmFyRmF6ZW5kYSh7IHNldEFwcExvYWRpbmcgfSkge1xuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKClcbiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUoZmFsc2UpXG5cbiAgY29uc3QgW2Zvcm1EYXRhLCBzZXRGb3JtRGF0YV0gPSB1c2VTdGF0ZSh7XG4gICAgbmFtZTogXCJcIixcbiAgICB0aXBvX3Byb3ByaWV0YXJpbzogXCJcIixcbiAgICBkYXRhX2FxdWlzaWNhbzogXCJcIixcbiAgICBjZXA6IFwiXCIsXG4gICAgYmFpcnJvOiBcIlwiLFxuICAgIG11bmljaXBpbzogXCJcIixcbiAgICB1ZjogXCJcIixcbiAgICBhcmVhX3RvdGFsOiBcIlwiLFxuICAgIHRlbGVmb25lOiBcIlwiLFxuICAgIHBsYW50YWNhbzogXCJcIlxuICB9KVxuXG4gIGZ1bmN0aW9uIGhhbmRsZUNoYW5nZShlKSB7XG4gICAgY29uc3QgeyBuYW1lLCB2YWx1ZSB9ID0gZS50YXJnZXRcbiAgICBzZXRGb3JtRGF0YSh7IC4uLmZvcm1EYXRhLCBbbmFtZV06IHZhbHVlIH0pXG4gIH1cblxuICBhc3luYyBmdW5jdGlvbiBoYW5kbGVSZWdpc3RlcihlKSB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpXG5cbiAgICBjb25zdCB1c2VyID0gYXV0aC5jdXJyZW50VXNlclxuICAgIGlmICghdXNlcikge1xuICAgICAgYWxlcnQoXCJVc3XDoXJpbyBuw6NvIGF1dGVudGljYWRvXCIpXG4gICAgICByZXR1cm5cbiAgICB9XG5cbiAgICB0cnkge1xuICAgICAgc2V0TG9hZGluZyh0cnVlKVxuXG4gICAgICBjb25zdCBxID0gcXVlcnkoXG4gICAgICAgIGNvbGxlY3Rpb24oZGIsIFwiZmFybXNcIiksXG4gICAgICAgIHdoZXJlKFwib3duZXJJZFwiLCBcIj09XCIsIHVzZXIudWlkKVxuICAgICAgKVxuXG4gICAgICBjb25zdCBzbmFwc2hvdCA9IGF3YWl0IGdldERvY3MocSlcblxuICAgICAgaWYgKCFzbmFwc2hvdC5lbXB0eSkge1xuICAgICAgICBhbGVydChcIlZvY8OqIGrDoSBwb3NzdWkgdW1hIGZhemVuZGEgY2FkYXN0cmFkYS5cIilcbiAgICAgICAgbmF2aWdhdGUoXCIvaG9tZVwiKVxuICAgICAgICByZXR1cm5cbiAgICAgIH1cblxuICAgICAgYXdhaXQgYXR0YWNoVW5pcXVlUGhvbmVUb1Byb2ZpbGUoe1xuICAgICAgICBwcm9maWxlQ29sbGVjdGlvbjogXCJvd25lcnNcIixcbiAgICAgICAgdXNlcklkOiB1c2VyLnVpZCxcbiAgICAgICAgcGhvbmU6IGZvcm1EYXRhLnRlbGVmb25lLFxuICAgICAgfSlcblxuICAgICAgY29uc3QgeyB0ZWxlZm9uZSwgLi4uc2FmZUZhcm1EYXRhIH0gPSBmb3JtRGF0YVxuICAgICAgYXdhaXQgYWRkRG9jKGNvbGxlY3Rpb24oZGIsIFwiZmFybXNcIiksIHtcbiAgICAgICAgLi4uc2FmZUZhcm1EYXRhLFxuICAgICAgICBhcmVhX3RvdGFsOiBwYXJzZUZsb2F0KGZvcm1EYXRhLmFyZWFfdG90YWwpLFxuICAgICAgICB0ZWxlZm9uZV9tYXNjYXJhZG86IG1hc2tBY2NvdW50UGhvbmUodGVsZWZvbmUpLFxuICAgICAgICBvd25lcklkOiB1c2VyLnVpZCxcbiAgICAgICAgY3JlYXRlZEF0OiBuZXcgRGF0ZSgpXG4gICAgICB9KVxuXG4gICAgICBhbGVydChcIkZhemVuZGEgY2FkYXN0cmFkYSBjb20gc3VjZXNzbyFcIilcbiAgICAgIHNlc3Npb25TdG9yYWdlLnJlbW92ZUl0ZW0oXCJ6ZW5pdGhTaG93V2hpdGVMb2FkZXJPbmNlXCIpXG4gICAgICBzZXNzaW9uU3RvcmFnZS5zZXRJdGVtKFwiemVuaXRoQmxvY2tXaGl0ZUxvYWRlclVudGlsXCIsIFN0cmluZyhEYXRlLm5vdygpICsgNTAwMCkpXG4gICAgICBzZXRBcHBMb2FkaW5nPy4odHJ1ZSlcbiAgICAgIG5hdmlnYXRlKFwiL2hvbWVcIiwgeyByZXBsYWNlOiB0cnVlIH0pXG5cbiAgICB9IGNhdGNoIChlcnJvcikge1xuICAgICAgY29uc29sZS5lcnJvcihlcnJvcilcbiAgICAgIGFsZXJ0KGFjY291bnRJZGVudGlmaWVyTWVzc2FnZShlcnJvcikgfHwgXCJFcnJvIGFvIGNhZGFzdHJhciBmYXplbmRhXCIpXG4gICAgfSBmaW5hbGx5IHtcbiAgICAgIHNldExvYWRpbmcoZmFsc2UpXG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cInJlZ2lzdGVyLWNvbnRhaW5lclwiPlxuXG4gICAgICB7LyogSEVBREVSIEZJWE8gKi99XG4gICAgICA8aGVhZGVyIGNsYXNzTmFtZT1cInJlZ2lzdGVyLWhlYWRlclwiPlxuICAgICAgICA8YnV0dG9uIG9uQ2xpY2s9eygpID0+IG5hdmlnYXRlKFwiL2hvbWVcIil9PlxuICAgICAgICAgIOKGkCBWb2x0YXJcbiAgICAgICAgPC9idXR0b24+XG4gICAgICAgIDxoMT5DYWRhc3RybyBkZSBGYXplbmRhPC9oMT5cbiAgICAgIDwvaGVhZGVyPlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInJlZ2lzdGVyLWNhcmRcIj5cbiAgICAgICAgPGZvcm0gb25TdWJtaXQ9e2hhbmRsZVJlZ2lzdGVyfT5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtZ3JvdXBcIj5cbiAgICAgICAgICAgIDxsYWJlbD5Ob21lIGRhIEZhemVuZGE8L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgbmFtZT1cIm5hbWVcIlxuICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEubmFtZX1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWw+VGlwbyBkZSBQcm9wcmlldMOhcmlvPC9sYWJlbD5cbiAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgbmFtZT1cInRpcG9fcHJvcHJpZXRhcmlvXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLnRpcG9fcHJvcHJpZXRhcmlvfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwiXCI+U2VsZWNpb25lPC9vcHRpb24+XG4gICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJQRlwiPlBlc3NvYSBGw61zaWNhPC9vcHRpb24+XG4gICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJQSlwiPlBlc3NvYSBKdXLDrWRpY2E8L29wdGlvbj5cbiAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsPkRhdGEgZGUgQXF1aXNpw6fDo288L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIHR5cGU9XCJkYXRlXCJcbiAgICAgICAgICAgICAgbmFtZT1cImRhdGFfYXF1aXNpY2FvXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLmRhdGFfYXF1aXNpY2FvfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtZ3JvdXBcIj5cbiAgICAgICAgICAgIDxsYWJlbD5DRVA8L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgbmFtZT1cImNlcFwiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5jZXB9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHJlcXVpcmVkXG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsPkJhaXJybzwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICBuYW1lPVwiYmFpcnJvXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLmJhaXJyb31cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWw+TXVuaWPDrXBpbzwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICBuYW1lPVwibXVuaWNpcGlvXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLm11bmljaXBpb31cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWw+VUY8L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgbmFtZT1cInVmXCJcbiAgICAgICAgICAgICAgbWF4TGVuZ3RoPVwiMlwiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS51Zn1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWw+w4FyZWEgVG90YWwgKGhlY3RhcmVzKTwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgdHlwZT1cIm51bWJlclwiXG4gICAgICAgICAgICAgIGlucHV0TW9kZT1cImRlY2ltYWxcIlxuICAgICAgICAgICAgICBuYW1lPVwiYXJlYV90b3RhbFwiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5hcmVhX3RvdGFsfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIkRpZ2l0ZSBhIMOhcmVhIGVtIGhlY3RhcmVzXCJcbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWw+VGVsZWZvbmUgZG8gUHJvcHJpZXTDoXJpbzwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICBuYW1lPVwidGVsZWZvbmVcIlxuICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEudGVsZWZvbmV9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHJlcXVpcmVkXG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsPlByaW5jaXBhbCBQbGFudGHDp8OjbzwvbGFiZWw+XG4gICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgIG5hbWU9XCJwbGFudGFjYW9cIlxuICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEucGxhbnRhY2FvfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwiXCI+U2VsZWNpb25lPC9vcHRpb24+XG4gICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJTb2phXCI+U29qYTwvb3B0aW9uPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwiVG9tYXRlXCI+VG9tYXRlPC9vcHRpb24+XG4gICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJDYWbDqVwiPkNhZsOpPC9vcHRpb24+XG4gICAgICAgICAgICA8L3NlbGVjdD5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwiYnRuLXN1Ym1pdFwiXG4gICAgICAgICAgICBkaXNhYmxlZD17bG9hZGluZ31cbiAgICAgICAgICA+XG4gICAgICAgICAgICB7bG9hZGluZyA/IFwiQ2FkYXN0cmFuZG8uLi5cIiA6IFwiQ2FkYXN0cmFyIEZhemVuZGFcIn1cbiAgICAgICAgICA8L2J1dHRvbj5cblxuICAgICAgICA8L2Zvcm0+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKVxufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9zYW11ZS9Eb3dubG9hZHMvVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vc3JjL3BhZ2VzL0FwcC9DYWRhc3Ryb0ZhemVuZGEuanN4In0=

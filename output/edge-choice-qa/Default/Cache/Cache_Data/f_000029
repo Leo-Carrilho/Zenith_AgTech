@@ -1,0 +1,251 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Profile/FarmInfoView.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import { motion } from "/node_modules/.vite/deps/framer-motion.js?v=bbb07f35";
+import { useLanguage } from "/src/contexts/LanguageContext.jsx";
+const FarmInfoView = ({ farmData, onAddFarm, onEditFarm, formatPhone }) => {
+  _s();
+  const { locale, t } = useLanguage();
+  if (!farmData) {
+    return /* @__PURE__ */ jsxDEV(
+      motion.div,
+      {
+        className: "empty-state-tech",
+        initial: { opacity: 0, scale: 0.9 },
+        animate: { opacity: 1, scale: 1 },
+        transition: { duration: 0.3 },
+        children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "empty-icon-container", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined empty-icon", children: "agriculture" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 17,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "empty-ring" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 18,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "empty-ring-2" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 19,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 16,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("h4", { children: t("farm.none") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 22,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: t("farm.noneDescription") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 23,
+            columnNumber: 9
+          }, this),
+          onAddFarm && /* @__PURE__ */ jsxDEV("button", { className: "empty-action-btn", onClick: onAddFarm, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "add" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 27,
+              columnNumber: 13
+            }, this),
+            t("farm.register")
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 26,
+            columnNumber: 9
+          }, this)
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+        lineNumber: 10,
+        columnNumber: 7
+      },
+      this
+    );
+  }
+  const formatDate = (dateString) => {
+    if (!dateString) return t("common.notInformed");
+    const date = new Date(dateString);
+    return date.toLocaleDateString(locale);
+  };
+  const formatArea = (area) => {
+    if (!area) return t("common.notInformed");
+    return `${parseFloat(area).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ha`;
+  };
+  const farmInitial = (farmData.name || "F").trim().charAt(0).toLocaleUpperCase(locale) || "F";
+  const location = [farmData.municipio, farmData.uf].filter(Boolean).join(" - ") || t("common.notInformed");
+  const farmRows = [
+    {
+      icon: "agriculture",
+      label: t("farm.name"),
+      value: farmData.name || t("common.notInformed")
+    },
+    {
+      icon: "square_foot",
+      label: t("farm.totalArea"),
+      value: formatArea(farmData.area_total)
+    },
+    {
+      icon: "grass",
+      label: t("farm.crop"),
+      value: farmData.plantacao || t("common.notInformed")
+    },
+    {
+      icon: "location_on",
+      label: t("personal.location"),
+      value: location
+    },
+    {
+      icon: "map",
+      label: t("farm.district"),
+      value: farmData.bairro || t("common.notInformed")
+    },
+    {
+      icon: "mail",
+      label: t("farm.postalCode"),
+      value: farmData.cep || t("common.notInformed")
+    },
+    {
+      icon: "call",
+      label: t("personal.phone"),
+      value: farmData.telefone_mascarado || (farmData.telefone ? formatPhone(farmData.telefone) : t("common.notInformed"))
+    },
+    {
+      icon: "calendar_month",
+      label: t("farm.acquisition"),
+      value: farmData.data_aquisicao ? formatDate(farmData.data_aquisicao) : t("common.notInformed")
+    },
+    {
+      icon: "badge",
+      label: t("farm.relationship"),
+      value: farmData.tipo_proprietario || t("common.notInformed")
+    }
+  ];
+  return /* @__PURE__ */ jsxDEV(
+    motion.div,
+    {
+      className: "profile-card farm-details",
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.3 },
+      children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "card-corner" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+          lineNumber: 103,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "farm-account-summary", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "farm-account-avatar", children: farmInitial }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 106,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "farm-account-copy", children: [
+            /* @__PURE__ */ jsxDEV("strong", { children: farmData.name || t("farm.fallbackName") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 108,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: location }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 109,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 107,
+            columnNumber: 9
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+          lineNumber: 105,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "farm-data-list", children: farmRows.map(
+          (row) => /* @__PURE__ */ jsxDEV("button", { type: "button", className: "personal-data-row farm-data-row", onClick: onEditFarm, disabled: !onEditFarm, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "personal-data-icon material-symbols-outlined", "aria-hidden": "true", children: row.icon }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 116,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "personal-data-copy", children: [
+              /* @__PURE__ */ jsxDEV("small", { children: row.label }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+                lineNumber: 118,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("strong", { children: row.value }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+                lineNumber: 119,
+                columnNumber: 15
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 117,
+              columnNumber: 13
+            }, this),
+            onEditFarm && /* @__PURE__ */ jsxDEV("span", { className: "personal-data-action material-symbols-outlined", "aria-hidden": "true", children: "edit" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+              lineNumber: 121,
+              columnNumber: 28
+            }, this)
+          ] }, row.label, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+            lineNumber: 115,
+            columnNumber: 9
+          }, this)
+        ) }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+          lineNumber: 113,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx",
+      lineNumber: 97,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(FarmInfoView, "EuK0hcpRaTT4uxRRQ5O2HdaWpV0=", false, function() {
+  return [useLanguage];
+});
+_c = FarmInfoView;
+export default FarmInfoView;
+var _c;
+$RefreshReg$(_c, "FarmInfoView");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmInfoView.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBQTtBQUFBO0FBQUEsbUJBQXdGO0FBQUEsZUFOVTRDLElBQUlaLE9BQXZIO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBT0E7QUFBQSxRQUNELEtBVkg7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQVdBO0FBQUE7QUFBQTtBQUFBLElBM0JGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQTRCQTtBQUVKO0FBQUM5QixHQTFIS0wsY0FBWTtBQUFBLFVBQ01ELFdBQVc7QUFBQTtBQUFBLEtBRDdCQztBQTRITixlQUFlQTtBQUFZLElBQUFnRDtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJtb3Rpb24iLCJ1c2VMYW5ndWFnZSIsIkZhcm1JbmZvVmlldyIsImZhcm1EYXRhIiwib25BZGRGYXJtIiwib25FZGl0RmFybSIsImZvcm1hdFBob25lIiwiX3MiLCJsb2NhbGUiLCJ0Iiwib3BhY2l0eSIsInNjYWxlIiwiZHVyYXRpb24iLCJmb3JtYXREYXRlIiwiZGF0ZVN0cmluZyIsImRhdGUiLCJEYXRlIiwidG9Mb2NhbGVEYXRlU3RyaW5nIiwiZm9ybWF0QXJlYSIsImFyZWEiLCJwYXJzZUZsb2F0IiwidG9Mb2NhbGVTdHJpbmciLCJtaW5pbXVtRnJhY3Rpb25EaWdpdHMiLCJtYXhpbXVtRnJhY3Rpb25EaWdpdHMiLCJmYXJtSW5pdGlhbCIsIm5hbWUiLCJ0cmltIiwiY2hhckF0IiwidG9Mb2NhbGVVcHBlckNhc2UiLCJsb2NhdGlvbiIsIm11bmljaXBpbyIsInVmIiwiZmlsdGVyIiwiQm9vbGVhbiIsImpvaW4iLCJmYXJtUm93cyIsImljb24iLCJsYWJlbCIsInZhbHVlIiwiYXJlYV90b3RhbCIsInBsYW50YWNhbyIsImJhaXJybyIsImNlcCIsInRlbGVmb25lX21hc2NhcmFkbyIsInRlbGVmb25lIiwiZGF0YV9hcXVpc2ljYW8iLCJ0aXBvX3Byb3ByaWV0YXJpbyIsInkiLCJtYXAiLCJyb3ciLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJGYXJtSW5mb1ZpZXcuanN4Il0sInNvdXJjZXNDb250ZW50IjpbIi8vIGNvbXBvbmVudHMvQXBwL1Byb2ZpbGUvRmFybUluZm9WaWV3LmpzeFxuaW1wb3J0IHsgbW90aW9uIH0gZnJvbSBcImZyYW1lci1tb3Rpb25cIlxuaW1wb3J0IHsgdXNlTGFuZ3VhZ2UgfSBmcm9tIFwiLi4vLi4vLi4vY29udGV4dHMvTGFuZ3VhZ2VDb250ZXh0XCJcblxuY29uc3QgRmFybUluZm9WaWV3ID0gKHsgZmFybURhdGEsIG9uQWRkRmFybSwgb25FZGl0RmFybSwgZm9ybWF0UGhvbmUgfSkgPT4ge1xuICBjb25zdCB7IGxvY2FsZSwgdCB9ID0gdXNlTGFuZ3VhZ2UoKVxuXG4gIGlmICghZmFybURhdGEpIHtcbiAgICByZXR1cm4gKFxuICAgICAgPG1vdGlvbi5kaXYgXG4gICAgICAgIGNsYXNzTmFtZT1cImVtcHR5LXN0YXRlLXRlY2hcIlxuICAgICAgICBpbml0aWFsPXt7IG9wYWNpdHk6IDAsIHNjYWxlOiAwLjkgfX1cbiAgICAgICAgYW5pbWF0ZT17eyBvcGFjaXR5OiAxLCBzY2FsZTogMSB9fVxuICAgICAgICB0cmFuc2l0aW9uPXt7IGR1cmF0aW9uOiAwLjMgfX1cbiAgICAgID5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbXB0eS1pY29uLWNvbnRhaW5lclwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWQgZW1wdHktaWNvblwiPmFncmljdWx0dXJlPC9zcGFuPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1wdHktcmluZ1wiPjwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1wdHktcmluZy0yXCI+PC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICBcbiAgICAgICAgPGg0Pnt0KFwiZmFybS5ub25lXCIpfTwvaDQ+XG4gICAgICAgIDxwPnt0KFwiZmFybS5ub25lRGVzY3JpcHRpb25cIil9PC9wPlxuICAgICAgICBcbiAgICAgICAge29uQWRkRmFybSAmJiAoXG4gICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJlbXB0eS1hY3Rpb24tYnRuXCIgb25DbGljaz17b25BZGRGYXJtfT5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIj5hZGQ8L3NwYW4+XG4gICAgICAgICAgICB7dChcImZhcm0ucmVnaXN0ZXJcIil9XG4gICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICl9XG4gICAgICA8L21vdGlvbi5kaXY+XG4gICAgKVxuICB9XG5cbiAgY29uc3QgZm9ybWF0RGF0ZSA9IChkYXRlU3RyaW5nKSA9PiB7XG4gICAgaWYgKCFkYXRlU3RyaW5nKSByZXR1cm4gdChcImNvbW1vbi5ub3RJbmZvcm1lZFwiKVxuICAgIGNvbnN0IGRhdGUgPSBuZXcgRGF0ZShkYXRlU3RyaW5nKVxuICAgIHJldHVybiBkYXRlLnRvTG9jYWxlRGF0ZVN0cmluZyhsb2NhbGUpXG4gIH1cblxuICBjb25zdCBmb3JtYXRBcmVhID0gKGFyZWEpID0+IHtcbiAgICBpZiAoIWFyZWEpIHJldHVybiB0KFwiY29tbW9uLm5vdEluZm9ybWVkXCIpXG4gICAgcmV0dXJuIGAke3BhcnNlRmxvYXQoYXJlYSkudG9Mb2NhbGVTdHJpbmcobG9jYWxlLCB7IG1pbmltdW1GcmFjdGlvbkRpZ2l0czogMSwgbWF4aW11bUZyYWN0aW9uRGlnaXRzOiAxIH0pfSBoYWBcbiAgfVxuXG4gIGNvbnN0IGZhcm1Jbml0aWFsID0gKGZhcm1EYXRhLm5hbWUgfHwgXCJGXCIpLnRyaW0oKS5jaGFyQXQoMCkudG9Mb2NhbGVVcHBlckNhc2UobG9jYWxlKSB8fCBcIkZcIlxuICBjb25zdCBsb2NhdGlvbiA9IFtmYXJtRGF0YS5tdW5pY2lwaW8sIGZhcm1EYXRhLnVmXS5maWx0ZXIoQm9vbGVhbikuam9pbihcIiAtIFwiKSB8fCB0KFwiY29tbW9uLm5vdEluZm9ybWVkXCIpXG4gIGNvbnN0IGZhcm1Sb3dzID0gW1xuICAgIHtcbiAgICAgIGljb246IFwiYWdyaWN1bHR1cmVcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS5uYW1lXCIpLFxuICAgICAgdmFsdWU6IGZhcm1EYXRhLm5hbWUgfHwgdChcImNvbW1vbi5ub3RJbmZvcm1lZFwiKSxcbiAgICB9LFxuICAgIHtcbiAgICAgIGljb246IFwic3F1YXJlX2Zvb3RcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS50b3RhbEFyZWFcIiksXG4gICAgICB2YWx1ZTogZm9ybWF0QXJlYShmYXJtRGF0YS5hcmVhX3RvdGFsKSxcbiAgICB9LFxuICAgIHtcbiAgICAgIGljb246IFwiZ3Jhc3NcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS5jcm9wXCIpLFxuICAgICAgdmFsdWU6IGZhcm1EYXRhLnBsYW50YWNhbyB8fCB0KFwiY29tbW9uLm5vdEluZm9ybWVkXCIpLFxuICAgIH0sXG4gICAge1xuICAgICAgaWNvbjogXCJsb2NhdGlvbl9vblwiLFxuICAgICAgbGFiZWw6IHQoXCJwZXJzb25hbC5sb2NhdGlvblwiKSxcbiAgICAgIHZhbHVlOiBsb2NhdGlvbixcbiAgICB9LFxuICAgIHtcbiAgICAgIGljb246IFwibWFwXCIsXG4gICAgICBsYWJlbDogdChcImZhcm0uZGlzdHJpY3RcIiksXG4gICAgICB2YWx1ZTogZmFybURhdGEuYmFpcnJvIHx8IHQoXCJjb21tb24ubm90SW5mb3JtZWRcIiksXG4gICAgfSxcbiAgICB7XG4gICAgICBpY29uOiBcIm1haWxcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS5wb3N0YWxDb2RlXCIpLFxuICAgICAgdmFsdWU6IGZhcm1EYXRhLmNlcCB8fCB0KFwiY29tbW9uLm5vdEluZm9ybWVkXCIpLFxuICAgIH0sXG4gICAge1xuICAgICAgaWNvbjogXCJjYWxsXCIsXG4gICAgICBsYWJlbDogdChcInBlcnNvbmFsLnBob25lXCIpLFxuICAgICAgdmFsdWU6IGZhcm1EYXRhLnRlbGVmb25lX21hc2NhcmFkbyB8fCAoZmFybURhdGEudGVsZWZvbmUgPyBmb3JtYXRQaG9uZShmYXJtRGF0YS50ZWxlZm9uZSkgOiB0KFwiY29tbW9uLm5vdEluZm9ybWVkXCIpKSxcbiAgICB9LFxuICAgIHtcbiAgICAgIGljb246IFwiY2FsZW5kYXJfbW9udGhcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS5hY3F1aXNpdGlvblwiKSxcbiAgICAgIHZhbHVlOiBmYXJtRGF0YS5kYXRhX2FxdWlzaWNhbyA/IGZvcm1hdERhdGUoZmFybURhdGEuZGF0YV9hcXVpc2ljYW8pIDogdChcImNvbW1vbi5ub3RJbmZvcm1lZFwiKSxcbiAgICB9LFxuICAgIHtcbiAgICAgIGljb246IFwiYmFkZ2VcIixcbiAgICAgIGxhYmVsOiB0KFwiZmFybS5yZWxhdGlvbnNoaXBcIiksXG4gICAgICB2YWx1ZTogZmFybURhdGEudGlwb19wcm9wcmlldGFyaW8gfHwgdChcImNvbW1vbi5ub3RJbmZvcm1lZFwiKSxcbiAgICB9LFxuICBdXG5cbiAgcmV0dXJuIChcbiAgICA8bW90aW9uLmRpdiBcbiAgICAgIGNsYXNzTmFtZT1cInByb2ZpbGUtY2FyZCBmYXJtLWRldGFpbHNcIlxuICAgICAgaW5pdGlhbD17eyBvcGFjaXR5OiAwLCB5OiAyMCB9fVxuICAgICAgYW5pbWF0ZT17eyBvcGFjaXR5OiAxLCB5OiAwIH19XG4gICAgICB0cmFuc2l0aW9uPXt7IGR1cmF0aW9uOiAwLjMgfX1cbiAgICA+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImNhcmQtY29ybmVyXCI+PC9kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmFybS1hY2NvdW50LXN1bW1hcnlcIj5cbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiZmFybS1hY2NvdW50LWF2YXRhclwiPntmYXJtSW5pdGlhbH08L3NwYW4+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmFybS1hY2NvdW50LWNvcHlcIj5cbiAgICAgICAgICA8c3Ryb25nPntmYXJtRGF0YS5uYW1lIHx8IHQoXCJmYXJtLmZhbGxiYWNrTmFtZVwiKX08L3N0cm9uZz5cbiAgICAgICAgICA8c3Bhbj57bG9jYXRpb259PC9zcGFuPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImZhcm0tZGF0YS1saXN0XCI+XG4gICAgICAgIHtmYXJtUm93cy5tYXAoKHJvdykgPT4gKFxuICAgICAgICAgIDxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzTmFtZT1cInBlcnNvbmFsLWRhdGEtcm93IGZhcm0tZGF0YS1yb3dcIiBvbkNsaWNrPXtvbkVkaXRGYXJtfSBkaXNhYmxlZD17IW9uRWRpdEZhcm19IGtleT17cm93LmxhYmVsfT5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInBlcnNvbmFsLWRhdGEtaWNvbiBtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+e3Jvdy5pY29ufTwvc3Bhbj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInBlcnNvbmFsLWRhdGEtY29weVwiPlxuICAgICAgICAgICAgICA8c21hbGw+e3Jvdy5sYWJlbH08L3NtYWxsPlxuICAgICAgICAgICAgICA8c3Ryb25nPntyb3cudmFsdWV9PC9zdHJvbmc+XG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICB7b25FZGl0RmFybSAmJiA8c3BhbiBjbGFzc05hbWU9XCJwZXJzb25hbC1kYXRhLWFjdGlvbiBtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+ZWRpdDwvc3Bhbj59XG4gICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICkpfVxuICAgICAgPC9kaXY+XG4gICAgPC9tb3Rpb24uZGl2PlxuICApXG59XG5cbmV4cG9ydCBkZWZhdWx0IEZhcm1JbmZvVmlld1xuIl0sImZpbGUiOiJDOi9Vc2Vycy9zYW11ZS9Eb3dubG9hZHMvVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vc3JjL2NvbXBvbmVudHMvQXBwL1Byb2ZpbGUvRmFybUluZm9WaWV3LmpzeCJ9

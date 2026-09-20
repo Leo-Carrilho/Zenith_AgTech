@@ -1,0 +1,634 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Explore/DiarioTab.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useState = __vite__cjsImport1_react["useState"]; const useEffect = __vite__cjsImport1_react["useEffect"];
+import { motion, AnimatePresence } from "/node_modules/.vite/deps/framer-motion.js?v=bbb07f35";
+import "/src/styles/App/DiarioTab.css";
+function getLocalDateValue(date = /* @__PURE__ */ new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+export default function DiarioTab() {
+  _s();
+  const [entries, setEntries] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [newEntry, setNewEntry] = useState({
+    title: "",
+    description: "",
+    type: "observacao",
+    date: getLocalDateValue()
+  });
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  useEffect(() => {
+    const saved = localStorage.getItem("diaryEntries");
+    if (saved) {
+      setEntries(JSON.parse(saved));
+    } else {
+      const sampleEntries = [
+        {
+          id: 1,
+          title: "Aplicação de fungicida",
+          description: "Aplicação preventiva na área norte da fazenda. Clima favorável, sem ventos.",
+          type: "tratamento",
+          date: "2024-03-20",
+          time: "08:30"
+        },
+        {
+          id: 2,
+          title: "Irrigação realizada",
+          description: "Sistema de irrigação ativado por 2 horas na área central.",
+          type: "irrigacao",
+          date: "2024-03-19",
+          time: "16:00"
+        },
+        {
+          id: 3,
+          title: "Pragas detectadas",
+          description: "Foco de lagarta identificado na borda da plantação. Monitoramento necessário.",
+          type: "alerta",
+          date: "2024-03-18",
+          time: "10:15"
+        }
+      ];
+      setEntries(sampleEntries);
+      localStorage.setItem("diaryEntries", JSON.stringify(sampleEntries));
+    }
+  }, []);
+  const saveEntries = (newEntries) => {
+    setEntries(newEntries);
+    localStorage.setItem("diaryEntries", JSON.stringify(newEntries));
+  };
+  const addEntry = () => {
+    if (!newEntry.title.trim()) return;
+    const entry = {
+      id: Date.now(),
+      ...newEntry,
+      time: (/* @__PURE__ */ new Date()).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+    };
+    saveEntries([entry, ...entries]);
+    setNewEntry({
+      title: "",
+      description: "",
+      type: "observacao",
+      date: getLocalDateValue()
+    });
+    setShowForm(false);
+  };
+  const deleteEntry = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir esta entrada?")) {
+      saveEntries(entries.filter((entry) => entry.id !== id));
+    }
+  };
+  const parseLocalDate = (dateStr) => {
+    const [year, month, day] = String(dateStr).split("-").map(Number);
+    return new Date(year, month - 1, day);
+  };
+  const formatDate = (dateStr) => {
+    const date = parseLocalDate(dateStr);
+    return date.toLocaleDateString("pt-BR", { day: "numeric", month: "short" });
+  };
+  const getTypeIcon = (type) => {
+    switch (type) {
+      case "tratamento":
+        return "experiment";
+      case "irrigacao":
+        return "water_drop";
+      case "alerta":
+        return "pest_control";
+      default:
+        return "edit_note";
+    }
+  };
+  const getTypeColor = (type) => {
+    switch (type) {
+      case "tratamento":
+        return "#2d6140";
+      case "irrigacao":
+        return "#0077ff";
+      case "alerta":
+        return "#ff9f1c";
+      default:
+        return "#3d8057";
+    }
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "diario-container", children: [
+    /* @__PURE__ */ jsxDEV("section", { className: "diario-hero", children: /* @__PURE__ */ jsxDEV("div", { className: "diario-header", children: [
+      /* @__PURE__ */ jsxDEV("h2", { children: "Diário de Campo" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 128,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { children: "Registre suas atividades diárias" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 129,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 127,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 126,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      "button",
+      {
+        type: "button",
+        className: "diario-add-btn",
+        onClick: () => setShowForm(true),
+        children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "add" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+            lineNumber: 139,
+            columnNumber: 9
+          }, this),
+          "Nova entrada"
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 134,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV(AnimatePresence, { children: showForm && /* @__PURE__ */ jsxDEV(
+      motion.div,
+      {
+        className: "diario-modal",
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        children: /* @__PURE__ */ jsxDEV(
+          motion.div,
+          {
+            className: "diario-form",
+            initial: { scale: 0.9, y: 20 },
+            animate: { scale: 1, y: 0 },
+            exit: { scale: 0.9, y: 20 },
+            children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "diario-form-header", children: [
+                /* @__PURE__ */ jsxDEV("h3", { children: "Nova entrada" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 159,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV("button", { className: "close-btn", onClick: () => setShowForm(false), children: /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "close" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 161,
+                  columnNumber: 19
+                }, this) }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 160,
+                  columnNumber: 17
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 158,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+                /* @__PURE__ */ jsxDEV("label", { children: "Título" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 166,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "input",
+                  {
+                    type: "text",
+                    placeholder: "Ex: Aplicação de fungicida",
+                    value: newEntry.title,
+                    onChange: (e) => setNewEntry({ ...newEntry, title: e.target.value })
+                  },
+                  void 0,
+                  false,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 167,
+                    columnNumber: 17
+                  },
+                  this
+                )
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 165,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+                /* @__PURE__ */ jsxDEV("label", { children: "Descrição" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 176,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "textarea",
+                  {
+                    rows: "3",
+                    placeholder: "Detalhes da atividade...",
+                    value: newEntry.description,
+                    onChange: (e) => setNewEntry({ ...newEntry, description: e.target.value })
+                  },
+                  void 0,
+                  false,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 177,
+                    columnNumber: 17
+                  },
+                  this
+                )
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 175,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+                /* @__PURE__ */ jsxDEV("label", { children: "Data" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 186,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "input",
+                  {
+                    type: "date",
+                    value: newEntry.date,
+                    onChange: (e) => setNewEntry({ ...newEntry, date: e.target.value })
+                  },
+                  void 0,
+                  false,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 187,
+                    columnNumber: 17
+                  },
+                  this
+                )
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 185,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+                /* @__PURE__ */ jsxDEV("label", { children: "Tipo" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 195,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "select",
+                  {
+                    value: newEntry.type,
+                    onChange: (e) => setNewEntry({ ...newEntry, type: e.target.value }),
+                    children: [
+                      /* @__PURE__ */ jsxDEV("option", { value: "observacao", children: "Observação" }, void 0, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                        lineNumber: 200,
+                        columnNumber: 19
+                      }, this),
+                      /* @__PURE__ */ jsxDEV("option", { value: "tratamento", children: "Tratamento" }, void 0, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                        lineNumber: 201,
+                        columnNumber: 19
+                      }, this),
+                      /* @__PURE__ */ jsxDEV("option", { value: "irrigacao", children: "Irrigação" }, void 0, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                        lineNumber: 202,
+                        columnNumber: 19
+                      }, this),
+                      /* @__PURE__ */ jsxDEV("option", { value: "alerta", children: "Alerta" }, void 0, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                        lineNumber: 203,
+                        columnNumber: 19
+                      }, this)
+                    ]
+                  },
+                  void 0,
+                  true,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 196,
+                    columnNumber: 17
+                  },
+                  this
+                )
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 194,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("button", { className: "submit-btn", onClick: addEntry, children: "Salvar entrada" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 207,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+            lineNumber: 152,
+            columnNumber: 13
+          },
+          this
+        )
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 146,
+        columnNumber: 9
+      },
+      this
+    ) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 144,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "diario-list", children: entries.length === 0 ? /* @__PURE__ */ jsxDEV("div", { className: "diario-empty", children: [
+      /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "menu_book" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 219,
+        columnNumber: 13
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { children: "Nenhuma entrada no diário" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 220,
+        columnNumber: 13
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { className: "empty-hint", children: 'Clique em "Nova entrada" para começar' }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 221,
+        columnNumber: 13
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 218,
+      columnNumber: 9
+    }, this) : entries.map((entry, index) => {
+      const entryColor = getTypeColor(entry.type);
+      return /* @__PURE__ */ jsxDEV(
+        motion.article,
+        {
+          className: "diario-card",
+          style: { "--entry-color": entryColor, "--entry-soft": `${entryColor}18` },
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay: index * 0.05 },
+          onClick: () => setSelectedEntry(entry),
+          onKeyDown: (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setSelectedEntry(entry);
+            }
+          },
+          role: "button",
+          tabIndex: 0,
+          children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "diario-card-icon", "aria-hidden": "true", children: /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: getTypeIcon(entry.type) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+              lineNumber: 246,
+              columnNumber: 17
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+              lineNumber: 245,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "diario-card-content", children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "diario-card-meta", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: [
+                  /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "calendar_today" }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 252,
+                    columnNumber: 21
+                  }, this),
+                  formatDate(entry.date)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 251,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { children: [
+                  /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "schedule" }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 256,
+                    columnNumber: 21
+                  }, this),
+                  entry.time
+                ] }, void 0, true, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 255,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 250,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "diario-card-header", children: [
+                /* @__PURE__ */ jsxDEV("h3", { children: entry.title }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 262,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "button",
+                  {
+                    type: "button",
+                    className: "delete-entry",
+                    "aria-label": `Excluir ${entry.title}`,
+                    onClick: (e) => {
+                      e.stopPropagation();
+                      deleteEntry(entry.id);
+                    },
+                    children: /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "delete" }, void 0, false, {
+                      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                      lineNumber: 272,
+                      columnNumber: 21
+                    }, this)
+                  },
+                  void 0,
+                  false,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 263,
+                    columnNumber: 19
+                  },
+                  this
+                )
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 261,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { children: entry.description }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 275,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+              lineNumber: 249,
+              columnNumber: 15
+            }, this)
+          ]
+        },
+        entry.id,
+        true,
+        {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+          lineNumber: 228,
+          columnNumber: 13
+        },
+        this
+      );
+    }) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 216,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(AnimatePresence, { children: selectedEntry && /* @__PURE__ */ jsxDEV(
+      motion.div,
+      {
+        className: "diario-modal",
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        onClick: () => setSelectedEntry(null),
+        children: /* @__PURE__ */ jsxDEV(
+          motion.div,
+          {
+            className: "diario-detail",
+            initial: { scale: 0.9, y: 20 },
+            animate: { scale: 1, y: 0 },
+            exit: { scale: 0.9, y: 20 },
+            onClick: (e) => e.stopPropagation(),
+            children: [
+              /* @__PURE__ */ jsxDEV("button", { className: "close-btn", onClick: () => setSelectedEntry(null), children: /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "close" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 301,
+                columnNumber: 17
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 300,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "detail-header", children: [
+                /* @__PURE__ */ jsxDEV(
+                  "span",
+                  {
+                    className: "type-icon large",
+                    style: { background: `${getTypeColor(selectedEntry.type)}20`, color: getTypeColor(selectedEntry.type) },
+                    children: /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: getTypeIcon(selectedEntry.type) }, void 0, false, {
+                      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                      lineNumber: 308,
+                      columnNumber: 19
+                    }, this)
+                  },
+                  void 0,
+                  false,
+                  {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 304,
+                    columnNumber: 17
+                  },
+                  this
+                ),
+                /* @__PURE__ */ jsxDEV("div", { children: [
+                  /* @__PURE__ */ jsxDEV("h3", { children: selectedEntry.title }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 311,
+                    columnNumber: 19
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("p", { className: "detail-date", children: [
+                    parseLocalDate(selectedEntry.date).toLocaleDateString("pt-BR"),
+                    " • ",
+                    selectedEntry.time
+                  ] }, void 0, true, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                    lineNumber: 312,
+                    columnNumber: 19
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                  lineNumber: 310,
+                  columnNumber: 17
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 303,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { className: "detail-description", children: selectedEntry.description }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+                lineNumber: 317,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+            lineNumber: 293,
+            columnNumber: 13
+          },
+          this
+        )
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+        lineNumber: 286,
+        columnNumber: 9
+      },
+      this
+    ) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+      lineNumber: 284,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx",
+    lineNumber: 125,
+    columnNumber: 5
+  }, this);
+}
+_s(DiarioTab, "4dtucOP5RLFVx0e61mTDRvfgcso=");
+_c = DiarioTab;
+var _c;
+$RefreshReg$(_c, "DiarioTab");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/DiarioTab.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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LFdBQVM7QUFBQSxLQUFUQTtBQUFTLElBQUE2RDtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJ1c2VTdGF0ZSIsInVzZUVmZmVjdCIsIm1vdGlvbiIsIkFuaW1hdGVQcmVzZW5jZSIsImdldExvY2FsRGF0ZVZhbHVlIiwiZGF0ZSIsIkRhdGUiLCJ5ZWFyIiwiZ2V0RnVsbFllYXIiLCJtb250aCIsIlN0cmluZyIsImdldE1vbnRoIiwicGFkU3RhcnQiLCJkYXkiLCJnZXREYXRlIiwiRGlhcmlvVGFiIiwiX3MiLCJlbnRyaWVzIiwic2V0RW50cmllcyIsInNob3dGb3JtIiwic2V0U2hvd0Zvcm0iLCJuZXdFbnRyeSIsInNldE5ld0VudHJ5IiwidGl0bGUiLCJkZXNjcmlwdGlvbiIsInR5cGUiLCJzZWxlY3RlZEVudHJ5Iiwic2V0U2VsZWN0ZWRFbnRyeSIsInNhdmVkIiwibG9jYWxTdG9yYWdlIiwiZ2V0SXRlbSIsIkpTT04iLCJwYXJzZSIsInNhbXBsZUVudHJpZXMiLCJpZCIsInRpbWUiLCJzZXRJdGVtIiwic3RyaW5naWZ5Iiwic2F2ZUVudHJpZXMiLCJuZXdFbnRyaWVzIiwiYWRkRW50cnkiLCJ0cmltIiwiZW50cnkiLCJub3ciLCJ0b0xvY2FsZVRpbWVTdHJpbmciLCJob3VyIiwibWludXRlIiwiZGVsZXRlRW50cnkiLCJ3aW5kb3ciLCJjb25maXJtIiwiZmlsdGVyIiwicGFyc2VMb2NhbERhdGUiLCJkYXRlU3RyIiwic3BsaXQiLCJtYXAiLCJOdW1iZXIiLCJmb3JtYXREYXRlIiwidG9Mb2NhbGVEYXRlU3RyaW5nIiwiZ2V0VHlwZUljb24iLCJnZXRUeXBlQ29sb3IiLCJvcGFjaXR5Iiwic2NhbGUiLCJ5IiwiZSIsInRhcmdldCIsInZhbHVlIiwibGVuZ3RoIiwiaW5kZXgiLCJlbnRyeUNvbG9yIiwiZGVsYXkiLCJldmVudCIsImtleSIsInByZXZlbnREZWZhdWx0Iiwic3RvcFByb3BhZ2F0aW9uIiwiYmFja2dyb3VuZCIsImNvbG9yIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiRGlhcmlvVGFiLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyB1c2VTdGF0ZSwgdXNlRWZmZWN0IH0gZnJvbSBcInJlYWN0XCJcbmltcG9ydCB7IG1vdGlvbiwgQW5pbWF0ZVByZXNlbmNlIH0gZnJvbSBcImZyYW1lci1tb3Rpb25cIlxuaW1wb3J0IFwiLi4vLi4vLi4vc3R5bGVzL0FwcC9EaWFyaW9UYWIuY3NzXCJcblxuZnVuY3Rpb24gZ2V0TG9jYWxEYXRlVmFsdWUoZGF0ZSA9IG5ldyBEYXRlKCkpIHtcbiAgY29uc3QgeWVhciA9IGRhdGUuZ2V0RnVsbFllYXIoKVxuICBjb25zdCBtb250aCA9IFN0cmluZyhkYXRlLmdldE1vbnRoKCkgKyAxKS5wYWRTdGFydCgyLCBcIjBcIilcbiAgY29uc3QgZGF5ID0gU3RyaW5nKGRhdGUuZ2V0RGF0ZSgpKS5wYWRTdGFydCgyLCBcIjBcIilcbiAgcmV0dXJuIGAke3llYXJ9LSR7bW9udGh9LSR7ZGF5fWBcbn1cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gRGlhcmlvVGFiKCkge1xuICBjb25zdCBbZW50cmllcywgc2V0RW50cmllc10gPSB1c2VTdGF0ZShbXSlcbiAgY29uc3QgW3Nob3dGb3JtLCBzZXRTaG93Rm9ybV0gPSB1c2VTdGF0ZShmYWxzZSlcbiAgY29uc3QgW25ld0VudHJ5LCBzZXROZXdFbnRyeV0gPSB1c2VTdGF0ZSh7XG4gICAgdGl0bGU6IFwiXCIsXG4gICAgZGVzY3JpcHRpb246IFwiXCIsXG4gICAgdHlwZTogXCJvYnNlcnZhY2FvXCIsXG4gICAgZGF0ZTogZ2V0TG9jYWxEYXRlVmFsdWUoKVxuICB9KVxuICBjb25zdCBbc2VsZWN0ZWRFbnRyeSwgc2V0U2VsZWN0ZWRFbnRyeV0gPSB1c2VTdGF0ZShudWxsKVxuXG4gIC8vIENhcnJlZ2FyIGVudHJhZGFzIGRvIGxvY2FsU3RvcmFnZVxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGNvbnN0IHNhdmVkID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oXCJkaWFyeUVudHJpZXNcIilcbiAgICBpZiAoc2F2ZWQpIHtcbiAgICAgIHNldEVudHJpZXMoSlNPTi5wYXJzZShzYXZlZCkpXG4gICAgfSBlbHNlIHtcbiAgICAgIC8vIERhZG9zIGRlIGV4ZW1wbG9cbiAgICAgIGNvbnN0IHNhbXBsZUVudHJpZXMgPSBbXG4gICAgICAgIHtcbiAgICAgICAgICBpZDogMSxcbiAgICAgICAgICB0aXRsZTogXCJBcGxpY2HDp8OjbyBkZSBmdW5naWNpZGFcIixcbiAgICAgICAgICBkZXNjcmlwdGlvbjogXCJBcGxpY2HDp8OjbyBwcmV2ZW50aXZhIG5hIMOhcmVhIG5vcnRlIGRhIGZhemVuZGEuIENsaW1hIGZhdm9yw6F2ZWwsIHNlbSB2ZW50b3MuXCIsXG4gICAgICAgICAgdHlwZTogXCJ0cmF0YW1lbnRvXCIsXG4gICAgICAgICAgZGF0ZTogXCIyMDI0LTAzLTIwXCIsXG4gICAgICAgICAgdGltZTogXCIwODozMFwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICBpZDogMixcbiAgICAgICAgICB0aXRsZTogXCJJcnJpZ2HDp8OjbyByZWFsaXphZGFcIixcbiAgICAgICAgICBkZXNjcmlwdGlvbjogXCJTaXN0ZW1hIGRlIGlycmlnYcOnw6NvIGF0aXZhZG8gcG9yIDIgaG9yYXMgbmEgw6FyZWEgY2VudHJhbC5cIixcbiAgICAgICAgICB0eXBlOiBcImlycmlnYWNhb1wiLFxuICAgICAgICAgIGRhdGU6IFwiMjAyNC0wMy0xOVwiLFxuICAgICAgICAgIHRpbWU6IFwiMTY6MDBcIlxuICAgICAgICB9LFxuICAgICAgICB7XG4gICAgICAgICAgaWQ6IDMsXG4gICAgICAgICAgdGl0bGU6IFwiUHJhZ2FzIGRldGVjdGFkYXNcIixcbiAgICAgICAgICBkZXNjcmlwdGlvbjogXCJGb2NvIGRlIGxhZ2FydGEgaWRlbnRpZmljYWRvIG5hIGJvcmRhIGRhIHBsYW50YcOnw6NvLiBNb25pdG9yYW1lbnRvIG5lY2Vzc8OhcmlvLlwiLFxuICAgICAgICAgIHR5cGU6IFwiYWxlcnRhXCIsXG4gICAgICAgICAgZGF0ZTogXCIyMDI0LTAzLTE4XCIsXG4gICAgICAgICAgdGltZTogXCIxMDoxNVwiXG4gICAgICAgIH1cbiAgICAgIF1cbiAgICAgIHNldEVudHJpZXMoc2FtcGxlRW50cmllcylcbiAgICAgIGxvY2FsU3RvcmFnZS5zZXRJdGVtKFwiZGlhcnlFbnRyaWVzXCIsIEpTT04uc3RyaW5naWZ5KHNhbXBsZUVudHJpZXMpKVxuICAgIH1cbiAgfSwgW10pXG5cbiAgLy8gU2FsdmFyIGVudHJhZGFzXG4gIGNvbnN0IHNhdmVFbnRyaWVzID0gKG5ld0VudHJpZXMpID0+IHtcbiAgICBzZXRFbnRyaWVzKG5ld0VudHJpZXMpXG4gICAgbG9jYWxTdG9yYWdlLnNldEl0ZW0oXCJkaWFyeUVudHJpZXNcIiwgSlNPTi5zdHJpbmdpZnkobmV3RW50cmllcykpXG4gIH1cblxuICAvLyBBZGljaW9uYXIgbm92YSBlbnRyYWRhXG4gIGNvbnN0IGFkZEVudHJ5ID0gKCkgPT4ge1xuICAgIGlmICghbmV3RW50cnkudGl0bGUudHJpbSgpKSByZXR1cm5cblxuICAgIGNvbnN0IGVudHJ5ID0ge1xuICAgICAgaWQ6IERhdGUubm93KCksXG4gICAgICAuLi5uZXdFbnRyeSxcbiAgICAgIHRpbWU6IG5ldyBEYXRlKCkudG9Mb2NhbGVUaW1lU3RyaW5nKFwicHQtQlJcIiwgeyBob3VyOiBcIjItZGlnaXRcIiwgbWludXRlOiBcIjItZGlnaXRcIiB9KVxuICAgIH1cblxuICAgIHNhdmVFbnRyaWVzKFtlbnRyeSwgLi4uZW50cmllc10pXG4gICAgc2V0TmV3RW50cnkoe1xuICAgICAgdGl0bGU6IFwiXCIsXG4gICAgICBkZXNjcmlwdGlvbjogXCJcIixcbiAgICAgIHR5cGU6IFwib2JzZXJ2YWNhb1wiLFxuICAgICAgZGF0ZTogZ2V0TG9jYWxEYXRlVmFsdWUoKVxuICAgIH0pXG4gICAgc2V0U2hvd0Zvcm0oZmFsc2UpXG4gIH1cblxuICAvLyBEZWxldGFyIGVudHJhZGFcbiAgY29uc3QgZGVsZXRlRW50cnkgPSAoaWQpID0+IHtcbiAgICBpZiAod2luZG93LmNvbmZpcm0oXCJUZW0gY2VydGV6YSBxdWUgZGVzZWphIGV4Y2x1aXIgZXN0YSBlbnRyYWRhP1wiKSkge1xuICAgICAgc2F2ZUVudHJpZXMoZW50cmllcy5maWx0ZXIoZW50cnkgPT4gZW50cnkuaWQgIT09IGlkKSlcbiAgICB9XG4gIH1cblxuICBjb25zdCBwYXJzZUxvY2FsRGF0ZSA9IChkYXRlU3RyKSA9PiB7XG4gICAgY29uc3QgW3llYXIsIG1vbnRoLCBkYXldID0gU3RyaW5nKGRhdGVTdHIpLnNwbGl0KFwiLVwiKS5tYXAoTnVtYmVyKVxuICAgIHJldHVybiBuZXcgRGF0ZSh5ZWFyLCBtb250aCAtIDEsIGRheSlcbiAgfVxuXG4gIC8vIEZvcm1hdGFyIGRhdGEgc2VtIGRlc2xvY2FtZW50byBkZSBmdXNvIGhvcmFyaW9cbiAgY29uc3QgZm9ybWF0RGF0ZSA9IChkYXRlU3RyKSA9PiB7XG4gICAgY29uc3QgZGF0ZSA9IHBhcnNlTG9jYWxEYXRlKGRhdGVTdHIpXG4gICAgcmV0dXJuIGRhdGUudG9Mb2NhbGVEYXRlU3RyaW5nKFwicHQtQlJcIiwgeyBkYXk6IFwibnVtZXJpY1wiLCBtb250aDogXCJzaG9ydFwiIH0pXG4gIH1cblxuICAvLyBPYnRlciDDrWNvbmUgYmFzZWFkbyBubyB0aXBvXG4gIGNvbnN0IGdldFR5cGVJY29uID0gKHR5cGUpID0+IHtcbiAgICBzd2l0Y2godHlwZSkge1xuICAgICAgY2FzZSBcInRyYXRhbWVudG9cIjogcmV0dXJuIFwiZXhwZXJpbWVudFwiXG4gICAgICBjYXNlIFwiaXJyaWdhY2FvXCI6IHJldHVybiBcIndhdGVyX2Ryb3BcIlxuICAgICAgY2FzZSBcImFsZXJ0YVwiOiByZXR1cm4gXCJwZXN0X2NvbnRyb2xcIlxuICAgICAgZGVmYXVsdDogcmV0dXJuIFwiZWRpdF9ub3RlXCJcbiAgICB9XG4gIH1cblxuICBjb25zdCBnZXRUeXBlQ29sb3IgPSAodHlwZSkgPT4ge1xuICAgIHN3aXRjaCh0eXBlKSB7XG4gICAgICBjYXNlIFwidHJhdGFtZW50b1wiOiByZXR1cm4gXCIjMmQ2MTQwXCJcbiAgICAgIGNhc2UgXCJpcnJpZ2FjYW9cIjogcmV0dXJuIFwiIzAwNzdmZlwiXG4gICAgICBjYXNlIFwiYWxlcnRhXCI6IHJldHVybiBcIiNmZjlmMWNcIlxuICAgICAgZGVmYXVsdDogcmV0dXJuIFwiIzNkODA1N1wiXG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cImRpYXJpby1jb250YWluZXJcIj5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImRpYXJpby1oZXJvXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGlhcmlvLWhlYWRlclwiPlxuICAgICAgICAgIDxoMj5EacOhcmlvIGRlIENhbXBvPC9oMj5cbiAgICAgICAgICA8cD5SZWdpc3RyZSBzdWFzIGF0aXZpZGFkZXMgZGnDoXJpYXM8L3A+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9zZWN0aW9uPlxuXG4gICAgICB7LyogQm90w6NvIE5vdmEgRW50cmFkYSAqL31cbiAgICAgIDxidXR0b24gXG4gICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICBjbGFzc05hbWU9XCJkaWFyaW8tYWRkLWJ0blwiXG4gICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNob3dGb3JtKHRydWUpfVxuICAgICAgPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+YWRkPC9zcGFuPlxuICAgICAgICBOb3ZhIGVudHJhZGFcbiAgICAgIDwvYnV0dG9uPlxuXG4gICAgICB7LyogRm9ybXVsw6FyaW8gTm92YSBFbnRyYWRhICovfVxuICAgICAgPEFuaW1hdGVQcmVzZW5jZT5cbiAgICAgICAge3Nob3dGb3JtICYmIChcbiAgICAgICAgICA8bW90aW9uLmRpdiBcbiAgICAgICAgICAgIGNsYXNzTmFtZT1cImRpYXJpby1tb2RhbFwiXG4gICAgICAgICAgICBpbml0aWFsPXt7IG9wYWNpdHk6IDAgfX1cbiAgICAgICAgICAgIGFuaW1hdGU9e3sgb3BhY2l0eTogMSB9fVxuICAgICAgICAgICAgZXhpdD17eyBvcGFjaXR5OiAwIH19XG4gICAgICAgICAgPlxuICAgICAgICAgICAgPG1vdGlvbi5kaXYgXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImRpYXJpby1mb3JtXCJcbiAgICAgICAgICAgICAgaW5pdGlhbD17eyBzY2FsZTogMC45LCB5OiAyMCB9fVxuICAgICAgICAgICAgICBhbmltYXRlPXt7IHNjYWxlOiAxLCB5OiAwIH19XG4gICAgICAgICAgICAgIGV4aXQ9e3sgc2NhbGU6IDAuOSwgeTogMjAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkaWFyaW8tZm9ybS1oZWFkZXJcIj5cbiAgICAgICAgICAgICAgICA8aDM+Tm92YSBlbnRyYWRhPC9oMz5cbiAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cImNsb3NlLWJ0blwiIG9uQ2xpY2s9eygpID0+IHNldFNob3dGb3JtKGZhbHNlKX0+XG4gICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+Y2xvc2U8L3NwYW4+XG4gICAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgICAgIDxsYWJlbD5Uw610dWxvPC9sYWJlbD5cbiAgICAgICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiRXg6IEFwbGljYcOnw6NvIGRlIGZ1bmdpY2lkYVwiXG4gICAgICAgICAgICAgICAgICB2YWx1ZT17bmV3RW50cnkudGl0bGV9XG4gICAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IHNldE5ld0VudHJ5KHsuLi5uZXdFbnRyeSwgdGl0bGU6IGUudGFyZ2V0LnZhbHVlfSl9XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmb3JtLWdyb3VwXCI+XG4gICAgICAgICAgICAgICAgPGxhYmVsPkRlc2NyacOnw6NvPC9sYWJlbD5cbiAgICAgICAgICAgICAgICA8dGV4dGFyZWFcbiAgICAgICAgICAgICAgICAgIHJvd3M9XCIzXCJcbiAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiRGV0YWxoZXMgZGEgYXRpdmlkYWRlLi4uXCJcbiAgICAgICAgICAgICAgICAgIHZhbHVlPXtuZXdFbnRyeS5kZXNjcmlwdGlvbn1cbiAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0TmV3RW50cnkoey4uLm5ld0VudHJ5LCBkZXNjcmlwdGlvbjogZS50YXJnZXQudmFsdWV9KX1cbiAgICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZvcm0tZ3JvdXBcIj5cbiAgICAgICAgICAgICAgICA8bGFiZWw+RGF0YTwvbGFiZWw+XG4gICAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgICB0eXBlPVwiZGF0ZVwiXG4gICAgICAgICAgICAgICAgICB2YWx1ZT17bmV3RW50cnkuZGF0ZX1cbiAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0TmV3RW50cnkoey4uLm5ld0VudHJ5LCBkYXRlOiBlLnRhcmdldC52YWx1ZX0pfVxuICAgICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgICAgIDxsYWJlbD5UaXBvPC9sYWJlbD5cbiAgICAgICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgICAgICB2YWx1ZT17bmV3RW50cnkudHlwZX1cbiAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0TmV3RW50cnkoey4uLm5ld0VudHJ5LCB0eXBlOiBlLnRhcmdldC52YWx1ZX0pfVxuICAgICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJvYnNlcnZhY2FvXCI+T2JzZXJ2YcOnw6NvPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwidHJhdGFtZW50b1wiPlRyYXRhbWVudG88L29wdGlvbj5cbiAgICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJpcnJpZ2FjYW9cIj5JcnJpZ2HDp8Ojbzwvb3B0aW9uPlxuICAgICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cImFsZXJ0YVwiPkFsZXJ0YTwvb3B0aW9uPlxuICAgICAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cInN1Ym1pdC1idG5cIiBvbkNsaWNrPXthZGRFbnRyeX0+XG4gICAgICAgICAgICAgICAgU2FsdmFyIGVudHJhZGFcbiAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8L21vdGlvbi5kaXY+XG4gICAgICAgICAgPC9tb3Rpb24uZGl2PlxuICAgICAgICApfVxuICAgICAgPC9BbmltYXRlUHJlc2VuY2U+XG5cbiAgICAgIHsvKiBMaXN0YSBkZSBFbnRyYWRhcyAqL31cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGlhcmlvLWxpc3RcIj5cbiAgICAgICAge2VudHJpZXMubGVuZ3RoID09PSAwID8gKFxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGlhcmlvLWVtcHR5XCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+bWVudV9ib29rPC9zcGFuPlxuICAgICAgICAgICAgPHA+TmVuaHVtYSBlbnRyYWRhIG5vIGRpw6FyaW88L3A+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJlbXB0eS1oaW50XCI+Q2xpcXVlIGVtIFwiTm92YSBlbnRyYWRhXCIgcGFyYSBjb21lw6dhcjwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgKSA6IChcbiAgICAgICAgICBlbnRyaWVzLm1hcCgoZW50cnksIGluZGV4KSA9PiB7XG4gICAgICAgICAgICBjb25zdCBlbnRyeUNvbG9yID0gZ2V0VHlwZUNvbG9yKGVudHJ5LnR5cGUpXG5cbiAgICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICA8bW90aW9uLmFydGljbGVcbiAgICAgICAgICAgICAga2V5PXtlbnRyeS5pZH1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZGlhcmlvLWNhcmRcIlxuICAgICAgICAgICAgICBzdHlsZT17eyBcIi0tZW50cnktY29sb3JcIjogZW50cnlDb2xvciwgXCItLWVudHJ5LXNvZnRcIjogYCR7ZW50cnlDb2xvcn0xOGAgfX1cbiAgICAgICAgICAgICAgaW5pdGlhbD17eyBvcGFjaXR5OiAwLCB5OiAyMCB9fVxuICAgICAgICAgICAgICBhbmltYXRlPXt7IG9wYWNpdHk6IDEsIHk6IDAgfX1cbiAgICAgICAgICAgICAgdHJhbnNpdGlvbj17eyBkZWxheTogaW5kZXggKiAwLjA1IH19XG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNlbGVjdGVkRW50cnkoZW50cnkpfVxuICAgICAgICAgICAgICBvbktleURvd249eyhldmVudCkgPT4ge1xuICAgICAgICAgICAgICAgIGlmIChldmVudC5rZXkgPT09IFwiRW50ZXJcIiB8fCBldmVudC5rZXkgPT09IFwiIFwiKSB7XG4gICAgICAgICAgICAgICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICBzZXRTZWxlY3RlZEVudHJ5KGVudHJ5KVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgICAgcm9sZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgIHRhYkluZGV4PXswfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRpYXJpby1jYXJkLWljb25cIiBhcmlhLWhpZGRlbj1cInRydWVcIj5cbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+e2dldFR5cGVJY29uKGVudHJ5LnR5cGUpfTwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkaWFyaW8tY2FyZC1jb250ZW50XCI+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkaWFyaW8tY2FyZC1tZXRhXCI+XG4gICAgICAgICAgICAgICAgICA8c3Bhbj5cbiAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPmNhbGVuZGFyX3RvZGF5PC9zcGFuPlxuICAgICAgICAgICAgICAgICAgICB7Zm9ybWF0RGF0ZShlbnRyeS5kYXRlKX1cbiAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDxzcGFuPlxuICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+c2NoZWR1bGU8L3NwYW4+XG4gICAgICAgICAgICAgICAgICAgIHtlbnRyeS50aW1lfVxuICAgICAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkaWFyaW8tY2FyZC1oZWFkZXJcIj5cbiAgICAgICAgICAgICAgICAgIDxoMz57ZW50cnkudGl0bGV9PC9oMz5cbiAgICAgICAgICAgICAgICAgIDxidXR0b24gXG4gICAgICAgICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJkZWxldGUtZW50cnlcIlxuICAgICAgICAgICAgICAgICAgICBhcmlhLWxhYmVsPXtgRXhjbHVpciAke2VudHJ5LnRpdGxlfWB9XG4gICAgICAgICAgICAgICAgICAgIG9uQ2xpY2s9eyhlKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgZS5zdG9wUHJvcGFnYXRpb24oKVxuICAgICAgICAgICAgICAgICAgICAgIGRlbGV0ZUVudHJ5KGVudHJ5LmlkKVxuICAgICAgICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+ZGVsZXRlPC9zcGFuPlxuICAgICAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgPHA+e2VudHJ5LmRlc2NyaXB0aW9ufTwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L21vdGlvbi5hcnRpY2xlPlxuICAgICAgICAgICAgKVxuICAgICAgICAgIH0pXG4gICAgICAgICl9XG4gICAgICA8L2Rpdj5cblxuICAgICAgey8qIE1vZGFsIGRlIERldGFsaGVzICovfVxuICAgICAgPEFuaW1hdGVQcmVzZW5jZT5cbiAgICAgICAge3NlbGVjdGVkRW50cnkgJiYgKFxuICAgICAgICAgIDxtb3Rpb24uZGl2IFxuICAgICAgICAgICAgY2xhc3NOYW1lPVwiZGlhcmlvLW1vZGFsXCJcbiAgICAgICAgICAgIGluaXRpYWw9e3sgb3BhY2l0eTogMCB9fVxuICAgICAgICAgICAgYW5pbWF0ZT17eyBvcGFjaXR5OiAxIH19XG4gICAgICAgICAgICBleGl0PXt7IG9wYWNpdHk6IDAgfX1cbiAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNlbGVjdGVkRW50cnkobnVsbCl9XG4gICAgICAgICAgPlxuICAgICAgICAgICAgPG1vdGlvbi5kaXYgXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImRpYXJpby1kZXRhaWxcIlxuICAgICAgICAgICAgICBpbml0aWFsPXt7IHNjYWxlOiAwLjksIHk6IDIwIH19XG4gICAgICAgICAgICAgIGFuaW1hdGU9e3sgc2NhbGU6IDEsIHk6IDAgfX1cbiAgICAgICAgICAgICAgZXhpdD17eyBzY2FsZTogMC45LCB5OiAyMCB9fVxuICAgICAgICAgICAgICBvbkNsaWNrPXsoZSkgPT4gZS5zdG9wUHJvcGFnYXRpb24oKX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJjbG9zZS1idG5cIiBvbkNsaWNrPXsoKSA9PiBzZXRTZWxlY3RlZEVudHJ5KG51bGwpfT5cbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+Y2xvc2U8L3NwYW4+XG4gICAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldGFpbC1oZWFkZXJcIj5cbiAgICAgICAgICAgICAgICA8c3BhbiBcbiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInR5cGUtaWNvbiBsYXJnZVwiXG4gICAgICAgICAgICAgICAgICBzdHlsZT17eyBiYWNrZ3JvdW5kOiBgJHtnZXRUeXBlQ29sb3Ioc2VsZWN0ZWRFbnRyeS50eXBlKX0yMGAsIGNvbG9yOiBnZXRUeXBlQ29sb3Ioc2VsZWN0ZWRFbnRyeS50eXBlKSB9fVxuICAgICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIj57Z2V0VHlwZUljb24oc2VsZWN0ZWRFbnRyeS50eXBlKX08L3NwYW4+XG4gICAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICA8aDM+e3NlbGVjdGVkRW50cnkudGl0bGV9PC9oMz5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImRldGFpbC1kYXRlXCI+XG4gICAgICAgICAgICAgICAgICAgIHtwYXJzZUxvY2FsRGF0ZShzZWxlY3RlZEVudHJ5LmRhdGUpLnRvTG9jYWxlRGF0ZVN0cmluZyhcInB0LUJSXCIpfSDigKIge3NlbGVjdGVkRW50cnkudGltZX1cbiAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImRldGFpbC1kZXNjcmlwdGlvblwiPntzZWxlY3RlZEVudHJ5LmRlc2NyaXB0aW9ufTwvcD5cbiAgICAgICAgICAgIDwvbW90aW9uLmRpdj5cbiAgICAgICAgICA8L21vdGlvbi5kaXY+XG4gICAgICAgICl9XG4gICAgICA8L0FuaW1hdGVQcmVzZW5jZT5cbiAgICA8L2Rpdj5cbiAgKVxufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9zYW11ZS9Eb3dubG9hZHMvVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vc3JjL2NvbXBvbmVudHMvQXBwL0V4cGxvcmUvRGlhcmlvVGFiLmpzeCJ9

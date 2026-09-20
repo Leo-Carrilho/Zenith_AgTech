@@ -164,7 +164,7 @@ const pageTransition = {
   duration: 0.32,
 }
 
-function AnimatedRoutes({ setAppLoading, onInstallRequest, isInstalled }) {
+function AnimatedRoutes({ setAppLoading, onInstallRequest, onDirectInstallRequest, isInstalled }) {
   const location = useLocation()
 
   return (
@@ -178,7 +178,7 @@ function AnimatedRoutes({ setAppLoading, onInstallRequest, isInstalled }) {
         transition={pageTransition}
       >
         <Routes location={location}>
-          <Route path="/" element={<Intro />} />
+          <Route path="/" element={<Intro onInstallRequest={onDirectInstallRequest} isInstalled={isInstalled} />} />
           <Route path="/login" element={<Login setAppLoading={setAppLoading} />} />
           <Route path="/register" element={<CadastroCompleto setAppLoading={setAppLoading} />} />
           <Route path="/cadastrar-fazenda" element={<CadastrarFazenda setAppLoading={setAppLoading} />} />
@@ -353,6 +353,18 @@ const handleInstallRequest = () => {
   setShowInstallPrompt(true)
 }
 
+const handleDirectInstallRequest = async () => {
+  if (isInstalled) return
+
+  const installPrompt = deferredPrompt || window.__zenithDeferredInstallPrompt
+  if (installPrompt) {
+    await handleInstall()
+    return
+  }
+
+  setShowInstallPrompt(true)
+}
+
 const handleAppUpdate = () => {
   localStorage.removeItem(UPDATE_PROMPT_PENDING_KEY)
 
@@ -402,6 +414,7 @@ const handleAppUpdate = () => {
           <AnimatedRoutes
             setAppLoading={setAppLoading}
             onInstallRequest={handleInstallRequest}
+            onDirectInstallRequest={handleDirectInstallRequest}
             isInstalled={isInstalled}
           />
           <RouteChangeLoader />

@@ -1,0 +1,14 @@
+{
+   "appDescription": {
+      "message": "Tillegg for aktivering av nettautomatisering. Denne nettutvidelsen er kompatibel med Power Automate for skrivebord, versjon 2.26 eller tidligere."
+   },
+   "appName": {
+      "message": "Microsoft Power Automate (eldre)"
+   },
+   "deprecationLink": {
+      "message": "her"
+   },
+   "deprecationMessage": {
+      "message": "Etter en bestemt dato som blir kunngjort av Microsoft Edge-teamet (avskrivningsdatoen), støtter ikke Microsoft Edge-nettleseren nettutvidelser som er opprettet av Manifest V2. Den spesifikke nettutvidelsen som du bruker, er basert på Manifest V2 og er kompatibel med Power Automate for skrivebord, versjon 2.26 eller eldre. Den slutter derfor å fungere fra avskrivningsdatoen. Hvis du vil fortsette å automatisere nettscenarioer med denne nettleseren etter avskrivningsdatoen, må du oppgradere Power Automate for skrivebord til den nyeste versjonen (2.27 eller nyere) og installere den nye Microsoft Power Automate-nettutvidelsen. Finn ut mer her "
+   }
+}

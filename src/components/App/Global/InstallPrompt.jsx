@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { useState } from "react"
-import { FaDownload, FaTimes, FaAndroid, FaApple } from 'react-icons/fa'
+import { FaDownload, FaTimes, FaAndroid, FaApple, FaCheckCircle } from 'react-icons/fa'
 import '../../../styles/Global/InstallPrompt.css'
 
 const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, hasPrompt }) => {
@@ -10,8 +10,12 @@ const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, 
 
   const handleFallbackInstall = () => {
     if (shouldOpenChrome) {
-      const currentPath = `${window.location.host}${window.location.pathname}${window.location.search}`
-      window.location.href = `intent://${currentPath}#Intent;scheme=https;package=com.android.chrome;end`
+      const targetUrl = new URL(window.location.href)
+      targetUrl.searchParams.set("install", "true")
+      targetUrl.searchParams.set("source", "install-choice")
+      const scheme = targetUrl.protocol.replace(":", "")
+      const targetPath = `${targetUrl.host}${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`
+      window.location.href = `intent://${targetPath}#Intent;scheme=${scheme};package=com.android.chrome;end`
       return
     }
 
@@ -33,7 +37,7 @@ const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, 
         exit={{ scale: 0.9, y: 40 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="close-btn" onClick={onClose}>
+        <button type="button" className="close-btn" aria-label="Fechar instalação" onClick={onClose}>
           <FaTimes />
         </button>
 
@@ -41,20 +45,21 @@ const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, 
           <FaDownload />
         </div>
 
-        <h2>Instalar App</h2>
+        <h2>Instalar Zenith</h2>
         <p className="subtitle">
           Acesse mais rápido e sem navegador.
         </p>
 
         <button
+          type="button"
           className="install-main-btn"
           onClick={canInstallDirectly ? onInstall : handleFallbackInstall}
         >
           <FaDownload /> {
             canInstallDirectly
-              ? "Instalar agora"
+              ? "Instalar aplicativo"
               : shouldOpenChrome
-                ? "Abrir no Chrome"
+                ? "Instalar pelo Chrome"
                 : "Ver como instalar"
           }
         </button>
@@ -85,14 +90,13 @@ const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, 
           </div>
         )}
 
-        {/* BENEFÍCIOS SIMPLES */}
         <div className="benefits">
-          <span>⚡ Rápido</span>
-          <span>📱 Como app</span>
-          <span>🔒 Seguro</span>
+          <span><FaCheckCircle aria-hidden="true" /> Acesso rápido</span>
+          <span><FaCheckCircle aria-hidden="true" /> Tela inicial</span>
+          <span><FaCheckCircle aria-hidden="true" /> Navegação segura</span>
         </div>
 
-        <button className="later-btn" onClick={onClose}>
+        <button type="button" className="later-btn" onClick={onClose}>
           Agora não
         </button>
       </motion.div>

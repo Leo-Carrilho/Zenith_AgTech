@@ -1,0 +1,6 @@
+2026/09/20-17:14:46.690 3d70 Creating DB C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-choice-qa\Default\IndexedDB\http_127.0.0.1_5176.indexeddb.leveldb since it was missing.
+2026/09/20-17:14:46.748 3d70 Reusing MANIFEST C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-choice-qa\Default\IndexedDB\http_127.0.0.1_5176.indexeddb.leveldb/MANIFEST-000001
+2026/09/20-17:14:46.785 27ec Level-0 table #5: started
+2026/09/20-17:14:46.802 27ec Level-0 table #5: 1266 bytes OK
+2026/09/20-17:14:46.811 27ec Delete type=0 #3
+2026/09/20-17:14:46.812 27ec Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

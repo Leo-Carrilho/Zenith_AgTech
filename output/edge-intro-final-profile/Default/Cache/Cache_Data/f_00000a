@@ -1,0 +1,339 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/App/Intro.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useEffect = __vite__cjsImport1_react["useEffect"]; const useState = __vite__cjsImport1_react["useState"];
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=6258fd2e";
+import { onAuthStateChanged } from "/node_modules/.vite/deps/firebase_auth.js?v=a50b1a93";
+import {
+  Activity,
+  ArrowRight,
+  Leaf,
+  LogIn,
+  Radar,
+  ScanSearch,
+  ShieldCheck
+} from "/node_modules/.vite/deps/lucide-react.js?v=9653314b";
+import { auth } from "/src/services/firebase.js";
+import LoadingScreen from "/src/components/App/Home/LoadingScreen.jsx";
+import "/src/styles/App/Intro.css";
+const Logo = "/assets/image/Logo-redonda.png";
+const SoyCutout = "/assets/image/soja-hero-cutout.png";
+const highlights = [
+  { icon: ShieldCheck, label: "Diagnóstico confiável" },
+  { icon: Activity, label: "Acompanhamento contínuo" },
+  { icon: Radar, label: "Decisões em tempo real" }
+];
+export default function Intro() {
+  _s();
+  const navigate = useNavigate();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/home", { replace: true });
+        return;
+      }
+      setCheckingAuth(false);
+    });
+    return unsubscribe;
+  }, [navigate]);
+  if (checkingAuth) return /* @__PURE__ */ jsxDEV(LoadingScreen, {}, void 0, false, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+    lineNumber: 44,
+    columnNumber: 28
+  }, this);
+  return /* @__PURE__ */ jsxDEV("main", { className: "intro", "data-system-bar-color": "#f4f8ef", children: /* @__PURE__ */ jsxDEV("div", { className: "intro-shell", children: [
+    /* @__PURE__ */ jsxDEV("header", { className: "intro-brand", "aria-label": "Zenith", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "intro-brand__mark", children: /* @__PURE__ */ jsxDEV("img", { src: Logo, alt: "", draggable: "false" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 51,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 50,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "intro-brand__copy", children: [
+        /* @__PURE__ */ jsxDEV("strong", { children: "Zenith" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 54,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { children: "Agricultura de precisão" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 55,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 53,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("span", { className: "intro-brand__icon", "aria-hidden": "true", children: /* @__PURE__ */ jsxDEV(Leaf, { size: 19, strokeWidth: 2 }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 58,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 57,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+      lineNumber: 49,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ jsxDEV("section", { className: "intro-layout", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "intro-visual", "aria-label": "Lavoura monitorada pela plataforma Zenith", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-visual__shade", "aria-hidden": "true" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 64,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-visual__grid", "aria-hidden": "true" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 65,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-visual__tag", children: [
+          /* @__PURE__ */ jsxDEV(ScanSearch, { size: 16, strokeWidth: 2.1 }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 68,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { children: "Inteligência aplicada ao campo" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 69,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 67,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "img",
+          {
+            className: "intro-visual__soy",
+            src: SoyCutout,
+            alt: "Vagem de soja",
+            draggable: "false"
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 72,
+            columnNumber: 13
+          },
+          this
+        ),
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-visual__caption", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "intro-visual__signal", "aria-hidden": "true" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 80,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("strong", { children: "Monitoramento ativo" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 82,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("small", { children: "Dados do campo em uma única visão" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 83,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 81,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 79,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 63,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "intro-content", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-eyebrow", children: [
+          /* @__PURE__ */ jsxDEV(Radar, { size: 16, strokeWidth: 2.2 }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 90,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { children: "Tecnologia para quem produz" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 91,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 89,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("h1", { children: [
+          "Seu campo, visto com ",
+          /* @__PURE__ */ jsxDEV("em", { children: "mais precisão." }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 95,
+            columnNumber: 36
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 94,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "intro-description", children: "Monitore lavouras, organize a operação e transforme imagens e dados em decisões mais seguras para a sua produção." }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 98,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-highlights", "aria-label": "Benefícios da plataforma", children: highlights.map(
+          ({ icon: Icon, label }) => /* @__PURE__ */ jsxDEV("div", { className: "intro-highlight", children: [
+            /* @__PURE__ */ jsxDEV("span", { "aria-hidden": "true", children: /* @__PURE__ */ jsxDEV(Icon, { size: 18, strokeWidth: 2 }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 106,
+              columnNumber: 21
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 105,
+              columnNumber: 19
+            }, this),
+            /* @__PURE__ */ jsxDEV("small", { children: label }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 108,
+              columnNumber: 19
+            }, this)
+          ] }, label, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+            lineNumber: 104,
+            columnNumber: 15
+          }, this)
+        ) }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 102,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "intro-actions", children: [
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "button",
+              className: "intro-button intro-button--primary",
+              onClick: () => navigate("/register"),
+              children: [
+                /* @__PURE__ */ jsxDEV("span", { children: "Começar agora" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+                  lineNumber: 119,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV(ArrowRight, { size: 19, strokeWidth: 2.2 }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+                  lineNumber: 120,
+                  columnNumber: 17
+                }, this)
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 114,
+              columnNumber: 15
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "button",
+              className: "intro-button intro-button--secondary",
+              onClick: () => navigate("/login"),
+              children: [
+                /* @__PURE__ */ jsxDEV(LogIn, { size: 18, strokeWidth: 2.1 }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+                  lineNumber: 128,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { children: "Já tenho uma conta" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+                  lineNumber: 129,
+                  columnNumber: 17
+                }, this)
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+              lineNumber: 123,
+              columnNumber: 15
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 113,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "intro-footnote", children: "Gestão agrícola, diagnóstico e monitoramento em uma experiência simples." }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+          lineNumber: 133,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+        lineNumber: 88,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+      lineNumber: 62,
+      columnNumber: 9
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+    lineNumber: 48,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx",
+    lineNumber: 47,
+    columnNumber: 5
+  }, this);
+}
+_s(Intro, "OYQ1mcgiZ1Tt3mHVu1cYfy4ZKvM=", false, function() {
+  return [useNavigate];
+});
+_c = Intro;
+var _c;
+$RefreshReg$(_c, "Intro");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/pages/App/Intro.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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YUFqQkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQWtCQTtBQUFBLFFBRUEsdUJBQUMsT0FBRSxXQUFVLGtCQUFnQix3RkFBN0I7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUVBO0FBQUEsV0EvQ0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQWdEQTtBQUFBLFNBMUVGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0EyRUE7QUFBQSxPQXpGRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBMEZBLEtBM0ZGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0E0RkE7QUFFSjtBQUFDRCxHQWxIdUJELE9BQUs7QUFBQSxVQUNWaEIsV0FBVztBQUFBO0FBQUEsS0FETmdCO0FBQUssSUFBQVU7QUFBQSxhQUFBQSxJQUFBIiwibmFtZXMiOlsidXNlRWZmZWN0IiwidXNlU3RhdGUiLCJ1c2VOYXZpZ2F0ZSIsIm9uQXV0aFN0YXRlQ2hhbmdlZCIsIkFjdGl2aXR5IiwiQXJyb3dSaWdodCIsIkxlYWYiLCJMb2dJbiIsIlJhZGFyIiwiU2NhblNlYXJjaCIsIlNoaWVsZENoZWNrIiwiYXV0aCIsIkxvYWRpbmdTY3JlZW4iLCJMb2dvIiwiU295Q3V0b3V0IiwiaGlnaGxpZ2h0cyIsImljb24iLCJsYWJlbCIsIkludHJvIiwiX3MiLCJuYXZpZ2F0ZSIsImNoZWNraW5nQXV0aCIsInNldENoZWNraW5nQXV0aCIsInVuc3Vic2NyaWJlIiwidXNlciIsInJlcGxhY2UiLCJtYXAiLCJJY29uIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiSW50cm8uanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHVzZUVmZmVjdCwgdXNlU3RhdGUgfSBmcm9tIFwicmVhY3RcIlxuaW1wb3J0IHsgdXNlTmF2aWdhdGUgfSBmcm9tIFwicmVhY3Qtcm91dGVyLWRvbVwiXG5pbXBvcnQgeyBvbkF1dGhTdGF0ZUNoYW5nZWQgfSBmcm9tIFwiZmlyZWJhc2UvYXV0aFwiXG5pbXBvcnQge1xuICBBY3Rpdml0eSxcbiAgQXJyb3dSaWdodCxcbiAgTGVhZixcbiAgTG9nSW4sXG4gIFJhZGFyLFxuICBTY2FuU2VhcmNoLFxuICBTaGllbGRDaGVjayxcbn0gZnJvbSBcImx1Y2lkZS1yZWFjdFwiXG5cbmltcG9ydCB7IGF1dGggfSBmcm9tIFwiLi4vLi4vc2VydmljZXMvZmlyZWJhc2VcIlxuaW1wb3J0IExvYWRpbmdTY3JlZW4gZnJvbSBcIi4uLy4uL2NvbXBvbmVudHMvQXBwL0hvbWUvTG9hZGluZ1NjcmVlblwiXG5pbXBvcnQgXCIuLi8uLi9zdHlsZXMvQXBwL0ludHJvLmNzc1wiXG5cbmNvbnN0IExvZ28gPSBcIi9hc3NldHMvaW1hZ2UvTG9nby1yZWRvbmRhLnBuZ1wiXG5jb25zdCBTb3lDdXRvdXQgPSBcIi9hc3NldHMvaW1hZ2Uvc29qYS1oZXJvLWN1dG91dC5wbmdcIlxuXG5jb25zdCBoaWdobGlnaHRzID0gW1xuICB7IGljb246IFNoaWVsZENoZWNrLCBsYWJlbDogXCJEaWFnbsOzc3RpY28gY29uZmnDoXZlbFwiIH0sXG4gIHsgaWNvbjogQWN0aXZpdHksIGxhYmVsOiBcIkFjb21wYW5oYW1lbnRvIGNvbnTDrW51b1wiIH0sXG4gIHsgaWNvbjogUmFkYXIsIGxhYmVsOiBcIkRlY2lzw7VlcyBlbSB0ZW1wbyByZWFsXCIgfSxcbl1cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gSW50cm8oKSB7XG4gIGNvbnN0IG5hdmlnYXRlID0gdXNlTmF2aWdhdGUoKVxuICBjb25zdCBbY2hlY2tpbmdBdXRoLCBzZXRDaGVja2luZ0F1dGhdID0gdXNlU3RhdGUodHJ1ZSlcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGNvbnN0IHVuc3Vic2NyaWJlID0gb25BdXRoU3RhdGVDaGFuZ2VkKGF1dGgsICh1c2VyKSA9PiB7XG4gICAgICBpZiAodXNlcikge1xuICAgICAgICBuYXZpZ2F0ZShcIi9ob21lXCIsIHsgcmVwbGFjZTogdHJ1ZSB9KVxuICAgICAgICByZXR1cm5cbiAgICAgIH1cblxuICAgICAgc2V0Q2hlY2tpbmdBdXRoKGZhbHNlKVxuICAgIH0pXG5cbiAgICByZXR1cm4gdW5zdWJzY3JpYmVcbiAgfSwgW25hdmlnYXRlXSlcblxuICBpZiAoY2hlY2tpbmdBdXRoKSByZXR1cm4gPExvYWRpbmdTY3JlZW4gLz5cblxuICByZXR1cm4gKFxuICAgIDxtYWluIGNsYXNzTmFtZT1cImludHJvXCIgZGF0YS1zeXN0ZW0tYmFyLWNvbG9yPVwiI2Y0ZjhlZlwiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnRyby1zaGVsbFwiPlxuICAgICAgICA8aGVhZGVyIGNsYXNzTmFtZT1cImludHJvLWJyYW5kXCIgYXJpYS1sYWJlbD1cIlplbml0aFwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW50cm8tYnJhbmRfX21hcmtcIj5cbiAgICAgICAgICAgIDxpbWcgc3JjPXtMb2dvfSBhbHQ9XCJcIiBkcmFnZ2FibGU9XCJmYWxzZVwiIC8+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnRyby1icmFuZF9fY29weVwiPlxuICAgICAgICAgICAgPHN0cm9uZz5aZW5pdGg8L3N0cm9uZz5cbiAgICAgICAgICAgIDxzcGFuPkFncmljdWx0dXJhIGRlIHByZWNpc8Ojbzwvc3Bhbj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJpbnRyby1icmFuZF9faWNvblwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxuICAgICAgICAgICAgPExlYWYgc2l6ZT17MTl9IHN0cm9rZVdpZHRoPXsyfSAvPlxuICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgPC9oZWFkZXI+XG5cbiAgICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiaW50cm8tbGF5b3V0XCI+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnRyby12aXN1YWxcIiBhcmlhLWxhYmVsPVwiTGF2b3VyYSBtb25pdG9yYWRhIHBlbGEgcGxhdGFmb3JtYSBaZW5pdGhcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW50cm8tdmlzdWFsX19zaGFkZVwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiIC8+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImludHJvLXZpc3VhbF9fZ3JpZFwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiIC8+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW50cm8tdmlzdWFsX190YWdcIj5cbiAgICAgICAgICAgICAgPFNjYW5TZWFyY2ggc2l6ZT17MTZ9IHN0cm9rZVdpZHRoPXsyLjF9IC8+XG4gICAgICAgICAgICAgIDxzcGFuPkludGVsaWfDqm5jaWEgYXBsaWNhZGEgYW8gY2FtcG88L3NwYW4+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGltZ1xuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJpbnRyby12aXN1YWxfX3NveVwiXG4gICAgICAgICAgICAgIHNyYz17U295Q3V0b3V0fVxuICAgICAgICAgICAgICBhbHQ9XCJWYWdlbSBkZSBzb2phXCJcbiAgICAgICAgICAgICAgZHJhZ2dhYmxlPVwiZmFsc2VcIlxuICAgICAgICAgICAgLz5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnRyby12aXN1YWxfX2NhcHRpb25cIj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiaW50cm8tdmlzdWFsX19zaWduYWxcIiBhcmlhLWhpZGRlbj1cInRydWVcIiAvPlxuICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgIDxzdHJvbmc+TW9uaXRvcmFtZW50byBhdGl2bzwvc3Ryb25nPlxuICAgICAgICAgICAgICAgIDxzbWFsbD5EYWRvcyBkbyBjYW1wbyBlbSB1bWEgw7puaWNhIHZpc8Ojbzwvc21hbGw+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImludHJvLWNvbnRlbnRcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW50cm8tZXllYnJvd1wiPlxuICAgICAgICAgICAgICA8UmFkYXIgc2l6ZT17MTZ9IHN0cm9rZVdpZHRoPXsyLjJ9IC8+XG4gICAgICAgICAgICAgIDxzcGFuPlRlY25vbG9naWEgcGFyYSBxdWVtIHByb2R1ejwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8aDE+XG4gICAgICAgICAgICAgIFNldSBjYW1wbywgdmlzdG8gY29tIDxlbT5tYWlzIHByZWNpc8Ojby48L2VtPlxuICAgICAgICAgICAgPC9oMT5cblxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiaW50cm8tZGVzY3JpcHRpb25cIj5cbiAgICAgICAgICAgICAgTW9uaXRvcmUgbGF2b3VyYXMsIG9yZ2FuaXplIGEgb3BlcmHDp8OjbyBlIHRyYW5zZm9ybWUgaW1hZ2VucyBlIGRhZG9zIGVtIGRlY2lzw7VlcyBtYWlzIHNlZ3VyYXMgcGFyYSBhIHN1YSBwcm9kdcOnw6NvLlxuICAgICAgICAgICAgPC9wPlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImludHJvLWhpZ2hsaWdodHNcIiBhcmlhLWxhYmVsPVwiQmVuZWbDrWNpb3MgZGEgcGxhdGFmb3JtYVwiPlxuICAgICAgICAgICAgICB7aGlnaGxpZ2h0cy5tYXAoKHsgaWNvbjogSWNvbiwgbGFiZWwgfSkgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW50cm8taGlnaGxpZ2h0XCIga2V5PXtsYWJlbH0+XG4gICAgICAgICAgICAgICAgICA8c3BhbiBhcmlhLWhpZGRlbj1cInRydWVcIj5cbiAgICAgICAgICAgICAgICAgICAgPEljb24gc2l6ZT17MTh9IHN0cm9rZVdpZHRoPXsyfSAvPlxuICAgICAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICAgICAgPHNtYWxsPntsYWJlbH08L3NtYWxsPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImludHJvLWFjdGlvbnNcIj5cbiAgICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImludHJvLWJ1dHRvbiBpbnRyby1idXR0b24tLXByaW1hcnlcIlxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG5hdmlnYXRlKFwiL3JlZ2lzdGVyXCIpfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgPHNwYW4+Q29tZcOnYXIgYWdvcmE8L3NwYW4+XG4gICAgICAgICAgICAgICAgPEFycm93UmlnaHQgc2l6ZT17MTl9IHN0cm9rZVdpZHRoPXsyLjJ9IC8+XG4gICAgICAgICAgICAgIDwvYnV0dG9uPlxuXG4gICAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJpbnRyby1idXR0b24gaW50cm8tYnV0dG9uLS1zZWNvbmRhcnlcIlxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG5hdmlnYXRlKFwiL2xvZ2luXCIpfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgPExvZ0luIHNpemU9ezE4fSBzdHJva2VXaWR0aD17Mi4xfSAvPlxuICAgICAgICAgICAgICAgIDxzcGFuPkrDoSB0ZW5obyB1bWEgY29udGE8L3NwYW4+XG4gICAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImludHJvLWZvb3Rub3RlXCI+XG4gICAgICAgICAgICAgIEdlc3TDo28gYWdyw61jb2xhLCBkaWFnbsOzc3RpY28gZSBtb25pdG9yYW1lbnRvIGVtIHVtYSBleHBlcmnDqm5jaWEgc2ltcGxlcy5cbiAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9zZWN0aW9uPlxuICAgICAgPC9kaXY+XG4gICAgPC9tYWluPlxuICApXG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL3NhbXVlL0Rvd25sb2Fkcy9UZXN0ZV9JbnRlZ3JhLW9fQVBJX1NpdGUtbWFpbi9UZXN0ZV9JbnRlZ3JhLW9fQVBJX1NpdGUtbWFpbi9zcmMvcGFnZXMvQXBwL0ludHJvLmpzeCJ9

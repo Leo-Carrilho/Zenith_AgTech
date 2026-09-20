@@ -1,0 +1,289 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Global/InstallPrompt.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"]; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import { motion } from "/node_modules/.vite/deps/framer-motion.js?v=bbb07f35";
+import __vite__cjsImport2_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useState = __vite__cjsImport2_react["useState"];
+import { FaDownload, FaTimes, FaAndroid, FaApple } from "/node_modules/.vite/deps/react-icons_fa.js?v=8ff455ec";
+import "/src/styles/Global/InstallPrompt.css";
+const InstallPrompt = ({ onInstall, onClose, isIOS, isAndroid, isChromeAndroid, hasPrompt }) => {
+  _s();
+  const [showInstructions, setShowInstructions] = useState(false);
+  const canInstallDirectly = hasPrompt && !isIOS;
+  const shouldOpenChrome = isAndroid && !isChromeAndroid && !hasPrompt;
+  const handleFallbackInstall = () => {
+    if (shouldOpenChrome) {
+      const currentPath = `${window.location.host}${window.location.pathname}${window.location.search}`;
+      window.location.href = `intent://${currentPath}#Intent;scheme=https;package=com.android.chrome;end`;
+      return;
+    }
+    setShowInstructions(true);
+  };
+  return /* @__PURE__ */ jsxDEV(
+    motion.div,
+    {
+      className: "install-overlay",
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      onClick: onClose,
+      children: /* @__PURE__ */ jsxDEV(
+        motion.div,
+        {
+          className: "install-box",
+          initial: { scale: 0.9, y: 40 },
+          animate: { scale: 1, y: 0 },
+          exit: { scale: 0.9, y: 40 },
+          onClick: (e) => e.stopPropagation(),
+          children: [
+            /* @__PURE__ */ jsxDEV("button", { className: "close-btn", onClick: onClose, children: /* @__PURE__ */ jsxDEV(FaTimes, {}, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 37,
+              columnNumber: 11
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 36,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "icon", children: /* @__PURE__ */ jsxDEV(FaDownload, {}, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 41,
+              columnNumber: 11
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 40,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV("h2", { children: "Instalar App" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 44,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "subtitle", children: "Acesse mais rápido e sem navegador." }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 45,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                className: "install-main-btn",
+                onClick: canInstallDirectly ? onInstall : handleFallbackInstall,
+                children: [
+                  /* @__PURE__ */ jsxDEV(FaDownload, {}, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                    lineNumber: 53,
+                    columnNumber: 11
+                  }, this),
+                  " ",
+                  canInstallDirectly ? "Instalar agora" : shouldOpenChrome ? "Abrir no Chrome" : "Ver como instalar"
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 49,
+                columnNumber: 9
+              },
+              this
+            ),
+            !hasPrompt && /* @__PURE__ */ jsxDEV("div", { className: `hint${showInstructions ? " hint--expanded" : ""}`, children: showInstructions && isIOS ? /* @__PURE__ */ jsxDEV("ol", { className: "install-steps", children: [
+              /* @__PURE__ */ jsxDEV("li", { children: [
+                "Toque no botão ",
+                /* @__PURE__ */ jsxDEV("b", { children: "Compartilhar" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                  lineNumber: 66,
+                  columnNumber: 36
+                }, this),
+                " do navegador."
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 66,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("li", { children: [
+                "Escolha ",
+                /* @__PURE__ */ jsxDEV("b", { children: "Adicionar à Tela de Início" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                  lineNumber: 67,
+                  columnNumber: 29
+                }, this),
+                "."
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 67,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("li", { children: [
+                "Confirme tocando em ",
+                /* @__PURE__ */ jsxDEV("b", { children: "Adicionar" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                  lineNumber: 68,
+                  columnNumber: 41
+                }, this),
+                "."
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 68,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 65,
+              columnNumber: 11
+            }, this) : showInstructions ? /* @__PURE__ */ jsxDEV("ol", { className: "install-steps", children: [
+              /* @__PURE__ */ jsxDEV("li", { children: [
+                "Abra o menu ",
+                /* @__PURE__ */ jsxDEV("b", { children: "⋮" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                  lineNumber: 72,
+                  columnNumber: 33
+                }, this),
+                " do navegador."
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 72,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("li", { children: [
+                "Toque em ",
+                /* @__PURE__ */ jsxDEV("b", { children: "Instalar app" }, void 0, false, {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                  lineNumber: 73,
+                  columnNumber: 30
+                }, this),
+                "."
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 73,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("li", { children: "Confirme a instalação." }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 74,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 71,
+              columnNumber: 11
+            }, this) : isIOS ? /* @__PURE__ */ jsxDEV(Fragment, { children: [
+              /* @__PURE__ */ jsxDEV(FaApple, {}, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 78,
+                columnNumber: 17
+              }, this),
+              " Toque em ",
+              /* @__PURE__ */ jsxDEV("b", { children: "Compartilhar" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 78,
+                columnNumber: 38
+              }, this),
+              " → ",
+              /* @__PURE__ */ jsxDEV("b", { children: "Tela de Início" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 78,
+                columnNumber: 60
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 77,
+              columnNumber: 11
+            }, this) : /* @__PURE__ */ jsxDEV(Fragment, { children: [
+              /* @__PURE__ */ jsxDEV(FaAndroid, {}, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 82,
+                columnNumber: 17
+              }, this),
+              " Menu ⋮ → ",
+              /* @__PURE__ */ jsxDEV("b", { children: "Instalar app" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 82,
+                columnNumber: 40
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 81,
+              columnNumber: 11
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 63,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "benefits", children: [
+              /* @__PURE__ */ jsxDEV("span", { children: "⚡ Rápido" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 90,
+                columnNumber: 11
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: "📱 Como app" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 91,
+                columnNumber: 11
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: "🔒 Seguro" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+                lineNumber: 92,
+                columnNumber: 11
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 89,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ jsxDEV("button", { className: "later-btn", onClick: onClose, children: "Agora não" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+              lineNumber: 95,
+              columnNumber: 9
+            }, this)
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+          lineNumber: 29,
+          columnNumber: 7
+        },
+        this
+      )
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx",
+      lineNumber: 22,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(InstallPrompt, "nCwlOQyHnorNuj5zUWFCvmgsWCk=");
+_c = InstallPrompt;
+export default InstallPrompt;
+var _c;
+$RefreshReg$(_c, "InstallPrompt");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Global/InstallPrompt.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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LGNBQUc7QUFBQSxjQUFVLHVCQUFDLE9BQUUsNEJBQUg7QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFBZTtBQUFBLGlCQUR4QztBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUVBLEtBcEJKO0FBQUE7QUFBQTtBQUFBO0FBQUEsbUJBc0JBO0FBQUEsWUFJRix1QkFBQyxTQUFJLFdBQVUsWUFDYjtBQUFBLHFDQUFDLFVBQUssd0JBQU47QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFBYztBQUFBLGNBQ2QsdUJBQUMsVUFBSywyQkFBTjtBQUFBO0FBQUE7QUFBQTtBQUFBLHFCQUFpQjtBQUFBLGNBQ2pCLHVCQUFDLFVBQUsseUJBQU47QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFBZTtBQUFBLGlCQUhqQjtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUlBO0FBQUEsWUFFQSx1QkFBQyxZQUFPLFdBQVUsYUFBWSxTQUFTRCxTQUFRLHlCQUEvQztBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUVBO0FBQUE7QUFBQTtBQUFBLFFBcEVGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxNQXFFQTtBQUFBO0FBQUEsSUE1RUY7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBNkVBO0FBRUo7QUFBQ0ssR0EvRktQLGVBQWE7QUFBQSxLQUFiQTtBQWlHTixlQUFlQTtBQUFhLElBQUF5QjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJtb3Rpb24iLCJ1c2VTdGF0ZSIsIkZhRG93bmxvYWQiLCJGYVRpbWVzIiwiRmFBbmRyb2lkIiwiRmFBcHBsZSIsIkluc3RhbGxQcm9tcHQiLCJvbkluc3RhbGwiLCJvbkNsb3NlIiwiaXNJT1MiLCJpc0FuZHJvaWQiLCJpc0Nocm9tZUFuZHJvaWQiLCJoYXNQcm9tcHQiLCJfcyIsInNob3dJbnN0cnVjdGlvbnMiLCJzZXRTaG93SW5zdHJ1Y3Rpb25zIiwiY2FuSW5zdGFsbERpcmVjdGx5Iiwic2hvdWxkT3BlbkNocm9tZSIsImhhbmRsZUZhbGxiYWNrSW5zdGFsbCIsImN1cnJlbnRQYXRoIiwid2luZG93IiwibG9jYXRpb24iLCJob3N0IiwicGF0aG5hbWUiLCJzZWFyY2giLCJocmVmIiwib3BhY2l0eSIsInNjYWxlIiwieSIsImUiLCJzdG9wUHJvcGFnYXRpb24iLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJJbnN0YWxsUHJvbXB0LmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBtb3Rpb24gfSBmcm9tIFwiZnJhbWVyLW1vdGlvblwiXG5pbXBvcnQgeyB1c2VTdGF0ZSB9IGZyb20gXCJyZWFjdFwiXG5pbXBvcnQgeyBGYURvd25sb2FkLCBGYVRpbWVzLCBGYUFuZHJvaWQsIEZhQXBwbGUgfSBmcm9tICdyZWFjdC1pY29ucy9mYSdcbmltcG9ydCAnLi4vLi4vLi4vc3R5bGVzL0dsb2JhbC9JbnN0YWxsUHJvbXB0LmNzcydcblxuY29uc3QgSW5zdGFsbFByb21wdCA9ICh7IG9uSW5zdGFsbCwgb25DbG9zZSwgaXNJT1MsIGlzQW5kcm9pZCwgaXNDaHJvbWVBbmRyb2lkLCBoYXNQcm9tcHQgfSkgPT4ge1xuICBjb25zdCBbc2hvd0luc3RydWN0aW9ucywgc2V0U2hvd0luc3RydWN0aW9uc10gPSB1c2VTdGF0ZShmYWxzZSlcbiAgY29uc3QgY2FuSW5zdGFsbERpcmVjdGx5ID0gaGFzUHJvbXB0ICYmICFpc0lPU1xuICBjb25zdCBzaG91bGRPcGVuQ2hyb21lID0gaXNBbmRyb2lkICYmICFpc0Nocm9tZUFuZHJvaWQgJiYgIWhhc1Byb21wdFxuXG4gIGNvbnN0IGhhbmRsZUZhbGxiYWNrSW5zdGFsbCA9ICgpID0+IHtcbiAgICBpZiAoc2hvdWxkT3BlbkNocm9tZSkge1xuICAgICAgY29uc3QgY3VycmVudFBhdGggPSBgJHt3aW5kb3cubG9jYXRpb24uaG9zdH0ke3dpbmRvdy5sb2NhdGlvbi5wYXRobmFtZX0ke3dpbmRvdy5sb2NhdGlvbi5zZWFyY2h9YFxuICAgICAgd2luZG93LmxvY2F0aW9uLmhyZWYgPSBgaW50ZW50Oi8vJHtjdXJyZW50UGF0aH0jSW50ZW50O3NjaGVtZT1odHRwcztwYWNrYWdlPWNvbS5hbmRyb2lkLmNocm9tZTtlbmRgXG4gICAgICByZXR1cm5cbiAgICB9XG5cbiAgICBzZXRTaG93SW5zdHJ1Y3Rpb25zKHRydWUpXG4gIH1cblxuICByZXR1cm4gKFxuICAgIDxtb3Rpb24uZGl2IFxuICAgICAgY2xhc3NOYW1lPVwiaW5zdGFsbC1vdmVybGF5XCJcbiAgICAgIGluaXRpYWw9e3sgb3BhY2l0eTogMCB9fVxuICAgICAgYW5pbWF0ZT17eyBvcGFjaXR5OiAxIH19XG4gICAgICBleGl0PXt7IG9wYWNpdHk6IDAgfX1cbiAgICAgIG9uQ2xpY2s9e29uQ2xvc2V9XG4gICAgPlxuICAgICAgPG1vdGlvbi5kaXYgXG4gICAgICAgIGNsYXNzTmFtZT1cImluc3RhbGwtYm94XCJcbiAgICAgICAgaW5pdGlhbD17eyBzY2FsZTogMC45LCB5OiA0MCB9fVxuICAgICAgICBhbmltYXRlPXt7IHNjYWxlOiAxLCB5OiAwIH19XG4gICAgICAgIGV4aXQ9e3sgc2NhbGU6IDAuOSwgeTogNDAgfX1cbiAgICAgICAgb25DbGljaz17KGUpID0+IGUuc3RvcFByb3BhZ2F0aW9uKCl9XG4gICAgICA+XG4gICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiY2xvc2UtYnRuXCIgb25DbGljaz17b25DbG9zZX0+XG4gICAgICAgICAgPEZhVGltZXMgLz5cbiAgICAgICAgPC9idXR0b24+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpY29uXCI+XG4gICAgICAgICAgPEZhRG93bmxvYWQgLz5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGgyPkluc3RhbGFyIEFwcDwvaDI+XG4gICAgICAgIDxwIGNsYXNzTmFtZT1cInN1YnRpdGxlXCI+XG4gICAgICAgICAgQWNlc3NlIG1haXMgcsOhcGlkbyBlIHNlbSBuYXZlZ2Fkb3IuXG4gICAgICAgIDwvcD5cblxuICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgY2xhc3NOYW1lPVwiaW5zdGFsbC1tYWluLWJ0blwiXG4gICAgICAgICAgb25DbGljaz17Y2FuSW5zdGFsbERpcmVjdGx5ID8gb25JbnN0YWxsIDogaGFuZGxlRmFsbGJhY2tJbnN0YWxsfVxuICAgICAgICA+XG4gICAgICAgICAgPEZhRG93bmxvYWQgLz4ge1xuICAgICAgICAgICAgY2FuSW5zdGFsbERpcmVjdGx5XG4gICAgICAgICAgICAgID8gXCJJbnN0YWxhciBhZ29yYVwiXG4gICAgICAgICAgICAgIDogc2hvdWxkT3BlbkNocm9tZVxuICAgICAgICAgICAgICAgID8gXCJBYnJpciBubyBDaHJvbWVcIlxuICAgICAgICAgICAgICAgIDogXCJWZXIgY29tbyBpbnN0YWxhclwiXG4gICAgICAgICAgfVxuICAgICAgICA8L2J1dHRvbj5cblxuICAgICAgICB7IWhhc1Byb21wdCAmJiAoXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9e2BoaW50JHtzaG93SW5zdHJ1Y3Rpb25zID8gXCIgaGludC0tZXhwYW5kZWRcIiA6IFwiXCJ9YH0+XG4gICAgICAgICAgICB7c2hvd0luc3RydWN0aW9ucyAmJiBpc0lPUyA/IChcbiAgICAgICAgICAgICAgPG9sIGNsYXNzTmFtZT1cImluc3RhbGwtc3RlcHNcIj5cbiAgICAgICAgICAgICAgICA8bGk+VG9xdWUgbm8gYm90w6NvIDxiPkNvbXBhcnRpbGhhcjwvYj4gZG8gbmF2ZWdhZG9yLjwvbGk+XG4gICAgICAgICAgICAgICAgPGxpPkVzY29saGEgPGI+QWRpY2lvbmFyIMOgIFRlbGEgZGUgSW7DrWNpbzwvYj4uPC9saT5cbiAgICAgICAgICAgICAgICA8bGk+Q29uZmlybWUgdG9jYW5kbyBlbSA8Yj5BZGljaW9uYXI8L2I+LjwvbGk+XG4gICAgICAgICAgICAgIDwvb2w+XG4gICAgICAgICAgICApIDogc2hvd0luc3RydWN0aW9ucyA/IChcbiAgICAgICAgICAgICAgPG9sIGNsYXNzTmFtZT1cImluc3RhbGwtc3RlcHNcIj5cbiAgICAgICAgICAgICAgICA8bGk+QWJyYSBvIG1lbnUgPGI+4ouuPC9iPiBkbyBuYXZlZ2Fkb3IuPC9saT5cbiAgICAgICAgICAgICAgICA8bGk+VG9xdWUgZW0gPGI+SW5zdGFsYXIgYXBwPC9iPi48L2xpPlxuICAgICAgICAgICAgICAgIDxsaT5Db25maXJtZSBhIGluc3RhbGHDp8Ojby48L2xpPlxuICAgICAgICAgICAgICA8L29sPlxuICAgICAgICAgICAgKSA6IGlzSU9TID8gKFxuICAgICAgICAgICAgICA8PlxuICAgICAgICAgICAgICAgIDxGYUFwcGxlIC8+IFRvcXVlIGVtIDxiPkNvbXBhcnRpbGhhcjwvYj4g4oaSIDxiPlRlbGEgZGUgSW7DrWNpbzwvYj5cbiAgICAgICAgICAgICAgPC8+XG4gICAgICAgICAgICApIDogKFxuICAgICAgICAgICAgICA8PlxuICAgICAgICAgICAgICAgIDxGYUFuZHJvaWQgLz4gTWVudSDii64g4oaSIDxiPkluc3RhbGFyIGFwcDwvYj5cbiAgICAgICAgICAgICAgPC8+XG4gICAgICAgICAgICApfVxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICApfVxuXG4gICAgICAgIHsvKiBCRU5FRsONQ0lPUyBTSU1QTEVTICovfVxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJlbmVmaXRzXCI+XG4gICAgICAgICAgPHNwYW4+4pqhIFLDoXBpZG88L3NwYW4+XG4gICAgICAgICAgPHNwYW4+8J+TsSBDb21vIGFwcDwvc3Bhbj5cbiAgICAgICAgICA8c3Bhbj7wn5SSIFNlZ3Vybzwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJsYXRlci1idG5cIiBvbkNsaWNrPXtvbkNsb3NlfT5cbiAgICAgICAgICBBZ29yYSBuw6NvXG4gICAgICAgIDwvYnV0dG9uPlxuICAgICAgPC9tb3Rpb24uZGl2PlxuICAgIDwvbW90aW9uLmRpdj5cbiAgKVxufVxuXG5leHBvcnQgZGVmYXVsdCBJbnN0YWxsUHJvbXB0XG4iXSwiZmlsZSI6IkM6L1VzZXJzL3NhbXVlL0Rvd25sb2Fkcy9UZXN0ZV9JbnRlZ3JhLW9fQVBJX1NpdGUtbWFpbi9UZXN0ZV9JbnRlZ3JhLW9fQVBJX1NpdGUtbWFpbi9zcmMvY29tcG9uZW50cy9BcHAvR2xvYmFsL0luc3RhbGxQcm9tcHQuanN4In0=

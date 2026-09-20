@@ -1,0 +1,14 @@
+{
+   "appDescription": {
+      "message": "Web-automatizazioa gaitzeko osagarria. Web-luzapen hau bateragarria da mahaigainerako Power Automate-ren 2.26 bertsioarekin edo berriagoekin."
+   },
+   "appName": {
+      "message": "Microsoft Power Automate (legatua)"
+   },
+   "deprecationLink": {
+      "message": "hemen"
+   },
+   "deprecationMessage": {
+      "message": "Microsoft Edge taldeak adieraziko duen data jakin batetik aurrera (zaharkitze-data), Microsoft Edge arakatzaileak ez ditu aurrerantzean onartuko Manifest V2-rekin sortutako web-luzapenak. Erabiltzen ari zaren web-luzapena Manifest V2-rekin sortuta dago eta mahaigainerako Power Automate-ren 2.26 bertsioarekin edo berriagoekin da bateragarria. Horren ondorioz, funtzionatzeari utziko dio 2023ko ekainetik aurrera. 2023ko ekainetik aurrera web-inguruneak automatizatzen jarraitzeko arakatzaile honetan, mahaigainerako Power Automate-ren azken bertsioa (2.27 bertsioa edo berriagoa) eta Microsoft Power Automate web-luzapen berria instalatu behar dituzu. Informazio gehiago "
+   }
+}

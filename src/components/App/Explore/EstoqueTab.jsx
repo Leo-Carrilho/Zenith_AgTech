@@ -32,13 +32,9 @@ function validateNewProduct(product) {
   } else if (!Number.isFinite(minQuantity) || minQuantity < 0) {
     errors.minQuantity = "A quantidade mínima não pode ser negativa."
   }
-  if (product.price === "") {
-    errors.price = "Informe o preço unitário."
-  } else if (!Number.isFinite(price) || price <= 0) {
+  if (product.price !== "" && (!Number.isFinite(price) || price <= 0)) {
     errors.price = "O preço deve ser maior que zero."
   }
-  if (!product.supplier.trim()) errors.supplier = "Informe o fornecedor."
-  if (!product.expiryDate) errors.expiryDate = "Informe a data de validade."
 
   return errors
 }
@@ -190,7 +186,7 @@ export default function EstoqueTab() {
       supplier: newProduct.supplier.trim(),
       quantity: Number(newProduct.quantity),
       minQuantity: Number(newProduct.minQuantity),
-      price: Number(newProduct.price),
+      price: newProduct.price === "" ? 0 : Number(newProduct.price),
       createdAt: new Date().toISOString()
     }
 
@@ -419,60 +415,94 @@ export default function EstoqueTab() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowForm(false)}
+            onClick={closeNewProductForm}
           >
-            <motion.div
+            <motion.form
+              ref={newProductFormRef}
               className="product-form"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
+              onSubmit={(e) => {
+                e.preventDefault()
+                addProduct()
+              }}
+              noValidate
             >
               <div className="form-header">
                 <h3>Novo Produto</h3>
-                <button className="close-btn" onClick={() => setShowForm(false)}>
+                <button type="button" className="close-btn" aria-label="Fechar cadastro" onClick={closeNewProductForm}>
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
 
               <div className="form-group">
-                <label>Nome do produto</label>
+                <label htmlFor="new-product-name">
+                  Nome do produto <span className="required-mark" aria-hidden="true">*</span>
+                </label>
                 <input
+                  id="new-product-name"
                   type="text"
                   placeholder="Ex: Fungicida Premium"
                   value={newProduct.name}
-                  onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                  onChange={(e) => updateNewProductField("name", e.target.value)}
+                  required
+                  aria-invalid={Boolean(newProductErrors.name)}
+                  aria-describedby={newProductErrors.name ? "new-product-name-error" : undefined}
                 />
+                {newProductErrors.name && <span id="new-product-name-error" className="product-form-error">{newProductErrors.name}</span>}
               </div>
 
               <div className="form-group">
-                <label>Categoria</label>
+                <label htmlFor="new-product-category">
+                  Categoria <span className="required-mark" aria-hidden="true">*</span>
+                </label>
                 <select
+                  id="new-product-category"
                   value={newProduct.category}
-                  onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                  onChange={(e) => updateNewProductField("category", e.target.value)}
+                  required
+                  aria-invalid={Boolean(newProductErrors.category)}
+                  aria-describedby={newProductErrors.category ? "new-product-category-error" : undefined}
                 >
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
+                {newProductErrors.category && <span id="new-product-category-error" className="product-form-error">{newProductErrors.category}</span>}
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Quantidade</label>
+                  <label htmlFor="new-product-quantity">
+                    Quantidade <span className="required-mark" aria-hidden="true">*</span>
+                  </label>
                   <input
+                    id="new-product-quantity"
                     type="number"
                     step="0.01"
+                    min="0.01"
                     placeholder="0"
                     value={newProduct.quantity}
-                    onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
+                    onChange={(e) => updateNewProductField("quantity", e.target.value)}
+                    required
+                    aria-invalid={Boolean(newProductErrors.quantity)}
+                    aria-describedby={newProductErrors.quantity ? "new-product-quantity-error" : undefined}
                   />
+                  {newProductErrors.quantity && <span id="new-product-quantity-error" className="product-form-error">{newProductErrors.quantity}</span>}
                 </div>
                 <div className="form-group">
-                  <label>Unidade</label>
+                  <label htmlFor="new-product-unit">
+                    Unidade <span className="required-mark" aria-hidden="true">*</span>
+                  </label>
                   <select
+                    id="new-product-unit"
                     value={newProduct.unit}
-                    onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
+                    onChange={(e) => updateNewProductField("unit", e.target.value)}
+                    required
+                    aria-invalid={Boolean(newProductErrors.unit)}
+                    aria-describedby={newProductErrors.unit ? "new-product-unit-error" : undefined}
                   >
                     <option value="unidade">Unidade</option>
                     <option value="kg">Kg</option>
@@ -480,54 +510,70 @@ export default function EstoqueTab() {
                     <option value="sacos">Sacos</option>
                     <option value="caixas">Caixas</option>
                   </select>
+                  {newProductErrors.unit && <span id="new-product-unit-error" className="product-form-error">{newProductErrors.unit}</span>}
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Quantidade mínima</label>
+                  <label htmlFor="new-product-min-quantity">
+                    Quantidade mínima <span className="required-mark" aria-hidden="true">*</span>
+                  </label>
                   <input
+                    id="new-product-min-quantity"
                     type="number"
+                    min="0"
                     placeholder="0"
                     value={newProduct.minQuantity}
-                    onChange={(e) => setNewProduct({...newProduct, minQuantity: e.target.value})}
+                    onChange={(e) => updateNewProductField("minQuantity", e.target.value)}
+                    required
+                    aria-invalid={Boolean(newProductErrors.minQuantity)}
+                    aria-describedby={newProductErrors.minQuantity ? "new-product-min-quantity-error" : undefined}
                   />
+                  {newProductErrors.minQuantity && <span id="new-product-min-quantity-error" className="product-form-error">{newProductErrors.minQuantity}</span>}
                 </div>
                 <div className="form-group">
-                  <label>Preço unitário (R$)</label>
+                  <label htmlFor="new-product-price">Preço unitário (R$) <small>Opcional</small></label>
                   <input
+                    id="new-product-price"
                     type="number"
                     step="0.01"
+                    min="0.01"
                     placeholder="0,00"
                     value={newProduct.price}
-                    onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                    onChange={(e) => updateNewProductField("price", e.target.value)}
+                    aria-invalid={Boolean(newProductErrors.price)}
+                    aria-describedby={newProductErrors.price ? "new-product-price-error" : undefined}
                   />
+                  {newProductErrors.price && <span id="new-product-price-error" className="product-form-error">{newProductErrors.price}</span>}
                 </div>
               </div>
 
               <div className="form-group">
-                <label>Fornecedor</label>
+                <label htmlFor="new-product-supplier">Fornecedor <small>Opcional</small></label>
                 <input
+                  id="new-product-supplier"
                   type="text"
                   placeholder="Nome do fornecedor"
                   value={newProduct.supplier}
-                  onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
+                  onChange={(e) => updateNewProductField("supplier", e.target.value)}
                 />
               </div>
 
               <div className="form-group">
-                <label>Data de validade</label>
+                <label htmlFor="new-product-expiry">Data de validade <small>Opcional</small></label>
                 <input
+                  id="new-product-expiry"
                   type="date"
                   value={newProduct.expiryDate}
-                  onChange={(e) => setNewProduct({...newProduct, expiryDate: e.target.value})}
+                  onChange={(e) => updateNewProductField("expiryDate", e.target.value)}
                 />
               </div>
 
-              <button className="submit-btn" onClick={addProduct}>
+              <button type="submit" className="submit-btn">
                 Adicionar produto
               </button>
-            </motion.div>
+            </motion.form>
           </motion.div>
         )}
       </AnimatePresence>

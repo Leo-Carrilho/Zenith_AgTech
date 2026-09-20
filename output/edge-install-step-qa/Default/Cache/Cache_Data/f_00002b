@@ -1,0 +1,433 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Explore/LegislacaoDronesTab.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import { AnimatePresence, motion } from "/node_modules/.vite/deps/framer-motion.js?v=bbb07f35";
+import __vite__cjsImport2_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useState = __vite__cjsImport2_react["useState"];
+const officialLinks = [
+  {
+    label: "Cadastrar drone na ANAC",
+    agency: "ANAC",
+    description: "Cadastro oficial da aeronave não tripulada",
+    href: "https://www.gov.br/pt-br/servicos/cadastrar-drone-basico",
+    icon: "app_registration"
+  },
+  {
+    label: "Portal Drone UAS / DECEA",
+    agency: "DECEA",
+    description: "Orientações para acesso ao espaço aéreo",
+    href: "https://www.decea.mil.br/drone/",
+    icon: "flight_takeoff"
+  },
+  {
+    label: "Acessar SARPAS",
+    agency: "SARPAS",
+    description: "Solicitação e acompanhamento de voos",
+    href: "https://servicos.decea.mil.br/sarpas/",
+    icon: "map"
+  },
+  {
+    label: "Homologação Anatel",
+    agency: "ANATEL",
+    description: "Informações sobre homologação de equipamentos",
+    href: "https://www.gov.br/anatel/pt-br/assuntos/noticias/saiba-como-funciona-o-processo-de-homologacao",
+    icon: "settings_input_antenna"
+  }
+];
+const checklist = [
+  {
+    title: "Cadastro ANAC",
+    text: "No Brasil, drones usados como RPAS/VANT precisam seguir as regras da ANAC. Em geral, aeronaves acima de 250 g devem ser cadastradas e identificadas com o número de registro visível no equipamento. O cadastro ajuda a vincular a aeronave ao operador responsável.",
+    icon: "badge"
+  },
+  {
+    title: "Homologação",
+    text: "O drone, o rádio controle e módulos de transmissão usam radiofrequência. Por isso, o equipamento deve ser homologado pela Anatel antes do uso, evitando interferências e problemas legais na operação.",
+    icon: "verified"
+  },
+  {
+    title: "Autorização",
+    text: "Antes de decolar, o operador deve verificar o espaço aéreo pelo SARPAS/DECEA. Isso é essencial perto de aeroportos, helipontos, áreas militares, cidades, linhas de transmissão e locais com restrições temporárias.",
+    icon: "approval"
+  },
+  {
+    title: "Operação segura",
+    text: "Mesmo em área rural, planeje altitude, rota, vento, bateria, linha visual, distância de pessoas e animais, obstáculos e ponto de pouso. Se aparecer aeronave tripulada, a prioridade é sempre dela.",
+    icon: "health_and_safety"
+  }
+];
+const quickTips = [
+  { icon: "cloud", text: "Consulte o clima antes do voo" },
+  { icon: "visibility", text: "Planeje a rota e o objetivo" },
+  { icon: "groups", text: "Respeite a privacidade e propriedades" }
+];
+export default function LegislacaoDronesTab() {
+  _s();
+  const [activeTopic, setActiveTopic] = useState(null);
+  return /* @__PURE__ */ jsxDEV("section", { className: "drone-law-container drone-law-dashboard", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "drone-law-hero", children: /* @__PURE__ */ jsxDEV("div", { className: "drone-law-hero-copy", children: [
+      /* @__PURE__ */ jsxDEV("h1", { children: "Legislação" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 71,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { children: "Regras e documentos para operar drones na agricultura" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 72,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 70,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 69,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      "a",
+      {
+        className: "drone-law-featured",
+        href: officialLinks[0].href,
+        target: "_blank",
+        rel: "noreferrer",
+        children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "drone-law-featured-icon material-symbols-outlined", "aria-hidden": "true", children: "verified_user" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 82,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { children: [
+            /* @__PURE__ */ jsxDEV("strong", { children: "Checklist antes do voo" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 84,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("small", { children: "Revise cadastro, homologação, autorização e segurança operacional." }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 85,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 83,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "drone-law-featured-action", children: [
+            "Abrir",
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "chevron_right" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 89,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 87,
+            columnNumber: 9
+          }, this)
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 76,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV("section", { className: "drone-law-topics", "aria-labelledby": "drone-law-topics-title", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-section-heading", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "topic" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 95,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h2", { id: "drone-law-topics-title", children: "Temas principais" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 96,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 94,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-grid", children: checklist.map(
+        (item, index) => /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            type: "button",
+            className: `drone-law-card ${activeTopic === index ? "active" : ""}`,
+            "aria-pressed": activeTopic === index,
+            onClick: () => setActiveTopic(activeTopic === index ? null : index),
+            children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "drone-law-card-icon material-symbols-outlined", "aria-hidden": "true", children: item.icon }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+                lineNumber: 108,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("strong", { children: item.title }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+                lineNumber: 109,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          item.title,
+          true,
+          {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 101,
+            columnNumber: 11
+          },
+          this
+        )
+      ) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 99,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(AnimatePresence, { initial: false, children: activeTopic !== null && /* @__PURE__ */ jsxDEV(
+        motion.article,
+        {
+          className: "drone-law-topic-detail",
+          initial: { opacity: 0, height: 0 },
+          animate: { opacity: 1, height: "auto" },
+          exit: { opacity: 0, height: 0 },
+          children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: checklist[activeTopic].icon }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 122,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV("h3", { children: checklist[activeTopic].title }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+                lineNumber: 124,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { children: checklist[activeTopic].text }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+                lineNumber: 125,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 123,
+              columnNumber: 15
+            }, this)
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 116,
+          columnNumber: 11
+        },
+        this
+      ) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 114,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 93,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("section", { className: "drone-law-documents", "aria-labelledby": "drone-law-documents-title", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-section-heading", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "description" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 134,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h2", { id: "drone-law-documents-title", children: "Documentos oficiais" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 135,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("a", { href: officialLinks[1].href, target: "_blank", rel: "noreferrer", children: [
+          "Ver todos",
+          /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "chevron_right" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 138,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 136,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 133,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-links", children: officialLinks.map(
+        (link) => /* @__PURE__ */ jsxDEV("a", { href: link.href, target: "_blank", rel: "noreferrer", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "drone-law-agency-label", children: link.agency }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 145,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "drone-law-link-copy", children: [
+            /* @__PURE__ */ jsxDEV("strong", { children: link.label }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 147,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("small", { children: link.description }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+              lineNumber: 148,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 146,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "chevron_right" }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 150,
+            columnNumber: 15
+          }, this)
+        ] }, link.href, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 144,
+          columnNumber: 11
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 142,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 132,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("section", { className: "drone-law-agencies-section", "aria-labelledby": "drone-law-agencies-title", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-section-heading", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "lightbulb" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 158,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h2", { id: "drone-law-agencies-title", children: "Dicas rápidas" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 159,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 157,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "drone-law-quick-tips", children: quickTips.map(
+        (tip) => /* @__PURE__ */ jsxDEV("article", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: tip.icon }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 165,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: tip.text }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+            lineNumber: 166,
+            columnNumber: 15
+          }, this)
+        ] }, tip.text, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 164,
+          columnNumber: 11
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 162,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 156,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("aside", { className: "drone-law-responsibility", children: [
+      /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "balance" }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 173,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { children: [
+        /* @__PURE__ */ jsxDEV("strong", { children: "Dúvidas sobre legislação?" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 175,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { children: "Consulte os órgãos responsáveis e confirme as regras vigentes." }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 176,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 174,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("a", { href: officialLinks[1].href, target: "_blank", rel: "noreferrer", "aria-label": "Abrir portal oficial do DECEA", children: [
+        "Órgãos responsáveis",
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", "aria-hidden": "true", children: "chevron_right" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+          lineNumber: 180,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+        lineNumber: 178,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 172,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("p", { className: "drone-law-note", children: "Este material é informativo. Antes de voar, confirme as regras vigentes nos canais oficiais, porque normas do espaço aéreo e procedimentos do SARPAS podem mudar." }, void 0, false, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+      lineNumber: 184,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx",
+    lineNumber: 68,
+    columnNumber: 5
+  }, this);
+}
+_s(LegislacaoDronesTab, "zHwa4gBYdzhC25onulFYzeES/A0=");
+_c = LegislacaoDronesTab;
+var _c;
+$RefreshReg$(_c, "LegislacaoDronesTab");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Explore/LegislacaoDronesTab.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QSxTQXdIQTtBQUVKO0FBQUNPLEdBOUh1QkQscUJBQW1CO0FBQUEsS0FBbkJBO0FBQW1CLElBQUFXO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIkFuaW1hdGVQcmVzZW5jZSIsIm1vdGlvbiIsInVzZVN0YXRlIiwib2ZmaWNpYWxMaW5rcyIsImxhYmVsIiwiYWdlbmN5IiwiZGVzY3JpcHRpb24iLCJocmVmIiwiaWNvbiIsImNoZWNrbGlzdCIsInRpdGxlIiwidGV4dCIsInF1aWNrVGlwcyIsIkxlZ2lzbGFjYW9Ecm9uZXNUYWIiLCJfcyIsImFjdGl2ZVRvcGljIiwic2V0QWN0aXZlVG9waWMiLCJtYXAiLCJpdGVtIiwiaW5kZXgiLCJvcGFjaXR5IiwiaGVpZ2h0IiwibGluayIsInRpcCIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkxlZ2lzbGFjYW9Ecm9uZXNUYWIuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFuaW1hdGVQcmVzZW5jZSwgbW90aW9uIH0gZnJvbSBcImZyYW1lci1tb3Rpb25cIlxuaW1wb3J0IHsgdXNlU3RhdGUgfSBmcm9tIFwicmVhY3RcIlxuXG5jb25zdCBvZmZpY2lhbExpbmtzID0gW1xuICB7XG4gICAgbGFiZWw6IFwiQ2FkYXN0cmFyIGRyb25lIG5hIEFOQUNcIixcbiAgICBhZ2VuY3k6IFwiQU5BQ1wiLFxuICAgIGRlc2NyaXB0aW9uOiBcIkNhZGFzdHJvIG9maWNpYWwgZGEgYWVyb25hdmUgbsOjbyB0cmlwdWxhZGFcIixcbiAgICBocmVmOiBcImh0dHBzOi8vd3d3Lmdvdi5ici9wdC1ici9zZXJ2aWNvcy9jYWRhc3RyYXItZHJvbmUtYmFzaWNvXCIsXG4gICAgaWNvbjogXCJhcHBfcmVnaXN0cmF0aW9uXCJcbiAgfSxcbiAge1xuICAgIGxhYmVsOiBcIlBvcnRhbCBEcm9uZSBVQVMgLyBERUNFQVwiLFxuICAgIGFnZW5jeTogXCJERUNFQVwiLFxuICAgIGRlc2NyaXB0aW9uOiBcIk9yaWVudGHDp8O1ZXMgcGFyYSBhY2Vzc28gYW8gZXNwYcOnbyBhw6lyZW9cIixcbiAgICBocmVmOiBcImh0dHBzOi8vd3d3LmRlY2VhLm1pbC5ici9kcm9uZS9cIixcbiAgICBpY29uOiBcImZsaWdodF90YWtlb2ZmXCJcbiAgfSxcbiAge1xuICAgIGxhYmVsOiBcIkFjZXNzYXIgU0FSUEFTXCIsXG4gICAgYWdlbmN5OiBcIlNBUlBBU1wiLFxuICAgIGRlc2NyaXB0aW9uOiBcIlNvbGljaXRhw6fDo28gZSBhY29tcGFuaGFtZW50byBkZSB2b29zXCIsXG4gICAgaHJlZjogXCJodHRwczovL3NlcnZpY29zLmRlY2VhLm1pbC5ici9zYXJwYXMvXCIsXG4gICAgaWNvbjogXCJtYXBcIlxuICB9LFxuICB7XG4gICAgbGFiZWw6IFwiSG9tb2xvZ2HDp8OjbyBBbmF0ZWxcIixcbiAgICBhZ2VuY3k6IFwiQU5BVEVMXCIsXG4gICAgZGVzY3JpcHRpb246IFwiSW5mb3JtYcOnw7VlcyBzb2JyZSBob21vbG9nYcOnw6NvIGRlIGVxdWlwYW1lbnRvc1wiLFxuICAgIGhyZWY6IFwiaHR0cHM6Ly93d3cuZ292LmJyL2FuYXRlbC9wdC1ici9hc3N1bnRvcy9ub3RpY2lhcy9zYWliYS1jb21vLWZ1bmNpb25hLW8tcHJvY2Vzc28tZGUtaG9tb2xvZ2FjYW9cIixcbiAgICBpY29uOiBcInNldHRpbmdzX2lucHV0X2FudGVubmFcIlxuICB9XG5dXG5cbmNvbnN0IGNoZWNrbGlzdCA9IFtcbiAge1xuICAgIHRpdGxlOiBcIkNhZGFzdHJvIEFOQUNcIixcbiAgICB0ZXh0OiBcIk5vIEJyYXNpbCwgZHJvbmVzIHVzYWRvcyBjb21vIFJQQVMvVkFOVCBwcmVjaXNhbSBzZWd1aXIgYXMgcmVncmFzIGRhIEFOQUMuIEVtIGdlcmFsLCBhZXJvbmF2ZXMgYWNpbWEgZGUgMjUwIGcgZGV2ZW0gc2VyIGNhZGFzdHJhZGFzIGUgaWRlbnRpZmljYWRhcyBjb20gbyBuw7ptZXJvIGRlIHJlZ2lzdHJvIHZpc8OtdmVsIG5vIGVxdWlwYW1lbnRvLiBPIGNhZGFzdHJvIGFqdWRhIGEgdmluY3VsYXIgYSBhZXJvbmF2ZSBhbyBvcGVyYWRvciByZXNwb25zw6F2ZWwuXCIsXG4gICAgaWNvbjogXCJiYWRnZVwiXG4gIH0sXG4gIHtcbiAgICB0aXRsZTogXCJIb21vbG9nYcOnw6NvXCIsXG4gICAgdGV4dDogXCJPIGRyb25lLCBvIHLDoWRpbyBjb250cm9sZSBlIG3Ds2R1bG9zIGRlIHRyYW5zbWlzc8OjbyB1c2FtIHJhZGlvZnJlcXXDqm5jaWEuIFBvciBpc3NvLCBvIGVxdWlwYW1lbnRvIGRldmUgc2VyIGhvbW9sb2dhZG8gcGVsYSBBbmF0ZWwgYW50ZXMgZG8gdXNvLCBldml0YW5kbyBpbnRlcmZlcsOqbmNpYXMgZSBwcm9ibGVtYXMgbGVnYWlzIG5hIG9wZXJhw6fDo28uXCIsXG4gICAgaWNvbjogXCJ2ZXJpZmllZFwiXG4gIH0sXG4gIHtcbiAgICB0aXRsZTogXCJBdXRvcml6YcOnw6NvXCIsXG4gICAgdGV4dDogXCJBbnRlcyBkZSBkZWNvbGFyLCBvIG9wZXJhZG9yIGRldmUgdmVyaWZpY2FyIG8gZXNwYcOnbyBhw6lyZW8gcGVsbyBTQVJQQVMvREVDRUEuIElzc28gw6kgZXNzZW5jaWFsIHBlcnRvIGRlIGFlcm9wb3J0b3MsIGhlbGlwb250b3MsIMOhcmVhcyBtaWxpdGFyZXMsIGNpZGFkZXMsIGxpbmhhcyBkZSB0cmFuc21pc3PDo28gZSBsb2NhaXMgY29tIHJlc3RyacOnw7VlcyB0ZW1wb3LDoXJpYXMuXCIsXG4gICAgaWNvbjogXCJhcHByb3ZhbFwiXG4gIH0sXG4gIHtcbiAgICB0aXRsZTogXCJPcGVyYcOnw6NvIHNlZ3VyYVwiLFxuICAgIHRleHQ6IFwiTWVzbW8gZW0gw6FyZWEgcnVyYWwsIHBsYW5lamUgYWx0aXR1ZGUsIHJvdGEsIHZlbnRvLCBiYXRlcmlhLCBsaW5oYSB2aXN1YWwsIGRpc3TDom5jaWEgZGUgcGVzc29hcyBlIGFuaW1haXMsIG9ic3TDoWN1bG9zIGUgcG9udG8gZGUgcG91c28uIFNlIGFwYXJlY2VyIGFlcm9uYXZlIHRyaXB1bGFkYSwgYSBwcmlvcmlkYWRlIMOpIHNlbXByZSBkZWxhLlwiLFxuICAgIGljb246IFwiaGVhbHRoX2FuZF9zYWZldHlcIlxuICB9XG5dXG5cbmNvbnN0IHF1aWNrVGlwcyA9IFtcbiAgeyBpY29uOiBcImNsb3VkXCIsIHRleHQ6IFwiQ29uc3VsdGUgbyBjbGltYSBhbnRlcyBkbyB2b29cIiB9LFxuICB7IGljb246IFwidmlzaWJpbGl0eVwiLCB0ZXh0OiBcIlBsYW5lamUgYSByb3RhIGUgbyBvYmpldGl2b1wiIH0sXG4gIHsgaWNvbjogXCJncm91cHNcIiwgdGV4dDogXCJSZXNwZWl0ZSBhIHByaXZhY2lkYWRlIGUgcHJvcHJpZWRhZGVzXCIgfVxuXVxuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBMZWdpc2xhY2FvRHJvbmVzVGFiKCkge1xuICBjb25zdCBbYWN0aXZlVG9waWMsIHNldEFjdGl2ZVRvcGljXSA9IHVzZVN0YXRlKG51bGwpXG5cbiAgcmV0dXJuIChcbiAgICA8c2VjdGlvbiBjbGFzc05hbWU9XCJkcm9uZS1sYXctY29udGFpbmVyIGRyb25lLWxhdy1kYXNoYm9hcmRcIj5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LWhlcm9cIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkcm9uZS1sYXctaGVyby1jb3B5XCI+XG4gICAgICAgICAgPGgxPkxlZ2lzbGHDp8OjbzwvaDE+XG4gICAgICAgICAgPHA+UmVncmFzIGUgZG9jdW1lbnRvcyBwYXJhIG9wZXJhciBkcm9uZXMgbmEgYWdyaWN1bHR1cmE8L3A+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxhXG4gICAgICAgIGNsYXNzTmFtZT1cImRyb25lLWxhdy1mZWF0dXJlZFwiXG4gICAgICAgIGhyZWY9e29mZmljaWFsTGlua3NbMF0uaHJlZn1cbiAgICAgICAgdGFyZ2V0PVwiX2JsYW5rXCJcbiAgICAgICAgcmVsPVwibm9yZWZlcnJlclwiXG4gICAgICA+XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImRyb25lLWxhdy1mZWF0dXJlZC1pY29uIG1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj52ZXJpZmllZF91c2VyPC9zcGFuPlxuICAgICAgICA8c3Bhbj5cbiAgICAgICAgICA8c3Ryb25nPkNoZWNrbGlzdCBhbnRlcyBkbyB2b288L3N0cm9uZz5cbiAgICAgICAgICA8c21hbGw+UmV2aXNlIGNhZGFzdHJvLCBob21vbG9nYcOnw6NvLCBhdXRvcml6YcOnw6NvIGUgc2VndXJhbsOnYSBvcGVyYWNpb25hbC48L3NtYWxsPlxuICAgICAgICA8L3NwYW4+XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImRyb25lLWxhdy1mZWF0dXJlZC1hY3Rpb25cIj5cbiAgICAgICAgICBBYnJpclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj5jaGV2cm9uX3JpZ2h0PC9zcGFuPlxuICAgICAgICA8L3NwYW4+XG4gICAgICA8L2E+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImRyb25lLWxhdy10b3BpY3NcIiBhcmlhLWxhYmVsbGVkYnk9XCJkcm9uZS1sYXctdG9waWNzLXRpdGxlXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LXNlY3Rpb24taGVhZGluZ1wiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj50b3BpYzwvc3Bhbj5cbiAgICAgICAgICA8aDIgaWQ9XCJkcm9uZS1sYXctdG9waWNzLXRpdGxlXCI+VGVtYXMgcHJpbmNpcGFpczwvaDI+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LWdyaWRcIj5cbiAgICAgICAgICB7Y2hlY2tsaXN0Lm1hcCgoaXRlbSwgaW5kZXgpID0+IChcbiAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YGRyb25lLWxhdy1jYXJkICR7YWN0aXZlVG9waWMgPT09IGluZGV4ID8gXCJhY3RpdmVcIiA6IFwiXCJ9YH1cbiAgICAgICAgICAgICAga2V5PXtpdGVtLnRpdGxlfVxuICAgICAgICAgICAgICBhcmlhLXByZXNzZWQ9e2FjdGl2ZVRvcGljID09PSBpbmRleH1cbiAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gc2V0QWN0aXZlVG9waWMoYWN0aXZlVG9waWMgPT09IGluZGV4ID8gbnVsbCA6IGluZGV4KX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiZHJvbmUtbGF3LWNhcmQtaWNvbiBtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+e2l0ZW0uaWNvbn08L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmc+e2l0ZW0udGl0bGV9PC9zdHJvbmc+XG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPEFuaW1hdGVQcmVzZW5jZSBpbml0aWFsPXtmYWxzZX0+XG4gICAgICAgICAge2FjdGl2ZVRvcGljICE9PSBudWxsICYmIChcbiAgICAgICAgICAgIDxtb3Rpb24uYXJ0aWNsZVxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJkcm9uZS1sYXctdG9waWMtZGV0YWlsXCJcbiAgICAgICAgICAgICAgaW5pdGlhbD17eyBvcGFjaXR5OiAwLCBoZWlnaHQ6IDAgfX1cbiAgICAgICAgICAgICAgYW5pbWF0ZT17eyBvcGFjaXR5OiAxLCBoZWlnaHQ6IFwiYXV0b1wiIH19XG4gICAgICAgICAgICAgIGV4aXQ9e3sgb3BhY2l0eTogMCwgaGVpZ2h0OiAwIH19XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj57Y2hlY2tsaXN0W2FjdGl2ZVRvcGljXS5pY29ufTwvc3Bhbj5cbiAgICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICA8aDM+e2NoZWNrbGlzdFthY3RpdmVUb3BpY10udGl0bGV9PC9oMz5cbiAgICAgICAgICAgICAgICA8cD57Y2hlY2tsaXN0W2FjdGl2ZVRvcGljXS50ZXh0fTwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L21vdGlvbi5hcnRpY2xlPlxuICAgICAgICAgICl9XG4gICAgICAgIDwvQW5pbWF0ZVByZXNlbmNlPlxuICAgICAgPC9zZWN0aW9uPlxuXG4gICAgICA8c2VjdGlvbiBjbGFzc05hbWU9XCJkcm9uZS1sYXctZG9jdW1lbnRzXCIgYXJpYS1sYWJlbGxlZGJ5PVwiZHJvbmUtbGF3LWRvY3VtZW50cy10aXRsZVwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRyb25lLWxhdy1zZWN0aW9uLWhlYWRpbmdcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+ZGVzY3JpcHRpb248L3NwYW4+XG4gICAgICAgICAgPGgyIGlkPVwiZHJvbmUtbGF3LWRvY3VtZW50cy10aXRsZVwiPkRvY3VtZW50b3Mgb2ZpY2lhaXM8L2gyPlxuICAgICAgICAgIDxhIGhyZWY9e29mZmljaWFsTGlua3NbMV0uaHJlZn0gdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9yZWZlcnJlclwiPlxuICAgICAgICAgICAgVmVyIHRvZG9zXG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+Y2hldnJvbl9yaWdodDwvc3Bhbj5cbiAgICAgICAgICA8L2E+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LWxpbmtzXCI+XG4gICAgICAgICAge29mZmljaWFsTGlua3MubWFwKChsaW5rKSA9PiAoXG4gICAgICAgICAgICA8YSBrZXk9e2xpbmsuaHJlZn0gaHJlZj17bGluay5ocmVmfSB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub3JlZmVycmVyXCI+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImRyb25lLWxhdy1hZ2VuY3ktbGFiZWxcIj57bGluay5hZ2VuY3l9PC9zcGFuPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJkcm9uZS1sYXctbGluay1jb3B5XCI+XG4gICAgICAgICAgICAgICAgPHN0cm9uZz57bGluay5sYWJlbH08L3N0cm9uZz5cbiAgICAgICAgICAgICAgICA8c21hbGw+e2xpbmsuZGVzY3JpcHRpb259PC9zbWFsbD5cbiAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+Y2hldnJvbl9yaWdodDwvc3Bhbj5cbiAgICAgICAgICAgIDwvYT5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L3NlY3Rpb24+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImRyb25lLWxhdy1hZ2VuY2llcy1zZWN0aW9uXCIgYXJpYS1sYWJlbGxlZGJ5PVwiZHJvbmUtbGF3LWFnZW5jaWVzLXRpdGxlXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LXNlY3Rpb24taGVhZGluZ1wiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj5saWdodGJ1bGI8L3NwYW4+XG4gICAgICAgICAgPGgyIGlkPVwiZHJvbmUtbGF3LWFnZW5jaWVzLXRpdGxlXCI+RGljYXMgcsOhcGlkYXM8L2gyPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRyb25lLWxhdy1xdWljay10aXBzXCI+XG4gICAgICAgICAge3F1aWNrVGlwcy5tYXAoKHRpcCkgPT4gKFxuICAgICAgICAgICAgPGFydGljbGUga2V5PXt0aXAudGV4dH0+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIiBhcmlhLWhpZGRlbj1cInRydWVcIj57dGlwLmljb259PC9zcGFuPlxuICAgICAgICAgICAgICA8cD57dGlwLnRleHR9PC9wPlxuICAgICAgICAgICAgPC9hcnRpY2xlPlxuICAgICAgICAgICkpfVxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvc2VjdGlvbj5cblxuICAgICAgPGFzaWRlIGNsYXNzTmFtZT1cImRyb25lLWxhdy1yZXNwb25zaWJpbGl0eVwiPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+YmFsYW5jZTwvc3Bhbj5cbiAgICAgICAgPGRpdj5cbiAgICAgICAgICA8c3Ryb25nPkTDunZpZGFzIHNvYnJlIGxlZ2lzbGHDp8Ojbz88L3N0cm9uZz5cbiAgICAgICAgICA8cD5Db25zdWx0ZSBvcyDDs3Jnw6NvcyByZXNwb25zw6F2ZWlzIGUgY29uZmlybWUgYXMgcmVncmFzIHZpZ2VudGVzLjwvcD5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxhIGhyZWY9e29mZmljaWFsTGlua3NbMV0uaHJlZn0gdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9yZWZlcnJlclwiIGFyaWEtbGFiZWw9XCJBYnJpciBwb3J0YWwgb2ZpY2lhbCBkbyBERUNFQVwiPlxuICAgICAgICAgIMOTcmfDo29zIHJlc3BvbnPDoXZlaXNcbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+Y2hldnJvbl9yaWdodDwvc3Bhbj5cbiAgICAgICAgPC9hPlxuICAgICAgPC9hc2lkZT5cblxuICAgICAgPHAgY2xhc3NOYW1lPVwiZHJvbmUtbGF3LW5vdGVcIj5cbiAgICAgICAgRXN0ZSBtYXRlcmlhbCDDqSBpbmZvcm1hdGl2by4gQW50ZXMgZGUgdm9hciwgY29uZmlybWUgYXMgcmVncmFzIHZpZ2VudGVzIG5vcyBjYW5haXMgb2ZpY2lhaXMsXG4gICAgICAgIHBvcnF1ZSBub3JtYXMgZG8gZXNwYcOnbyBhw6lyZW8gZSBwcm9jZWRpbWVudG9zIGRvIFNBUlBBUyBwb2RlbSBtdWRhci5cbiAgICAgIDwvcD5cbiAgICA8L3NlY3Rpb24+XG4gIClcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvc2FtdWUvRG93bmxvYWRzL1Rlc3RlX0ludGVncmEtb19BUElfU2l0ZS1tYWluL1Rlc3RlX0ludGVncmEtb19BUElfU2l0ZS1tYWluL3NyYy9jb21wb25lbnRzL0FwcC9FeHBsb3JlL0xlZ2lzbGFjYW9Ecm9uZXNUYWIuanN4In0=

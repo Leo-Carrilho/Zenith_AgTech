@@ -4,11 +4,14 @@ import { onAuthStateChanged } from "firebase/auth"
 import {
   Activity,
   ArrowRight,
+  Download,
+  Globe2,
   Leaf,
   LogIn,
   Radar,
   ScanSearch,
   ShieldCheck,
+  Smartphone,
 } from "lucide-react"
 
 import { auth } from "../../services/firebase"
@@ -17,6 +20,7 @@ import "../../styles/App/Intro.css"
 
 const Logo = "/assets/image/Logo-redonda.png"
 const SoyCutout = "/assets/image/soja-hero-cutout.png"
+const SITE_CHOICE_SESSION_KEY = "zenithContinueOnWebsite"
 
 const highlights = [
   { icon: ShieldCheck, label: "Diagnóstico confiável" },
@@ -24,9 +28,15 @@ const highlights = [
   { icon: Radar, label: "Decisões em tempo real" },
 ]
 
-export default function Intro() {
+export default function Intro({ onInstallRequest, isInstalled = false }) {
   const navigate = useNavigate()
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [showAccessChoice, setShowAccessChoice] = useState(() => {
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+
+    return !isStandalone && sessionStorage.getItem(SITE_CHOICE_SESSION_KEY) !== "true"
+  })
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -41,13 +51,66 @@ export default function Intro() {
     return unsubscribe
   }, [navigate])
 
+  useEffect(() => {
+    if (isInstalled) setShowAccessChoice(false)
+  }, [isInstalled])
+
+  const continueOnWebsite = () => {
+    sessionStorage.setItem(SITE_CHOICE_SESSION_KEY, "true")
+    setShowAccessChoice(false)
+  }
+
   if (checkingAuth) return <LoadingScreen />
+
+  if (showAccessChoice) {
+    return (
+      <main className="access-choice" data-system-bar-color="#123b27">
+        <div className="access-choice__shade" aria-hidden="true" />
+
+        <header className="access-choice__brand" aria-label="Zenith">
+          <span className="access-choice__logo">
+            <img src={Logo} alt="" draggable="false" />
+          </span>
+          <span>
+            <strong>Zenith</strong>
+            <small>Agricultura de precisão</small>
+          </span>
+        </header>
+
+        <section className="access-choice__content" aria-labelledby="access-choice-title">
+          <div className="access-choice__eyebrow">
+            <Smartphone size={17} strokeWidth={2.1} aria-hidden="true" />
+            <span>Zenith no seu dispositivo</span>
+          </div>
+
+          <h1 id="access-choice-title">Como você quer acessar?</h1>
+          <p>
+            Instale a Zenith para abrir direto pela tela inicial ou continue usando normalmente pelo navegador.
+          </p>
+
+          <div className="access-choice__actions">
+            <button type="button" className="access-choice__button access-choice__button--install" onClick={onInstallRequest}>
+              <Download size={20} strokeWidth={2.2} aria-hidden="true" />
+              <span>Instalar aplicativo</span>
+              <ArrowRight size={19} strokeWidth={2.2} aria-hidden="true" />
+            </button>
+
+            <button type="button" className="access-choice__button access-choice__button--web" onClick={continueOnWebsite}>
+              <Globe2 size={20} strokeWidth={2.1} aria-hidden="true" />
+              <span>Continuar pelo site</span>
+            </button>
+          </div>
+
+          <small className="access-choice__note">
+            Você também poderá instalar o aplicativo mais tarde pelo menu da Zenith.
+          </small>
+        </section>
+      </main>
+    )
+  }
 
   return (
     <main className="intro" data-system-bar-color="#f4f8ef">
-      <div className="intro-orb intro-orb--top" aria-hidden="true" />
-      <div className="intro-orb intro-orb--bottom" aria-hidden="true" />
-
       <div className="intro-shell">
         <header className="intro-brand" aria-label="Zenith">
           <div className="intro-brand__mark">

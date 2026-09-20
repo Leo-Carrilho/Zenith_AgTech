@@ -1,0 +1,619 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Profile/FarmEditForm.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useState = __vite__cjsImport1_react["useState"];
+import { motion } from "/node_modules/.vite/deps/framer-motion.js?v=bbb07f35";
+import { useLanguage } from "/src/contexts/LanguageContext.jsx";
+const FarmEditForm = ({ farmData, onSave, onCancel, saving }) => {
+  _s();
+  const { t } = useLanguage();
+  const [formData, setFormData] = useState({
+    name: farmData?.name || "",
+    area_total: farmData?.area_total || "",
+    plantacao: farmData?.plantacao || "",
+    municipio: farmData?.municipio || "",
+    uf: farmData?.uf || "",
+    bairro: farmData?.bairro || "",
+    cep: farmData?.cep || "",
+    data_aquisicao: farmData?.data_aquisicao || "",
+    telefone: "",
+    tipo_proprietario: farmData?.tipo_proprietario || "Proprietário"
+  });
+  const [errors, setErrors] = useState({});
+  const [cepLoading, setCepLoading] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+  const buscarEnderecoPorCep = async (baseData = formData) => {
+    const cepLimpo = baseData.cep.replace(/\D/g, "");
+    if (cepLimpo.length !== 8) return baseData;
+    try {
+      setCepLoading(true);
+      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const data = await response.json();
+      if (data.erro) {
+        setErrors((prev) => ({ ...prev, cep: t("farm.postalNotFound") }));
+        return baseData;
+      }
+      const updatedData = {
+        ...baseData,
+        bairro: data.bairro || baseData.bairro,
+        municipio: data.localidade || baseData.municipio,
+        uf: data.uf || baseData.uf
+      };
+      setFormData(updatedData);
+      setErrors((prev) => ({
+        ...prev,
+        cep: "",
+        municipio: "",
+        uf: ""
+      }));
+      return updatedData;
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      setErrors((prev) => ({ ...prev, cep: t("farm.postalLookupError") }));
+      return baseData;
+    } finally {
+      setCepLoading(false);
+    }
+  };
+  const validateForm = (data = formData) => {
+    const newErrors = {};
+    if (!data.name.trim()) {
+      newErrors.name = t("farm.nameRequired");
+    }
+    if (!data.area_total) {
+      newErrors.area_total = t("farm.areaRequired");
+    } else if (isNaN(data.area_total) || parseFloat(data.area_total) <= 0) {
+      newErrors.area_total = t("farm.areaPositive");
+    }
+    if (!data.municipio.trim()) {
+      newErrors.municipio = t("farm.cityRequired");
+    }
+    if (!data.uf.trim()) {
+      newErrors.uf = t("farm.stateRequired");
+    } else if (data.uf.length > 2) {
+      newErrors.uf = t("farm.stateAbbreviation");
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updatedFormData = await buscarEnderecoPorCep(formData);
+    setFormData(updatedFormData);
+    if (validateForm(updatedFormData)) {
+      onSave(updatedFormData);
+    }
+  };
+  const ufList = [
+    "AC",
+    "AL",
+    "AP",
+    "AM",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MT",
+    "MS",
+    "MG",
+    "PA",
+    "PB",
+    "PR",
+    "PE",
+    "PI",
+    "RJ",
+    "RN",
+    "RS",
+    "RO",
+    "RR",
+    "SC",
+    "SP",
+    "SE",
+    "TO"
+  ];
+  const culturaList = [
+    "Soja",
+    "Milho",
+    "Café",
+    "Cana-de-açúcar",
+    "Algodão",
+    "Trigo",
+    "Arroz",
+    "Feijão",
+    "Pastagem",
+    "Eucalipto",
+    "Laranja",
+    "Outros"
+  ];
+  return /* @__PURE__ */ jsxDEV(
+    motion.div,
+    {
+      className: "profile-card farm-edit-card",
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: -20 },
+      children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "card-header", children: /* @__PURE__ */ jsxDEV("h3", { className: "personal-info-title", children: t("farm.edit") }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+          lineNumber: 131,
+          columnNumber: 9
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+          lineNumber: 130,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("form", { onSubmit: handleSubmit, children: /* @__PURE__ */ jsxDEV("div", { className: "form-fields", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "edit-form-actions", children: [
+            /* @__PURE__ */ jsxDEV("button", { type: "button", onClick: onCancel, className: "cancel-btn", children: t("common.cancel") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 138,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("button", { type: "submit", className: "save-btn", disabled: saving, children: saving ? t("common.saving") : t("common.save") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 142,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 137,
+            columnNumber: 12
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+            /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.nameField") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 149,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              "input",
+              {
+                type: "text",
+                name: "name",
+                value: formData.name,
+                onChange: handleChange,
+                className: `tech-input ${errors.name ? "error" : ""}`,
+                disabled: saving
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 150,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 148,
+            columnNumber: 11
+          }, this),
+          errors.name && /* @__PURE__ */ jsxDEV("span", { className: "error-message", children: errors.name }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 159,
+            columnNumber: 27
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-row-tech", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: [
+                t("farm.totalArea"),
+                " (ha)"
+              ] }, void 0, true, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 164,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "number",
+                  name: "area_total",
+                  value: formData.area_total,
+                  onChange: handleChange,
+                  className: `tech-input ${errors.area_total ? "error" : ""}`,
+                  step: "0.1",
+                  min: "0",
+                  disabled: saving
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 165,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 163,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.crop") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 178,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "select",
+                {
+                  name: "plantacao",
+                  value: formData.plantacao,
+                  onChange: handleChange,
+                  className: "tech-select",
+                  disabled: saving,
+                  children: [
+                    /* @__PURE__ */ jsxDEV("option", { value: "", children: t("common.select") }, void 0, false, {
+                      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                      lineNumber: 186,
+                      columnNumber: 17
+                    }, this),
+                    culturaList.map(
+                      (c) => /* @__PURE__ */ jsxDEV("option", { value: c, children: c }, c, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                        lineNumber: 188,
+                        columnNumber: 17
+                      }, this)
+                    )
+                  ]
+                },
+                void 0,
+                true,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 179,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 177,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 162,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-row-tech", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.city") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 197,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "text",
+                  name: "municipio",
+                  value: formData.municipio,
+                  onChange: handleChange,
+                  className: `tech-input ${errors.municipio ? "error" : ""}`,
+                  disabled: saving
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 198,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 196,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: "UF" }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 209,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "select",
+                {
+                  name: "uf",
+                  value: formData.uf,
+                  onChange: handleChange,
+                  className: `tech-select ${errors.uf ? "error" : ""}`,
+                  disabled: saving,
+                  children: [
+                    /* @__PURE__ */ jsxDEV("option", { value: "", children: t("common.select") }, void 0, false, {
+                      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                      lineNumber: 217,
+                      columnNumber: 17
+                    }, this),
+                    ufList.map(
+                      (uf) => /* @__PURE__ */ jsxDEV("option", { value: uf, children: uf }, uf, false, {
+                        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                        lineNumber: 219,
+                        columnNumber: 17
+                      }, this)
+                    )
+                  ]
+                },
+                void 0,
+                true,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 210,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 208,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 195,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-row-tech", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.neighborhood") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 228,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "text",
+                  name: "bairro",
+                  value: formData.bairro,
+                  onChange: handleChange,
+                  className: "tech-input",
+                  disabled: saving
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 229,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 227,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.postalCode") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 240,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "text",
+                  name: "cep",
+                  value: formData.cep,
+                  onChange: handleChange,
+                  onBlur: buscarEnderecoPorCep,
+                  className: "tech-input",
+                  disabled: saving || cepLoading
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 241,
+                  columnNumber: 15
+                },
+                this
+              ),
+              cepLoading && /* @__PURE__ */ jsxDEV("span", { className: "error-message", children: t("farm.searchingPostalCode") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 250,
+                columnNumber: 30
+              }, this),
+              errors.cep && /* @__PURE__ */ jsxDEV("span", { className: "error-message", children: errors.cep }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 251,
+                columnNumber: 30
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 239,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 226,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-row-tech", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("personal.phone") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 258,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "tel",
+                  name: "telefone",
+                  value: formData.telefone,
+                  onChange: handleChange,
+                  className: "tech-input",
+                  placeholder: farmData?.telefone_mascarado || t("farm.newPhone"),
+                  disabled: saving
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 259,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 257,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.acquisitionDate") }, void 0, false, {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 271,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  type: "date",
+                  name: "data_aquisicao",
+                  value: formData.data_aquisicao,
+                  onChange: handleChange,
+                  className: "tech-input",
+                  disabled: saving
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                  lineNumber: 272,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 270,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 256,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "input-group", children: [
+            /* @__PURE__ */ jsxDEV("label", { className: "input-label", children: t("farm.ownerType") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+              lineNumber: 285,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              "select",
+              {
+                name: "tipo_proprietario",
+                value: formData.tipo_proprietario,
+                onChange: handleChange,
+                className: "tech-select",
+                disabled: saving,
+                children: [
+                  /* @__PURE__ */ jsxDEV("option", { value: "Proprietário", children: t("farm.owner") }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                    lineNumber: 293,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "Arrendatário", children: t("farm.tenant") }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                    lineNumber: 294,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "Parceiro", children: t("farm.partner") }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                    lineNumber: 295,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "Comodatário", children: t("farm.borrower") }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                    lineNumber: 296,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "Outros", children: t("farm.others") }, void 0, false, {
+                    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                    lineNumber: 297,
+                    columnNumber: 15
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+                lineNumber: 286,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+            lineNumber: 284,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+          lineNumber: 135,
+          columnNumber: 9
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+          lineNumber: 134,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx",
+      lineNumber: 123,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(FarmEditForm, "mH2/kr60grqwpg1srdO/kYp8++s=", false, function() {
+  return [useLanguage];
+});
+_c = FarmEditForm;
+export default FarmEditForm;
+var _c;
+$RefreshReg$(_c, "FarmEditForm");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Profile/FarmEditForm.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBQSxrQkFDOUMsdUJBQUMsWUFBTyxPQUFNLGdCQUFnQkEsWUFBRSxhQUFhLEtBQTdDO0FBQUE7QUFBQTtBQUFBO0FBQUEseUJBQStDO0FBQUEsa0JBQy9DLHVCQUFDLFlBQU8sT0FBTSxZQUFZQSxZQUFFLGNBQWMsS0FBMUM7QUFBQTtBQUFBO0FBQUE7QUFBQSx5QkFBNEM7QUFBQSxrQkFDNUMsdUJBQUMsWUFBTyxPQUFNLGVBQWVBLFlBQUUsZUFBZSxLQUE5QztBQUFBO0FBQUE7QUFBQTtBQUFBLHlCQUFnRDtBQUFBLGtCQUNoRCx1QkFBQyxZQUFPLE9BQU0sVUFBVUEsWUFBRSxhQUFhLEtBQXZDO0FBQUE7QUFBQTtBQUFBO0FBQUEseUJBQXlDO0FBQUE7QUFBQTtBQUFBLGNBWDNDO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxZQVlBO0FBQUEsZUFkRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQWVBO0FBQUEsYUFwS0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQXVLQSxLQXhLRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBeUtBO0FBQUE7QUFBQTtBQUFBLElBcExGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQXFMQTtBQUVKO0FBQUNELEdBNVNLTCxjQUFZO0FBQUEsVUFDRkQsV0FBVztBQUFBO0FBQUEsS0FEckJDO0FBOFNOLGVBQWVBO0FBQVksSUFBQTJEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbInVzZVN0YXRlIiwibW90aW9uIiwidXNlTGFuZ3VhZ2UiLCJGYXJtRWRpdEZvcm0iLCJmYXJtRGF0YSIsIm9uU2F2ZSIsIm9uQ2FuY2VsIiwic2F2aW5nIiwiX3MiLCJ0IiwiZm9ybURhdGEiLCJzZXRGb3JtRGF0YSIsIm5hbWUiLCJhcmVhX3RvdGFsIiwicGxhbnRhY2FvIiwibXVuaWNpcGlvIiwidWYiLCJiYWlycm8iLCJjZXAiLCJkYXRhX2FxdWlzaWNhbyIsInRlbGVmb25lIiwidGlwb19wcm9wcmlldGFyaW8iLCJlcnJvcnMiLCJzZXRFcnJvcnMiLCJjZXBMb2FkaW5nIiwic2V0Q2VwTG9hZGluZyIsImhhbmRsZUNoYW5nZSIsImUiLCJ2YWx1ZSIsInRhcmdldCIsInByZXYiLCJidXNjYXJFbmRlcmVjb1BvckNlcCIsImJhc2VEYXRhIiwiY2VwTGltcG8iLCJyZXBsYWNlIiwibGVuZ3RoIiwicmVzcG9uc2UiLCJmZXRjaCIsImRhdGEiLCJqc29uIiwiZXJybyIsInVwZGF0ZWREYXRhIiwibG9jYWxpZGFkZSIsImVycm9yIiwiY29uc29sZSIsInZhbGlkYXRlRm9ybSIsIm5ld0Vycm9ycyIsInRyaW0iLCJpc05hTiIsInBhcnNlRmxvYXQiLCJPYmplY3QiLCJrZXlzIiwiaGFuZGxlU3VibWl0IiwicHJldmVudERlZmF1bHQiLCJ1cGRhdGVkRm9ybURhdGEiLCJ1Zkxpc3QiLCJjdWx0dXJhTGlzdCIsIm9wYWNpdHkiLCJ5IiwibWFwIiwiYyIsInRlbGVmb25lX21hc2NhcmFkbyIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkZhcm1FZGl0Rm9ybS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiLy8gY29tcG9uZW50cy9BcHAvUHJvZmlsZS9GYXJtRWRpdEZvcm0uanN4XG5pbXBvcnQgeyB1c2VTdGF0ZSB9IGZyb20gXCJyZWFjdFwiXG5pbXBvcnQgeyBtb3Rpb24gfSBmcm9tIFwiZnJhbWVyLW1vdGlvblwiXG5pbXBvcnQgeyB1c2VMYW5ndWFnZSB9IGZyb20gXCIuLi8uLi8uLi9jb250ZXh0cy9MYW5ndWFnZUNvbnRleHRcIlxuXG5jb25zdCBGYXJtRWRpdEZvcm0gPSAoeyBmYXJtRGF0YSwgb25TYXZlLCBvbkNhbmNlbCwgc2F2aW5nIH0pID0+IHtcbiAgY29uc3QgeyB0IH0gPSB1c2VMYW5ndWFnZSgpXG4gIGNvbnN0IFtmb3JtRGF0YSwgc2V0Rm9ybURhdGFdID0gdXNlU3RhdGUoe1xuICAgIG5hbWU6IGZhcm1EYXRhPy5uYW1lIHx8IFwiXCIsXG4gICAgYXJlYV90b3RhbDogZmFybURhdGE/LmFyZWFfdG90YWwgfHwgXCJcIixcbiAgICBwbGFudGFjYW86IGZhcm1EYXRhPy5wbGFudGFjYW8gfHwgXCJcIixcbiAgICBtdW5pY2lwaW86IGZhcm1EYXRhPy5tdW5pY2lwaW8gfHwgXCJcIixcbiAgICB1ZjogZmFybURhdGE/LnVmIHx8IFwiXCIsXG4gICAgYmFpcnJvOiBmYXJtRGF0YT8uYmFpcnJvIHx8IFwiXCIsXG4gICAgY2VwOiBmYXJtRGF0YT8uY2VwIHx8IFwiXCIsXG4gICAgZGF0YV9hcXVpc2ljYW86IGZhcm1EYXRhPy5kYXRhX2FxdWlzaWNhbyB8fCBcIlwiLFxuICAgIHRlbGVmb25lOiBcIlwiLFxuICAgIHRpcG9fcHJvcHJpZXRhcmlvOiBmYXJtRGF0YT8udGlwb19wcm9wcmlldGFyaW8gfHwgXCJQcm9wcmlldMOhcmlvXCJcbiAgfSlcblxuICBjb25zdCBbZXJyb3JzLCBzZXRFcnJvcnNdID0gdXNlU3RhdGUoe30pXG4gIGNvbnN0IFtjZXBMb2FkaW5nLCBzZXRDZXBMb2FkaW5nXSA9IHVzZVN0YXRlKGZhbHNlKVxuXG4gIGNvbnN0IGhhbmRsZUNoYW5nZSA9IChlKSA9PiB7XG4gICAgY29uc3QgeyBuYW1lLCB2YWx1ZSB9ID0gZS50YXJnZXRcbiAgICBzZXRGb3JtRGF0YShwcmV2ID0+ICh7IC4uLnByZXYsIFtuYW1lXTogdmFsdWUgfSkpXG4gICAgaWYgKGVycm9yc1tuYW1lXSkge1xuICAgICAgc2V0RXJyb3JzKHByZXYgPT4gKHsgLi4ucHJldiwgW25hbWVdOiBcIlwiIH0pKVxuICAgIH1cbiAgfVxuXG4gIGNvbnN0IGJ1c2NhckVuZGVyZWNvUG9yQ2VwID0gYXN5bmMgKGJhc2VEYXRhID0gZm9ybURhdGEpID0+IHtcbiAgICBjb25zdCBjZXBMaW1wbyA9IGJhc2VEYXRhLmNlcC5yZXBsYWNlKC9cXEQvZywgXCJcIilcblxuICAgIGlmIChjZXBMaW1wby5sZW5ndGggIT09IDgpIHJldHVybiBiYXNlRGF0YVxuXG4gICAgdHJ5IHtcbiAgICAgIHNldENlcExvYWRpbmcodHJ1ZSlcbiAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgZmV0Y2goYGh0dHBzOi8vdmlhY2VwLmNvbS5ici93cy8ke2NlcExpbXBvfS9qc29uL2ApXG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuanNvbigpXG5cbiAgICAgIGlmIChkYXRhLmVycm8pIHtcbiAgICAgICAgc2V0RXJyb3JzKHByZXYgPT4gKHsgLi4ucHJldiwgY2VwOiB0KFwiZmFybS5wb3N0YWxOb3RGb3VuZFwiKSB9KSlcbiAgICAgICAgcmV0dXJuIGJhc2VEYXRhXG4gICAgICB9XG5cbiAgICAgIGNvbnN0IHVwZGF0ZWREYXRhID0ge1xuICAgICAgICAuLi5iYXNlRGF0YSxcbiAgICAgICAgYmFpcnJvOiBkYXRhLmJhaXJybyB8fCBiYXNlRGF0YS5iYWlycm8sXG4gICAgICAgIG11bmljaXBpbzogZGF0YS5sb2NhbGlkYWRlIHx8IGJhc2VEYXRhLm11bmljaXBpbyxcbiAgICAgICAgdWY6IGRhdGEudWYgfHwgYmFzZURhdGEudWZcbiAgICAgIH1cblxuICAgICAgc2V0Rm9ybURhdGEodXBkYXRlZERhdGEpXG5cbiAgICAgIHNldEVycm9ycyhwcmV2ID0+ICh7XG4gICAgICAgIC4uLnByZXYsXG4gICAgICAgIGNlcDogXCJcIixcbiAgICAgICAgbXVuaWNpcGlvOiBcIlwiLFxuICAgICAgICB1ZjogXCJcIlxuICAgICAgfSkpXG5cbiAgICAgIHJldHVybiB1cGRhdGVkRGF0YVxuICAgIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgICBjb25zb2xlLmVycm9yKFwiRXJybyBhbyBidXNjYXIgQ0VQOlwiLCBlcnJvcilcbiAgICAgIHNldEVycm9ycyhwcmV2ID0+ICh7IC4uLnByZXYsIGNlcDogdChcImZhcm0ucG9zdGFsTG9va3VwRXJyb3JcIikgfSkpXG4gICAgICByZXR1cm4gYmFzZURhdGFcbiAgICB9IGZpbmFsbHkge1xuICAgICAgc2V0Q2VwTG9hZGluZyhmYWxzZSlcbiAgICB9XG4gIH1cblxuICBjb25zdCB2YWxpZGF0ZUZvcm0gPSAoZGF0YSA9IGZvcm1EYXRhKSA9PiB7XG4gICAgY29uc3QgbmV3RXJyb3JzID0ge31cblxuICAgIGlmICghZGF0YS5uYW1lLnRyaW0oKSkge1xuICAgICAgbmV3RXJyb3JzLm5hbWUgPSB0KFwiZmFybS5uYW1lUmVxdWlyZWRcIilcbiAgICB9XG5cbiAgICBpZiAoIWRhdGEuYXJlYV90b3RhbCkge1xuICAgICAgbmV3RXJyb3JzLmFyZWFfdG90YWwgPSB0KFwiZmFybS5hcmVhUmVxdWlyZWRcIilcbiAgICB9IGVsc2UgaWYgKGlzTmFOKGRhdGEuYXJlYV90b3RhbCkgfHwgcGFyc2VGbG9hdChkYXRhLmFyZWFfdG90YWwpIDw9IDApIHtcbiAgICAgIG5ld0Vycm9ycy5hcmVhX3RvdGFsID0gdChcImZhcm0uYXJlYVBvc2l0aXZlXCIpXG4gICAgfVxuXG4gICAgaWYgKCFkYXRhLm11bmljaXBpby50cmltKCkpIHtcbiAgICAgIG5ld0Vycm9ycy5tdW5pY2lwaW8gPSB0KFwiZmFybS5jaXR5UmVxdWlyZWRcIilcbiAgICB9XG5cbiAgICBpZiAoIWRhdGEudWYudHJpbSgpKSB7XG4gICAgICBuZXdFcnJvcnMudWYgPSB0KFwiZmFybS5zdGF0ZVJlcXVpcmVkXCIpXG4gICAgfSBlbHNlIGlmIChkYXRhLnVmLmxlbmd0aCA+IDIpIHtcbiAgICAgIG5ld0Vycm9ycy51ZiA9IHQoXCJmYXJtLnN0YXRlQWJicmV2aWF0aW9uXCIpXG4gICAgfVxuXG4gICAgc2V0RXJyb3JzKG5ld0Vycm9ycylcbiAgICByZXR1cm4gT2JqZWN0LmtleXMobmV3RXJyb3JzKS5sZW5ndGggPT09IDBcbiAgfVxuXG4gIGNvbnN0IGhhbmRsZVN1Ym1pdCA9IGFzeW5jIChlKSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgY29uc3QgdXBkYXRlZEZvcm1EYXRhID0gYXdhaXQgYnVzY2FyRW5kZXJlY29Qb3JDZXAoZm9ybURhdGEpXG4gICAgc2V0Rm9ybURhdGEodXBkYXRlZEZvcm1EYXRhKVxuXG4gICAgaWYgKHZhbGlkYXRlRm9ybSh1cGRhdGVkRm9ybURhdGEpKSB7XG4gICAgICBvblNhdmUodXBkYXRlZEZvcm1EYXRhKVxuICAgIH1cbiAgfVxuXG4gIGNvbnN0IHVmTGlzdCA9IFtcbiAgICBcIkFDXCIsXCJBTFwiLFwiQVBcIixcIkFNXCIsXCJCQVwiLFwiQ0VcIixcIkRGXCIsXCJFU1wiLFwiR09cIixcIk1BXCIsXG4gICAgXCJNVFwiLFwiTVNcIixcIk1HXCIsXCJQQVwiLFwiUEJcIixcIlBSXCIsXCJQRVwiLFwiUElcIixcIlJKXCIsXCJSTlwiLFxuICAgIFwiUlNcIixcIlJPXCIsXCJSUlwiLFwiU0NcIixcIlNQXCIsXCJTRVwiLFwiVE9cIlxuICBdXG5cbiAgY29uc3QgY3VsdHVyYUxpc3QgPSBbXG4gICAgXCJTb2phXCIsXCJNaWxob1wiLFwiQ2Fmw6lcIixcIkNhbmEtZGUtYcOnw7pjYXJcIixcIkFsZ29kw6NvXCIsXG4gICAgXCJUcmlnb1wiLFwiQXJyb3pcIixcIkZlaWrDo29cIixcIlBhc3RhZ2VtXCIsXCJFdWNhbGlwdG9cIixcbiAgICBcIkxhcmFuamFcIixcIk91dHJvc1wiXG4gIF1cblxuICByZXR1cm4gKFxuICAgIDxtb3Rpb24uZGl2IFxuICAgICAgY2xhc3NOYW1lPVwicHJvZmlsZS1jYXJkIGZhcm0tZWRpdC1jYXJkXCJcbiAgICAgIGluaXRpYWw9e3sgb3BhY2l0eTogMCwgeTogMjAgfX1cbiAgICAgIGFuaW1hdGU9e3sgb3BhY2l0eTogMSwgeTogMCB9fVxuICAgICAgZXhpdD17eyBvcGFjaXR5OiAwLCB5OiAtMjAgfX1cbiAgICA+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY2FyZC1oZWFkZXJcIj5cbiAgICAgICAgPGgzIGNsYXNzTmFtZT1cInBlcnNvbmFsLWluZm8tdGl0bGVcIj57dChcImZhcm0uZWRpdFwiKX08L2gzPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxmb3JtIG9uU3VibWl0PXtoYW5kbGVTdWJtaXR9PlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZvcm0tZmllbGRzXCI+XG5cbiAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlZGl0LWZvcm0tYWN0aW9uc1wiPlxuICAgICAgICAgICAgPGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgb25DbGljaz17b25DYW5jZWx9IGNsYXNzTmFtZT1cImNhbmNlbC1idG5cIj5cbiAgICAgICAgICAgICAge3QoXCJjb21tb24uY2FuY2VsXCIpfVxuICAgICAgICAgICAgPC9idXR0b24+XG5cbiAgICAgICAgICAgIDxidXR0b24gdHlwZT1cInN1Ym1pdFwiIGNsYXNzTmFtZT1cInNhdmUtYnRuXCIgZGlzYWJsZWQ9e3NhdmluZ30+XG4gICAgICAgICAgICAgIHtzYXZpbmcgPyB0KFwiY29tbW9uLnNhdmluZ1wiKSA6IHQoXCJjb21tb24uc2F2ZVwiKX1cbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIE5vbWUgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImlucHV0LWxhYmVsXCI+e3QoXCJmYXJtLm5hbWVGaWVsZFwiKX08L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgbmFtZT1cIm5hbWVcIlxuICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEubmFtZX1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPXtgdGVjaC1pbnB1dCAke2Vycm9ycy5uYW1lID8gJ2Vycm9yJyA6ICcnfWB9XG4gICAgICAgICAgICAgIGRpc2FibGVkPXtzYXZpbmd9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIHtlcnJvcnMubmFtZSAmJiA8c3BhbiBjbGFzc05hbWU9XCJlcnJvci1tZXNzYWdlXCI+e2Vycm9ycy5uYW1lfTwvc3Bhbj59XG5cbiAgICAgICAgICB7Lyogw4FyZWEgKyBDdWx0dXJhICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtcm93LXRlY2hcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtZ3JvdXBcIj5cbiAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImlucHV0LWxhYmVsXCI+e3QoXCJmYXJtLnRvdGFsQXJlYVwiKX0gKGhhKTwvbGFiZWw+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICAgIG5hbWU9XCJhcmVhX3RvdGFsXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuYXJlYV90b3RhbH1cbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT17YHRlY2gtaW5wdXQgJHtlcnJvcnMuYXJlYV90b3RhbCA/ICdlcnJvcicgOiAnJ31gfVxuICAgICAgICAgICAgICAgIHN0ZXA9XCIwLjFcIlxuICAgICAgICAgICAgICAgIG1pbj1cIjBcIlxuICAgICAgICAgICAgICAgIGRpc2FibGVkPXtzYXZpbmd9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiaW5wdXQtbGFiZWxcIj57dChcImZhcm0uY3JvcFwiKX08L2xhYmVsPlxuICAgICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgICAgbmFtZT1cInBsYW50YWNhb1wiXG4gICAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLnBsYW50YWNhb31cbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInRlY2gtc2VsZWN0XCJcbiAgICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cIlwiPnt0KFwiY29tbW9uLnNlbGVjdFwiKX08L29wdGlvbj5cbiAgICAgICAgICAgICAgICB7Y3VsdHVyYUxpc3QubWFwKGMgPT4gKFxuICAgICAgICAgICAgICAgICAgPG9wdGlvbiBrZXk9e2N9IHZhbHVlPXtjfT57Y308L29wdGlvbj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9zZWxlY3Q+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBMb2NhbGl6YcOnw6NvICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtcm93LXRlY2hcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtZ3JvdXBcIj5cbiAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImlucHV0LWxhYmVsXCI+e3QoXCJmYXJtLmNpdHlcIil9PC9sYWJlbD5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICAgIG5hbWU9XCJtdW5pY2lwaW9cIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5tdW5pY2lwaW99XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2B0ZWNoLWlucHV0ICR7ZXJyb3JzLm11bmljaXBpbyA/ICdlcnJvcicgOiAnJ31gfVxuICAgICAgICAgICAgICAgIGRpc2FibGVkPXtzYXZpbmd9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiaW5wdXQtbGFiZWxcIj5VRjwvbGFiZWw+XG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBuYW1lPVwidWZcIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS51Zn1cbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT17YHRlY2gtc2VsZWN0ICR7ZXJyb3JzLnVmID8gJ2Vycm9yJyA6ICcnfWB9XG4gICAgICAgICAgICAgICAgZGlzYWJsZWQ9e3NhdmluZ31cbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJcIj57dChcImNvbW1vbi5zZWxlY3RcIil9PC9vcHRpb24+XG4gICAgICAgICAgICAgICAge3VmTGlzdC5tYXAodWYgPT4gKFxuICAgICAgICAgICAgICAgICAgPG9wdGlvbiBrZXk9e3VmfSB2YWx1ZT17dWZ9Pnt1Zn08L29wdGlvbj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9zZWxlY3Q+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBCYWlycm8gKyBDRVAgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1yb3ctdGVjaFwiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpbnB1dC1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiaW5wdXQtbGFiZWxcIj57dChcImZhcm0ubmVpZ2hib3Job29kXCIpfTwvbGFiZWw+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgICBuYW1lPVwiYmFpcnJvXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuYmFpcnJvfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidGVjaC1pbnB1dFwiXG4gICAgICAgICAgICAgICAgZGlzYWJsZWQ9e3NhdmluZ31cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJpbnB1dC1sYWJlbFwiPnt0KFwiZmFybS5wb3N0YWxDb2RlXCIpfTwvbGFiZWw+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgICBuYW1lPVwiY2VwXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuY2VwfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgICAgb25CbHVyPXtidXNjYXJFbmRlcmVjb1BvckNlcH1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0ZWNoLWlucHV0XCJcbiAgICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nIHx8IGNlcExvYWRpbmd9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICAgIHtjZXBMb2FkaW5nICYmIDxzcGFuIGNsYXNzTmFtZT1cImVycm9yLW1lc3NhZ2VcIj57dChcImZhcm0uc2VhcmNoaW5nUG9zdGFsQ29kZVwiKX08L3NwYW4+fVxuICAgICAgICAgICAgICB7ZXJyb3JzLmNlcCAmJiA8c3BhbiBjbGFzc05hbWU9XCJlcnJvci1tZXNzYWdlXCI+e2Vycm9ycy5jZXB9PC9zcGFuPn1cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIFRlbGVmb25lICsgRGF0YSAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LXJvdy10ZWNoXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJpbnB1dC1sYWJlbFwiPnt0KFwicGVyc29uYWwucGhvbmVcIil9PC9sYWJlbD5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgdHlwZT1cInRlbFwiXG4gICAgICAgICAgICAgICAgbmFtZT1cInRlbGVmb25lXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEudGVsZWZvbmV9XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0ZWNoLWlucHV0XCJcbiAgICAgICAgICAgICAgICBwbGFjZWhvbGRlcj17ZmFybURhdGE/LnRlbGVmb25lX21hc2NhcmFkbyB8fCB0KFwiZmFybS5uZXdQaG9uZVwiKX1cbiAgICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaW5wdXQtZ3JvdXBcIj5cbiAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImlucHV0LWxhYmVsXCI+e3QoXCJmYXJtLmFjcXVpc2l0aW9uRGF0ZVwiKX08L2xhYmVsPlxuICAgICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgICB0eXBlPVwiZGF0ZVwiXG4gICAgICAgICAgICAgICAgbmFtZT1cImRhdGFfYXF1aXNpY2FvXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuZGF0YV9hcXVpc2ljYW99XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0ZWNoLWlucHV0XCJcbiAgICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogVGlwbyAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImlucHV0LWdyb3VwXCI+XG4gICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiaW5wdXQtbGFiZWxcIj57dChcImZhcm0ub3duZXJUeXBlXCIpfTwvbGFiZWw+XG4gICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgIG5hbWU9XCJ0aXBvX3Byb3ByaWV0YXJpb1wiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS50aXBvX3Byb3ByaWV0YXJpb31cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidGVjaC1zZWxlY3RcIlxuICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwiUHJvcHJpZXTDoXJpb1wiPnt0KFwiZmFybS5vd25lclwiKX08L29wdGlvbj5cbiAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cIkFycmVuZGF0w6FyaW9cIj57dChcImZhcm0udGVuYW50XCIpfTwvb3B0aW9uPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwiUGFyY2Vpcm9cIj57dChcImZhcm0ucGFydG5lclwiKX08L29wdGlvbj5cbiAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cIkNvbW9kYXTDoXJpb1wiPnt0KFwiZmFybS5ib3Jyb3dlclwiKX08L29wdGlvbj5cbiAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cIk91dHJvc1wiPnt0KFwiZmFybS5vdGhlcnNcIil9PC9vcHRpb24+XG4gICAgICAgICAgICA8L3NlbGVjdD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgIFxuXG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9mb3JtPlxuICAgIDwvbW90aW9uLmRpdj5cbiAgKVxufVxuXG5leHBvcnQgZGVmYXVsdCBGYXJtRWRpdEZvcm1cbiJdLCJmaWxlIjoiQzovVXNlcnMvc2FtdWUvRG93bmxvYWRzL1Rlc3RlX0ludGVncmEtb19BUElfU2l0ZS1tYWluL1Rlc3RlX0ludGVncmEtb19BUElfU2l0ZS1tYWluL3NyYy9jb21wb25lbnRzL0FwcC9Qcm9maWxlL0Zhcm1FZGl0Rm9ybS5qc3gifQ==

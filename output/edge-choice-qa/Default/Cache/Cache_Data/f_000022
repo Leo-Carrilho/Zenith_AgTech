@@ -1,0 +1,399 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/App/Home/ActivitiesList.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=07886c79"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=6258fd2e";
+import __vite__cjsImport2_react from "/node_modules/.vite/deps/react.js?v=07886c79"; const useEffect = __vite__cjsImport2_react["useEffect"]; const useState = __vite__cjsImport2_react["useState"];
+import DroneIcon from "/src/components/App/Global/DroneIcon.jsx";
+import { useLanguage } from "/src/contexts/LanguageContext.jsx";
+export default function ActivitiesList({ hasFarm, onViewAll, onRegister }) {
+  _s();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const [recentDiagnostics, setRecentDiagnostics] = useState([]);
+  useEffect(() => {
+    const saved = localStorage.getItem("diagnosticHistory");
+    if (saved) {
+      const history = JSON.parse(saved);
+      setRecentDiagnostics(history.slice(0, 3));
+    }
+  }, []);
+  if (!hasFarm) {
+    return /* @__PURE__ */ jsxDEV("div", { className: "empty-state glass", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "empty-icon", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "inbox" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 26,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "empty-icon-ring" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 27,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 25,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("h3", { children: t("activities.none") }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 29,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { children: t("activities.noneDescription") }, void 0, false, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 30,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("button", { className: "empty-action-btn", onClick: onRegister, children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "add" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 32,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { children: t("activities.registerFarm") }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 33,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "btn-glow" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 34,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 31,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+      lineNumber: 24,
+      columnNumber: 7
+    }, this);
+  }
+  const goToActivities = () => {
+    sessionStorage.setItem("zenithShowWhiteLoaderOnce", "true");
+    navigate("/explore", { state: { activeTab: "atividades" } });
+  };
+  const goToHistory = () => {
+    sessionStorage.setItem("zenithShowWhiteLoaderOnce", "true");
+    navigate("/explore", { state: { activeTab: "diagnostico", showHistory: true } });
+  };
+  const goToMap = () => {
+    sessionStorage.setItem("zenithShowWhiteLoaderOnce", "true");
+    navigate("/explore", { state: { activeTab: "mapa" } });
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "activities-list", children: [
+    recentDiagnostics.length > 0 && /* @__PURE__ */ jsxDEV("div", { className: "activity-card", onClick: goToActivities, children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-icon atividades", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "assignment" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 63,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "icon-pulse" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 64,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 62,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-content", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-header", children: [
+          /* @__PURE__ */ jsxDEV("h4", { className: "activity-title", children: t("activities.field") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 68,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "activity-time", children: t("activities.manageTasks") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 69,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 67,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "activity-description", children: t("activities.fieldDescription") }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 71,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-metrics", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "checklist" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 76,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.pendingTasks") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 77,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 75,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "chevron_right" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 80,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.clickAccess") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 81,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 79,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 74,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 66,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+      lineNumber: 61,
+      columnNumber: 7
+    }, this),
+    recentDiagnostics.length > 1 && /* @__PURE__ */ jsxDEV("div", { className: "activity-card", onClick: goToHistory, children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-icon diagnosticos", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "history" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 92,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "icon-pulse" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 93,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 91,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-content", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-header", children: [
+          /* @__PURE__ */ jsxDEV("h4", { className: "activity-title", children: t("activities.recentDiagnostics") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 97,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "activity-time", children: [
+            t("home.viewAll"),
+            " →"
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 98,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 96,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "activity-description", children: recentDiagnostics.slice(0, 2).map(
+          (diag, idx) => /* @__PURE__ */ jsxDEV("span", { children: [
+            diag.disease,
+            " (",
+            diag.confidence,
+            "%)",
+            idx < recentDiagnostics.slice(0, 2).length - 1 && " • "
+          ] }, idx, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 102,
+            columnNumber: 13
+          }, this)
+        ) }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 100,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-metrics", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "inventory" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 110,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.savedDiagnostics", { count: recentDiagnostics.length }) }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 111,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 109,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "trending_up" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 114,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.clickViewAll") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 115,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 113,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 108,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 95,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+      lineNumber: 90,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "activity-card", onClick: goToMap, children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-icon mapeamento", children: [
+        /* @__PURE__ */ jsxDEV(DroneIcon, { className: "activity-drone-icon" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 125,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "icon-pulse" }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 126,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 124,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "activity-content", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-header", children: [
+          /* @__PURE__ */ jsxDEV("h4", { className: "activity-title", children: t("activities.mappingFlight") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 130,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "activity-time", children: t("activities.twoHoursAgo") }, void 0, false, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 131,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 129,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "activity-description", children: t("activities.mappingDescription") }, void 0, false, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 133,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "activity-metrics", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "map" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 136,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.viewMap") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 137,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 135,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "metric", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-symbols-outlined", children: "chevron_right" }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 140,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: t("activities.clickAccess") }, void 0, false, {
+              fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+              lineNumber: 141,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+            lineNumber: 139,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+          lineNumber: 134,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+        lineNumber: 128,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+      lineNumber: 123,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx",
+    lineNumber: 58,
+    columnNumber: 5
+  }, this);
+}
+_s(ActivitiesList, "yybZEhrEWr+0WLUEJHgo7agy3WM=", false, function() {
+  return [useNavigate, useLanguage];
+});
+_c = ActivitiesList;
+var _c;
+$RefreshReg$(_c, "ActivitiesList");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/samue/Downloads/Teste_Integra-o_API_Site-main/Teste_Integra-o_API_Site-main/src/components/App/Home/ActivitiesList.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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T0FBRSxXQUFVLHdCQUF3QkEsWUFBRSwrQkFBK0IsS0FBdEU7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUF3RTtBQUFBLFFBQ3hFLHVCQUFDLFNBQUksV0FBVSxvQkFDYjtBQUFBLGlDQUFDLFNBQUksV0FBVSxVQUNiO0FBQUEsbUNBQUMsVUFBSyxXQUFVLDZCQUE0QixtQkFBNUM7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFBK0M7QUFBQSxZQUMvQyx1QkFBQyxVQUFNQSxZQUFFLG9CQUFvQixLQUE3QjtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUErQjtBQUFBLGVBRmpDO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBR0E7QUFBQSxVQUNBLHVCQUFDLFNBQUksV0FBVSxVQUNiO0FBQUEsbUNBQUMsVUFBSyxXQUFVLDZCQUE0Qiw2QkFBNUM7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFBeUQ7QUFBQSxZQUN6RCx1QkFBQyxVQUFNQSxZQUFFLHdCQUF3QixLQUFqQztBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUFtQztBQUFBLGVBRnJDO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBR0E7QUFBQSxhQVJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFTQTtBQUFBLFdBZkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQWdCQTtBQUFBLFNBckJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FzQkE7QUFBQSxPQXZGRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBd0ZBO0FBRUo7QUFBQ0YsR0E3SXVCSixnQkFBYztBQUFBLFVBQ25CTCxhQUNISSxXQUFXO0FBQUE7QUFBQSxLQUZIQztBQUFjLElBQUErQjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJ1c2VOYXZpZ2F0ZSIsInVzZUVmZmVjdCIsInVzZVN0YXRlIiwiRHJvbmVJY29uIiwidXNlTGFuZ3VhZ2UiLCJBY3Rpdml0aWVzTGlzdCIsImhhc0Zhcm0iLCJvblZpZXdBbGwiLCJvblJlZ2lzdGVyIiwiX3MiLCJuYXZpZ2F0ZSIsInQiLCJyZWNlbnREaWFnbm9zdGljcyIsInNldFJlY2VudERpYWdub3N0aWNzIiwic2F2ZWQiLCJsb2NhbFN0b3JhZ2UiLCJnZXRJdGVtIiwiaGlzdG9yeSIsIkpTT04iLCJwYXJzZSIsInNsaWNlIiwiZ29Ub0FjdGl2aXRpZXMiLCJzZXNzaW9uU3RvcmFnZSIsInNldEl0ZW0iLCJzdGF0ZSIsImFjdGl2ZVRhYiIsImdvVG9IaXN0b3J5Iiwic2hvd0hpc3RvcnkiLCJnb1RvTWFwIiwibGVuZ3RoIiwibWFwIiwiZGlhZyIsImlkeCIsImRpc2Vhc2UiLCJjb25maWRlbmNlIiwiY291bnQiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJBY3Rpdml0aWVzTGlzdC5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiLy8gY29tcG9uZW50cy9Ib21lL0FjdGl2aXRpZXNMaXN0LmpzeFxuaW1wb3J0IHsgdXNlTmF2aWdhdGUgfSBmcm9tIFwicmVhY3Qtcm91dGVyLWRvbVwiXG5pbXBvcnQgeyB1c2VFZmZlY3QsIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCJcbmltcG9ydCBEcm9uZUljb24gZnJvbSBcIi4uL0dsb2JhbC9Ecm9uZUljb25cIlxuaW1wb3J0IHsgdXNlTGFuZ3VhZ2UgfSBmcm9tIFwiLi4vLi4vLi4vY29udGV4dHMvTGFuZ3VhZ2VDb250ZXh0XCJcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQWN0aXZpdGllc0xpc3QoeyBoYXNGYXJtLCBvblZpZXdBbGwsIG9uUmVnaXN0ZXIgfSkge1xuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKClcbiAgY29uc3QgeyB0IH0gPSB1c2VMYW5ndWFnZSgpXG4gIGNvbnN0IFtyZWNlbnREaWFnbm9zdGljcywgc2V0UmVjZW50RGlhZ25vc3RpY3NdID0gdXNlU3RhdGUoW10pXG5cbiAgLy8gQ2FycmVnYXIgaGlzdMOzcmljbyBkZSBkaWFnbsOzc3RpY29zXG4gIHVzZUVmZmVjdCgoKSA9PiB7XG4gICAgY29uc3Qgc2F2ZWQgPSBsb2NhbFN0b3JhZ2UuZ2V0SXRlbShcImRpYWdub3N0aWNIaXN0b3J5XCIpXG4gICAgaWYgKHNhdmVkKSB7XG4gICAgICBjb25zdCBoaXN0b3J5ID0gSlNPTi5wYXJzZShzYXZlZClcbiAgICAgIC8vIFBlZ2FyIG9zIDMgZGlhZ27Ds3N0aWNvcyBtYWlzIHJlY2VudGVzXG4gICAgICBzZXRSZWNlbnREaWFnbm9zdGljcyhoaXN0b3J5LnNsaWNlKDAsIDMpKVxuICAgIH1cbiAgfSwgW10pXG5cbiAgaWYgKCFoYXNGYXJtKSB7XG4gICAgcmV0dXJuIChcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1wdHktc3RhdGUgZ2xhc3NcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbXB0eS1pY29uXCI+XG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmluYm94PC9zcGFuPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1wdHktaWNvbi1yaW5nXCI+PC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8aDM+e3QoXCJhY3Rpdml0aWVzLm5vbmVcIil9PC9oMz5cbiAgICAgICAgPHA+e3QoXCJhY3Rpdml0aWVzLm5vbmVEZXNjcmlwdGlvblwiKX08L3A+XG4gICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiZW1wdHktYWN0aW9uLWJ0blwiIG9uQ2xpY2s9e29uUmVnaXN0ZXJ9PlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIj5hZGQ8L3NwYW4+XG4gICAgICAgICAgPHNwYW4+e3QoXCJhY3Rpdml0aWVzLnJlZ2lzdGVyRmFybVwiKX08L3NwYW4+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJidG4tZ2xvd1wiPjwvZGl2PlxuICAgICAgICA8L2J1dHRvbj5cbiAgICAgIDwvZGl2PlxuICAgIClcbiAgfVxuXG4gIC8vIEZ1bsOnw6NvIHBhcmEgbmF2ZWdhciBwYXJhIGEgcMOhZ2luYSBkZSBhdGl2aWRhZGVzXG4gIGNvbnN0IGdvVG9BY3Rpdml0aWVzID0gKCkgPT4ge1xuICAgIHNlc3Npb25TdG9yYWdlLnNldEl0ZW0oXCJ6ZW5pdGhTaG93V2hpdGVMb2FkZXJPbmNlXCIsIFwidHJ1ZVwiKVxuICAgIG5hdmlnYXRlKFwiL2V4cGxvcmVcIiwgeyBzdGF0ZTogeyBhY3RpdmVUYWI6IFwiYXRpdmlkYWRlc1wiIH0gfSlcbiAgfVxuXG4gIC8vIEZ1bsOnw6NvIHBhcmEgbmF2ZWdhciBwYXJhIG8gaGlzdMOzcmljbyBjb21wbGV0byBkZSBkaWFnbsOzc3RpY29zXG4gIGNvbnN0IGdvVG9IaXN0b3J5ID0gKCkgPT4ge1xuICAgIHNlc3Npb25TdG9yYWdlLnNldEl0ZW0oXCJ6ZW5pdGhTaG93V2hpdGVMb2FkZXJPbmNlXCIsIFwidHJ1ZVwiKVxuICAgIG5hdmlnYXRlKFwiL2V4cGxvcmVcIiwgeyBzdGF0ZTogeyBhY3RpdmVUYWI6IFwiZGlhZ25vc3RpY29cIiwgc2hvd0hpc3Rvcnk6IHRydWUgfSB9KVxuICB9XG5cbiAgY29uc3QgZ29Ub01hcCA9ICgpID0+IHtcbiAgICBzZXNzaW9uU3RvcmFnZS5zZXRJdGVtKFwiemVuaXRoU2hvd1doaXRlTG9hZGVyT25jZVwiLCBcInRydWVcIilcbiAgICBuYXZpZ2F0ZShcIi9leHBsb3JlXCIsIHsgc3RhdGU6IHsgYWN0aXZlVGFiOiBcIm1hcGFcIiB9IH0pXG4gIH1cblxuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPVwiYWN0aXZpdGllcy1saXN0XCI+XG4gICAgICB7Lyogw5psdGltbyBEaWFnbsOzc3RpY28gLSBBZ29yYSB2YWkgcGFyYSBBdGl2aWRhZGVzICovfVxuICAgICAge3JlY2VudERpYWdub3N0aWNzLmxlbmd0aCA+IDAgJiYgKFxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFjdGl2aXR5LWNhcmRcIiBvbkNsaWNrPXtnb1RvQWN0aXZpdGllc30+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1pY29uIGF0aXZpZGFkZXNcIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIj5hc3NpZ25tZW50PC9zcGFuPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJpY29uLXB1bHNlXCI+PC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1jb250ZW50XCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFjdGl2aXR5LWhlYWRlclwiPlxuICAgICAgICAgICAgICA8aDQgY2xhc3NOYW1lPVwiYWN0aXZpdHktdGl0bGVcIj57dChcImFjdGl2aXRpZXMuZmllbGRcIil9PC9oND5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYWN0aXZpdHktdGltZVwiPnt0KFwiYWN0aXZpdGllcy5tYW5hZ2VUYXNrc1wiKX08L3NwYW4+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImFjdGl2aXR5LWRlc2NyaXB0aW9uXCI+XG4gICAgICAgICAgICAgIHt0KFwiYWN0aXZpdGllcy5maWVsZERlc2NyaXB0aW9uXCIpfVxuICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1tZXRyaWNzXCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWV0cmljXCI+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmNoZWNrbGlzdDwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8c3Bhbj57dChcImFjdGl2aXRpZXMucGVuZGluZ1Rhc2tzXCIpfTwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWV0cmljXCI+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmNoZXZyb25fcmlnaHQ8L3NwYW4+XG4gICAgICAgICAgICAgICAgPHNwYW4+e3QoXCJhY3Rpdml0aWVzLmNsaWNrQWNjZXNzXCIpfTwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICApfVxuXG4gICAgICB7LyogTWFpcyBEaWFnbsOzc3RpY29zIC0gVmFpIHBhcmEgbyBoaXN0w7NyaWNvICovfVxuICAgICAge3JlY2VudERpYWdub3N0aWNzLmxlbmd0aCA+IDEgJiYgKFxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFjdGl2aXR5LWNhcmRcIiBvbkNsaWNrPXtnb1RvSGlzdG9yeX0+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1pY29uIGRpYWdub3N0aWNvc1wiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmhpc3Rvcnk8L3NwYW4+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImljb24tcHVsc2VcIj48L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFjdGl2aXR5LWNvbnRlbnRcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWN0aXZpdHktaGVhZGVyXCI+XG4gICAgICAgICAgICAgIDxoNCBjbGFzc05hbWU9XCJhY3Rpdml0eS10aXRsZVwiPnt0KFwiYWN0aXZpdGllcy5yZWNlbnREaWFnbm9zdGljc1wiKX08L2g0PlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJhY3Rpdml0eS10aW1lXCI+e3QoXCJob21lLnZpZXdBbGxcIil9IOKGkjwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiYWN0aXZpdHktZGVzY3JpcHRpb25cIj5cbiAgICAgICAgICAgICAge3JlY2VudERpYWdub3N0aWNzLnNsaWNlKDAsIDIpLm1hcCgoZGlhZywgaWR4KSA9PiAoXG4gICAgICAgICAgICAgICAgPHNwYW4ga2V5PXtpZHh9PlxuICAgICAgICAgICAgICAgICAge2RpYWcuZGlzZWFzZX0gKHtkaWFnLmNvbmZpZGVuY2V9JSlcbiAgICAgICAgICAgICAgICAgIHtpZHggPCByZWNlbnREaWFnbm9zdGljcy5zbGljZSgwLCAyKS5sZW5ndGggLSAxICYmIFwiIOKAoiBcIn1cbiAgICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1tZXRyaWNzXCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWV0cmljXCI+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmludmVudG9yeTwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8c3Bhbj57dChcImFjdGl2aXRpZXMuc2F2ZWREaWFnbm9zdGljc1wiLCB7IGNvdW50OiByZWNlbnREaWFnbm9zdGljcy5sZW5ndGggfSl9PC9zcGFuPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtZXRyaWNcIj5cbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1zeW1ib2xzLW91dGxpbmVkXCI+dHJlbmRpbmdfdXA8L3NwYW4+XG4gICAgICAgICAgICAgICAgPHNwYW4+e3QoXCJhY3Rpdml0aWVzLmNsaWNrVmlld0FsbFwiKX08L3NwYW4+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgKX1cblxuICAgICAgey8qIFZvbyBkZSBNYXBlYW1lbnRvIC0gVmFpIHBhcmEgbyBtYXBhICovfVxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJhY3Rpdml0eS1jYXJkXCIgb25DbGljaz17Z29Ub01hcH0+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWN0aXZpdHktaWNvbiBtYXBlYW1lbnRvXCI+XG4gICAgICAgICAgPERyb25lSWNvbiBjbGFzc05hbWU9XCJhY3Rpdml0eS1kcm9uZS1pY29uXCIgLz5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImljb24tcHVsc2VcIj48L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWN0aXZpdHktY29udGVudFwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWN0aXZpdHktaGVhZGVyXCI+XG4gICAgICAgICAgICA8aDQgY2xhc3NOYW1lPVwiYWN0aXZpdHktdGl0bGVcIj57dChcImFjdGl2aXRpZXMubWFwcGluZ0ZsaWdodFwiKX08L2g0PlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYWN0aXZpdHktdGltZVwiPnt0KFwiYWN0aXZpdGllcy50d29Ib3Vyc0Fnb1wiKX08L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwiYWN0aXZpdHktZGVzY3JpcHRpb25cIj57dChcImFjdGl2aXRpZXMubWFwcGluZ0Rlc2NyaXB0aW9uXCIpfTwvcD5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFjdGl2aXR5LW1ldHJpY3NcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWV0cmljXCI+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLXN5bWJvbHMtb3V0bGluZWRcIj5tYXA8L3NwYW4+XG4gICAgICAgICAgICAgIDxzcGFuPnt0KFwiYWN0aXZpdGllcy52aWV3TWFwXCIpfTwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtZXRyaWNcIj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtc3ltYm9scy1vdXRsaW5lZFwiPmNoZXZyb25fcmlnaHQ8L3NwYW4+XG4gICAgICAgICAgICAgIDxzcGFuPnt0KFwiYWN0aXZpdGllcy5jbGlja0FjY2Vzc1wiKX08L3NwYW4+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKVxufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9zYW11ZS9Eb3dubG9hZHMvVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vVGVzdGVfSW50ZWdyYS1vX0FQSV9TaXRlLW1haW4vc3JjL2NvbXBvbmVudHMvQXBwL0hvbWUvQWN0aXZpdGllc0xpc3QuanN4In0=

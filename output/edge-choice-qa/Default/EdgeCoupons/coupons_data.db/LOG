@@ -1,0 +1,5 @@
+2026/09/20-17:14:44.438 2904 Creating DB C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-choice-qa\Default\EdgeCoupons/coupons_data.db since it was missing.
+2026/09/20-17:14:44.472 2904 Reusing MANIFEST C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-choice-qa\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/09/20-17:14:45.848 2e24 Level-0 table #5: started
+2026/09/20-17:14:45.873 2e24 Level-0 table #5: 683273 bytes OK
+2026/09/20-17:14:45.880 2e24 Delete type=0 #3

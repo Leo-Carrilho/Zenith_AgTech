@@ -1,0 +1,19 @@
+2026-09-20 20:15:23.021: [INFO] CurrentProfilePath: C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-install-step-qa\Default
+2026-09-20 20:15:23.021: [INFO] Profiles total count: 1
+2026-09-20 20:15:23.021: [INFO] Profile: name=Perfil 1 path=C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-install-step-qa\Default lastActive=2026-09-20T20:15:22.994Z
+2026-09-20 20:15:23.021: [INFO] LastUsedProfileDir: C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-install-step-qa\Default
+2026-09-20 20:15:23.021: [INFO] MostRecentlyActiveProfile: name=Perfil 1 path=C:\Users\samue\Downloads\Teste_Integra-o_API_Site-main\Teste_Integra-o_API_Site-main\output\edge-install-step-qa\Default lastActive=2026-09-20T20:15:22.994Z
+2026-09-20 20:15:23.021: [INFO] OnDoneLoading sync enabled: 0
+2026-09-20 20:15:23.021: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-20 20:15:23.021: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-20 20:15:23.021: [INFO] BookmarksSnapshot Startup total=3 bar=3 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-20 20:15:23.123: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-20 20:15:23.266: [INFO] VisibilityChanged: 0
+2026-09-20 20:15:24.248: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-20 20:15:24.254: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-20 20:15:24.258: [INFO] Primary account changed.
+2026-09-20 20:15:24.258: [INFO] OnPrimaryAccountChanged PrimaryAccountChangeEvent::Type::kSet
+2026-09-20 20:15:24.276: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-20 20:15:24.298: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-20 20:15:26.292: [INFO] Sync initialization duration: 1881ms
+2026-09-20 20:15:30.825: [INFO] BookmarksSnapshot Shutdown total=3 bar=3 other=0 mobile=0 showBar=0 showBarNTP=1
