@@ -57,13 +57,13 @@ export default defineConfig({
   lang: 'pt-BR',
    icons: [
   {
-    src: "/assets/icons/zenith-icon-192-v6.png",
+    src: "/assets/icons/zenith-icon-192-v7.png",
     sizes: "192x192",
     type: "image/png",
     purpose: "any"
   },
   {
-    src: "/assets/icons/zenith-icon-512-v6.png",
+    src: "/assets/icons/zenith-icon-512-v7.png",
     sizes: "512x512",
     type: "image/png",
     purpose: "any"
