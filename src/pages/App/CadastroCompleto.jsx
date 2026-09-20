@@ -73,6 +73,7 @@ export default function CadastroCompleto({ setAppLoading }) {
   const [farmData, setFarmData] = useState({
     name: "",
     tipo_proprietario: "",
+    documento_proprietario: "",
     cep: "",
     bairro: "",
     municipio: "",
@@ -190,6 +191,16 @@ export default function CadastroCompleto({ setAppLoading }) {
 
     if (name === "telefone") {
       formattedValue = formatPhone(value)
+    }
+
+    if (name === "tipo_proprietario") {
+      setFarmData({ ...farmData, tipo_proprietario: value, documento_proprietario: "" })
+      setAlertMessage({ type: "", text: "" })
+      return
+    }
+
+    if (name === "documento_proprietario") {
+      formattedValue = formatDocument(value, farmData.tipo_proprietario === "PF" ? "CPF" : "PJ")
     }
 
     setFarmData({
@@ -929,7 +940,7 @@ export default function CadastroCompleto({ setAppLoading }) {
                   }
                   maxLength={userData.type === "CPF" ? 14 : 18}
                 />
-                <small className="cadastro-tcc-help">Use um documento fictício para demonstração acadêmica. A pontuação é aplicada automaticamente.</small>
+                <small className="cadastro-tcc-help">Digite somente números; a pontuação é automática. Não use documento real. Exemplo: {userData.type === "CPF" ? "123.456.789-00" : "12.345.678/0001-00"}.</small>
                 <label className="cadastro-tcc-confirm">
                   <input type="checkbox" checked={documentoFicticioConfirmado} onChange={(event) => setDocumentoFicticioConfirmado(event.target.checked)} />
                   Confirmo que este documento é fictício e será usado apenas no TCC.
@@ -1059,6 +1070,22 @@ export default function CadastroCompleto({ setAppLoading }) {
               </select>
             </div>
 
+            {farmData.tipo_proprietario && (
+              <div className="input-group">
+                <label>{farmData.tipo_proprietario === "PF" ? "CPF Fictício" : "CNPJ Fictício"}</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  name="documento_proprietario"
+                  value={farmData.documento_proprietario}
+                  onChange={handleFarmChange}
+                  placeholder={farmData.tipo_proprietario === "PF" ? "000.000.000-00" : "00.000.000/0001-00"}
+                  maxLength={farmData.tipo_proprietario === "PF" ? 14 : 18}
+                />
+                <small className="cadastro-tcc-help">Digite somente números; a pontuação é automática. Não use documento real. Exemplo: {farmData.tipo_proprietario === "PF" ? "123.456.789-00" : "12.345.678/0001-00"}.</small>
+              </div>
+            )}
+
             <div className="input-row">
 
               <div className="input-group">
@@ -1145,7 +1172,7 @@ export default function CadastroCompleto({ setAppLoading }) {
                   placeholder="(00) 00000-0000"
                   maxLength={15}
                 />
-                <small className="cadastro-tcc-help">Informe um telefone fictício para a demonstração do projeto de TCC.</small>
+                <small className="cadastro-tcc-help">Digite somente números; a pontuação é automática. Não use telefone real. Exemplo: (11) 98765-4321.</small>
                 <label className="cadastro-tcc-confirm">
                   <input type="checkbox" checked={telefoneFicticioConfirmado} onChange={(event) => setTelefoneFicticioConfirmado(event.target.checked)} />
                   Confirmo que este telefone é fictício e será usado apenas no TCC.

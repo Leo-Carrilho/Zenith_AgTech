@@ -172,7 +172,11 @@ export default function MonitoramentoView() {
             Analise o alinhamento e a uniformidade das fileiras
           </p>
           <p className={styles.usageLimit} aria-live="polite">
-            {featureAccess.loading ? "Carregando limite..." : featureAccess.fullAccess ? "Acesso ilimitado" : `${featureAccess.used} de 3 análises usadas · ${featureAccess.remaining} restante${featureAccess.remaining === 1 ? "" : "s"}`}
+            {featureAccess.loading
+              ? "Verificando o limite de análises..."
+              : featureAccess.fullAccess
+                ? "Acesso ilimitado para demonstração."
+                : `Limite de demonstração: você utilizou ${featureAccess.used} de 3 análises. Restam ${featureAccess.remaining}.`}
           </p>
         </div>
 

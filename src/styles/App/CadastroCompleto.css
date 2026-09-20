@@ -295,7 +295,7 @@
   line-height: 1.4;
 }
 
-.cadastro-tcc-confirm {
+.cadastro-card .input-group .cadastro-tcc-confirm {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -306,7 +306,9 @@
   line-height: 1.4;
 }
 
-.cadastro-tcc-confirm input {
+.cadastro-card .input-group .cadastro-tcc-confirm input {
+  display: inline-block;
+  flex: 0 0 16px;
   width: 16px;
   height: 16px;
   margin: 0;
